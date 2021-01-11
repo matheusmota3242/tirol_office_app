@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tirol_office_app/views/screens/auth/forgot_password_view.dart';
 import 'package:tirol_office_app/views/screens/auth/register_view.dart';
+import 'package:tirol_office_app/views/screens/home_view.dart';
 
 class LoginView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
   @override
   Widget build(BuildContext context) {
+    // Altura da página
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
@@ -18,8 +21,8 @@ class LoginView extends StatelessWidget {
               _titlePage(screenHeight),
               _usernameField(screenHeight),
               _passwordField(screenHeight),
-              _forgotPasswordButton(screenHeight),
-              _loginButton(context, screenHeight),
+              _forgotPasswordButton(screenHeight, context),
+              _submitButton(context, screenHeight),
               _orText(),
               _registerButton(context, screenHeight)
             ],
@@ -29,6 +32,7 @@ class LoginView extends StatelessWidget {
     );
   }
 
+  // Imagem da página
   Widget _loginImage(double screenHeight) {
     var heightImage = 150.0;
     var paddingTop = (screenHeight / 12);
@@ -44,6 +48,7 @@ class LoginView extends StatelessWidget {
     );
   }
 
+  // Título da página
   Widget _titlePage(double screenHeight) {
     var fontSize = 36.0;
     var paddingBottom = (screenHeight / 40);
@@ -61,6 +66,7 @@ class LoginView extends StatelessWidget {
     );
   }
 
+  // Campo do usuário
   Widget _usernameField(double screenHeight) {
     var borderWidth = 1.0;
     var verticalPadding = (screenHeight / 40);
@@ -84,6 +90,7 @@ class LoginView extends StatelessWidget {
     );
   }
 
+  // Campo do senha
   Widget _passwordField(double screenHeight) {
     var verticalPadding = (screenHeight / 40);
     var fieldVerticalPadding = 8.0;
@@ -114,13 +121,18 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  Widget _forgotPasswordButton(double screenHeight) {
+  // Botão "esqueceu a senha?"
+  Widget _forgotPasswordButton(double screenHeight, BuildContext context) {
     return Container(
       height: 32.0,
       padding: EdgeInsets.only(right: _horizontalPadding),
       alignment: Alignment.topRight,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ForgotPasswordView(),
+          ),
+        ),
         child: Text(
           'Esqueceu a senha?',
           style: TextStyle(fontSize: 12),
@@ -129,7 +141,8 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  Widget _loginButton(BuildContext context, double screenHeight) {
+  // Botão de submissão do formulário
+  Widget _submitButton(BuildContext context, double screenHeight) {
     var buttonPadding = 16.0;
     var verticalPadding = (screenHeight / 40);
     return Padding(
@@ -137,7 +150,11 @@ class LoginView extends StatelessWidget {
           _horizontalPadding, verticalPadding),
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HomeView(),
+          ),
+        ),
         child: Text(
           'Entrar',
           style: TextStyle(

@@ -29,6 +29,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFFBF1E2E),
         buttonColor: Color(0xFF166D97),
+        appBarTheme: AppBarTheme(
+          color: Color(0xFF7999B7),
+        ),
+
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.

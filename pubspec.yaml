@@ -49,6 +49,7 @@ flutter:
   assets:
     - assets/images/login.svg
     - assets/images/register.svg
+    - assets/images/forgot_password.svg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
