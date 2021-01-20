@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/views/screens/auth/forgot_password_view.dart';
 import 'package:tirol_office_app/views/screens/auth/register_view.dart';
 import 'package:tirol_office_app/views/screens/home_view.dart';
@@ -7,8 +9,11 @@ import 'package:tirol_office_app/views/screens/home_view.dart';
 class LoginView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
+  String _email, _password;
+
   @override
   Widget build(BuildContext context) {
+    final _authService = Provider.of<AuthService>(context);
     // Altura da página
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -19,10 +24,10 @@ class LoginView extends StatelessWidget {
             children: [
               _loginImage(screenHeight),
               _titlePage(screenHeight),
-              _usernameField(screenHeight),
+              _emailField(screenHeight),
               _passwordField(screenHeight),
               _forgotPasswordButton(screenHeight, context),
-              _submitButton(context, screenHeight),
+              _submitButton(context, screenHeight, _authService),
               _orText(),
               _registerButton(context, screenHeight)
             ],
@@ -67,7 +72,7 @@ class LoginView extends StatelessWidget {
   }
 
   // Campo do usuário
-  Widget _usernameField(double screenHeight) {
+  Widget _emailField(double screenHeight) {
     var borderWidth = 1.0;
     var verticalPadding = (screenHeight / 40);
     var fieldVerticalPadding = 8.0;
@@ -77,6 +82,10 @@ class LoginView extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(_horizontalPadding, verticalPadding,
           _horizontalPadding, verticalPadding),
       child: TextFormField(
+        onChanged: (value) => _email = value.trim(),
+        validator: (value) =>
+            value.isEmpty ? 'Por favor, digite seu email' : null,
+        keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           filled: true,
           contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
@@ -102,6 +111,9 @@ class LoginView extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            onChanged: (value) => _password = value.trim(),
+            validator: (value) =>
+                value.isEmpty ? 'Por favor, digite sua senha' : null,
             decoration: InputDecoration(
               filled: true,
               counterStyle: TextStyle(color: Colors.red),
@@ -142,7 +154,8 @@ class LoginView extends StatelessWidget {
   }
 
   // Botão de submissão do formulário
-  Widget _submitButton(BuildContext context, double screenHeight) {
+  Widget _submitButton(
+      BuildContext context, double screenHeight, AuthService authService) {
     var buttonPadding = 16.0;
     var verticalPadding = (screenHeight / 40);
     return Padding(
@@ -150,11 +163,11 @@ class LoginView extends StatelessWidget {
           _horizontalPadding, verticalPadding),
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => HomeView(),
-          ),
-        ),
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            login(context, authService);
+          }
+        },
         child: Text(
           'Entrar',
           style: TextStyle(
@@ -200,5 +213,22 @@ class LoginView extends StatelessWidget {
         padding: EdgeInsets.only(top: buttonPadding, bottom: buttonPadding),
       ),
     );
+  }
+
+  dynamic login(BuildContext context, AuthService authService) async {
+    var result =
+        await authService.loginWithEmail(email: _email, password: _password);
+    print(result.toString());
+    if (result is bool) {
+      if (result) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HomeView(),
+          ),
+        );
+      }
+    } else {}
+
+    return result;
   }
 }

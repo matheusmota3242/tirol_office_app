@@ -1,0 +1,1 @@
+enum EquipmentStatus { ABLE, DISABLE }
