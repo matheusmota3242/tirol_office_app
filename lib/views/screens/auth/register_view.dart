@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
 import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/helpers/auth_helper.dart';
+import 'package:tirol_office_app/views/screens/auth/login_view.dart';
 
 class RegisterView extends StatelessWidget {
+  AuthHelper _authHelper = AuthHelper();
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
-  String _email, _password;
+  String _email, _password, _passwordConfirm;
   @override
   Widget build(BuildContext context) {
     AuthService _authService = Provider.of<AuthService>(context);
@@ -19,7 +24,6 @@ class RegisterView extends StatelessWidget {
               _registerImage(screenHeight),
               _titlePage(screenHeight),
               _emailField(screenHeight),
-              // _cpfField(screenHeight),
               _passwordField(screenHeight),
               _confirmPasswordField(screenHeight),
               _registerButton(context, screenHeight, _authService)
@@ -77,8 +81,8 @@ class RegisterView extends StatelessWidget {
         (verticalPadding / 2),
       ),
       child: TextFormField(
-        validator: (value) =>
-            value.isEmpty ? 'Por favor, digite seu e-mail' : null,
+        validator: (value) => validateEmail(value),
+        onChanged: (value) => _email = value.trim(),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           filled: true,
@@ -135,8 +139,8 @@ class RegisterView extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
-            validator: (value) =>
-                value.isEmpty ? 'Por favor, digite sua senha' : null,
+            validator: (value) => validatePassword(value),
+            onChanged: (value) => _password = value.trim(),
             obscureText: true,
             decoration: InputDecoration(
               filled: true,
@@ -172,8 +176,15 @@ class RegisterView extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
-            validator: (value) =>
-                value.isEmpty ? 'Por favor, confirme sua senha' : null,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Por favor, confirme sua senha';
+              }
+              if (_password != _passwordConfirm) {
+                return 'Senha e confirmação de senha incompatíveis';
+              }
+            },
+            onChanged: (value) => _passwordConfirm = value.trim(),
             obscureText: true,
             decoration: InputDecoration(
               filled: true,
@@ -205,7 +216,7 @@ class RegisterView extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            authService.signUp(email: _email, password: _password);
+            signup(context, authService);
           }
         },
         child: Text(
@@ -218,5 +229,30 @@ class RegisterView extends StatelessWidget {
         padding: EdgeInsets.only(top: buttonPadding, bottom: buttonPadding),
       ),
     );
+  }
+
+  String validateEmail(String email) {
+    return _authHelper.validateEmail(email);
+  }
+
+  String validatePassword(String password) {
+    return _authHelper.validatePassword(password);
+  }
+
+  dynamic signup(BuildContext context, AuthService authService) async {
+    var result = await authService.signUp(email: _email, password: _password);
+    if (result is bool) {
+      if (result) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => LoginView(),
+          ),
+        );
+      } else {
+        Fluttertoast.showToast(msg: "Registro inválido");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Registro inválido");
+    }
   }
 }

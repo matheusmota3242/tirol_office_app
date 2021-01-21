@@ -32,9 +32,12 @@ dependencies:
   flutter_barcode_scanner:
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.0+1
+  cloud_firestore: ^0.16.0
   mobx: ^1.2.1+4
   flutter_mobx: ^1.1.0+2 
   provider: ^4.3.3
+  fluttertoast: ^7.1.6
+  email_validator: '^1.0.5'
 
 
 dev_dependencies:

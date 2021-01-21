@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
 import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/helpers/auth_helper.dart';
 import 'package:tirol_office_app/views/screens/auth/forgot_password_view.dart';
 import 'package:tirol_office_app/views/screens/auth/register_view.dart';
 import 'package:tirol_office_app/views/screens/home_view.dart';
 
 class LoginView extends StatelessWidget {
+  AuthHelper _authHelper = AuthHelper();
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
   String _email, _password;
@@ -83,8 +87,7 @@ class LoginView extends StatelessWidget {
           _horizontalPadding, verticalPadding),
       child: TextFormField(
         onChanged: (value) => _email = value.trim(),
-        validator: (value) =>
-            value.isEmpty ? 'Por favor, digite seu email' : null,
+        validator: (value) => validateEmail(_email),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           filled: true,
@@ -111,9 +114,9 @@ class LoginView extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            obscureText: true,
             onChanged: (value) => _password = value.trim(),
-            validator: (value) =>
-                value.isEmpty ? 'Por favor, digite sua senha' : null,
+            validator: (value) => validatePassword(value),
             decoration: InputDecoration(
               filled: true,
               counterStyle: TextStyle(color: Colors.red),
@@ -215,10 +218,17 @@ class LoginView extends StatelessWidget {
     );
   }
 
+  String validateEmail(String email) {
+    return _authHelper.validateEmail(email);
+  }
+
+  String validatePassword(String password) {
+    return _authHelper.validatePassword(password);
+  }
+
   dynamic login(BuildContext context, AuthService authService) async {
     var result =
         await authService.loginWithEmail(email: _email, password: _password);
-    print(result.toString());
     if (result is bool) {
       if (result) {
         Navigator.of(context).push(
@@ -226,8 +236,13 @@ class LoginView extends StatelessWidget {
             builder: (context) => HomeView(),
           ),
         );
+      } else {
+        Fluttertoast.showToast(
+            msg: "E-mail ou senha inválida", gravity: ToastGravity.CENTER);
       }
-    } else {}
+    } else {
+      Fluttertoast.showToast(msg: "Login inválido");
+    }
 
     return result;
   }
