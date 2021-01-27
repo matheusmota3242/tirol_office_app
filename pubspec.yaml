@@ -38,6 +38,7 @@ dependencies:
   provider: ^4.3.3
   fluttertoast: ^7.1.6
   email_validator: '^1.0.5'
+  string_validator: ^0.1.4
 
 
 dev_dependencies:

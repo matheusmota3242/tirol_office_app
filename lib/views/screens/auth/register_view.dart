@@ -6,12 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/helpers/auth_helper.dart';
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class RegisterView extends StatelessWidget {
   AuthHelper _authHelper = AuthHelper();
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
-  String _email, _password, _passwordConfirm;
+  String _email, _password, _passwordConfirm, _name;
   @override
   Widget build(BuildContext context) {
     AuthService _authService = Provider.of<AuthService>(context);
@@ -23,6 +24,7 @@ class RegisterView extends StatelessWidget {
             children: [
               _registerImage(screenHeight),
               _titlePage(screenHeight),
+              _nameField(screenHeight),
               _emailField(screenHeight),
               _passwordField(screenHeight),
               _confirmPasswordField(screenHeight),
@@ -42,7 +44,7 @@ class RegisterView extends StatelessWidget {
     return SizedBox(
       child: Padding(
         padding: EdgeInsets.only(top: paddingTop, bottom: paddingBottom),
-        child: SvgPicture.asset(
+        child: SvgPicture.asset(abstract
           'assets/images/register.svg',
           height: heightImage,
         ),
@@ -97,32 +99,35 @@ class RegisterView extends StatelessWidget {
     );
   }
 
-  // Widget _cpfField(double screenHeight) {
-  //   var borderWidth = 1.0;
-  //   var verticalPadding = (screenHeight / 40);
-  //   var fieldVerticalPadding = 8.0;
-  //   var fieldLeftPadding = 8.0;
-  //   var fieldRightPadding = 0.0;
-  //   return Padding(
-  //     padding: EdgeInsets.fromLTRB(
-  //       _horizontalPadding,
-  //       verticalPadding,
-  //       _horizontalPadding,
-  //       (verticalPadding / 2),
-  //     ),
-  //     child: TextFormField(
-  //       decoration: InputDecoration(
-  //         filled: true,
-  //         contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
-  //             fieldVerticalPadding, fieldRightPadding, fieldVerticalPadding),
-  //         hintText: 'CPF',
-  //         border: OutlineInputBorder(
-  //           borderSide: BorderSide.none,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _nameField(double screenHeight) {
+    var borderWidth = 1.0;
+    var verticalPadding = (screenHeight / 40);
+    var fieldVerticalPadding = 8.0;
+    var fieldLeftPadding = 8.0;
+    var fieldRightPadding = 0.0;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        _horizontalPadding,
+        verticalPadding,
+        _horizontalPadding,
+        (verticalPadding / 2),
+      ),
+      child: TextFormField(
+        validator: (value) => _authHelper.validateName(value),
+        onChanged: (value) => _name = value.trim(),
+        keyboardType: TextInputType.name,
+        decoration: InputDecoration(
+          filled: true,
+          contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
+              fieldVerticalPadding, fieldRightPadding, fieldVerticalPadding),
+          hintText: 'Nome',
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _passwordField(double screenHeight) {
     var verticalPadding = (screenHeight / 40);
@@ -240,19 +245,21 @@ class RegisterView extends StatelessWidget {
   }
 
   dynamic signup(BuildContext context, AuthService authService) async {
-    var result = await authService.signUp(email: _email, password: _password);
+    var result = await authService.signUp(
+        email: _email, password: _password, name: _name);
     if (result is bool) {
       if (result) {
+        Toasts.showToast(content: 'Registro realizado com sucesso');
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => LoginView(),
           ),
         );
       } else {
-        Fluttertoast.showToast(msg: "Registro inválido");
+        Toasts.showToast(content: "Registro inválido");
       }
     } else {
-      Fluttertoast.showToast(msg: "Registro inválido");
+      Toasts.showToast(content: "Registro inválido");
     }
   }
 }

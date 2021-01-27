@@ -1,9 +1,18 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:string_validator/string_validator.dart';
 
 class AuthHelper {
   bool checkEmail(String email) {
     bool isValid = EmailValidator.validate(email);
     return isValid;
+  }
+
+  String validateName(String name) {
+    if (name.isEmpty) {
+      return 'Por favor, preencha o campo de nome';
+    } else if (!isAlpha(name)) {
+      return 'Apenas letras podem ser utilizadas';
+    }
   }
 
   String validateEmail(String email) {

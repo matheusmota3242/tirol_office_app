@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
+import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import '';
 
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _authService = Provider.of<AuthService>(context);
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
         title: Text('Home'),
         backgroundColor: Theme.of(context).appBarTheme.color,
         actions: [
@@ -17,6 +21,9 @@ class HomeView extends StatelessWidget {
             onPressed: () => scanQRCode(context),
           ),
         ],
+      ),
+      drawer: MenuDrawer(
+        userEmail: _authService.user.email,
       ),
       body: Container(
         padding: EdgeInsets.all(12.0),
