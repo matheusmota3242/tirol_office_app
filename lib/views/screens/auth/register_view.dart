@@ -44,7 +44,7 @@ class RegisterView extends StatelessWidget {
     return SizedBox(
       child: Padding(
         padding: EdgeInsets.only(top: paddingTop, bottom: paddingBottom),
-        child: SvgPicture.asset(abstract
+        child: SvgPicture.asset(
           'assets/images/register.svg',
           height: heightImage,
         ),

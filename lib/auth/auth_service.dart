@@ -16,7 +16,10 @@ class AuthService {
           email: email, password: password);
       user = result.user;
     } catch (e) {}
-    return result.user != null;
+    if (result != null) {
+      return result.user != null;
+    }
+    return null;
   }
 
   Future signUp(

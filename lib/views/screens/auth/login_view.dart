@@ -8,6 +8,7 @@ import 'package:tirol_office_app/helpers/auth_helper.dart';
 import 'package:tirol_office_app/views/screens/auth/forgot_password_view.dart';
 import 'package:tirol_office_app/views/screens/auth/register_view.dart';
 import 'package:tirol_office_app/views/screens/home_view.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class LoginView extends StatelessWidget {
   AuthHelper _authHelper = AuthHelper();
@@ -237,11 +238,10 @@ class LoginView extends StatelessWidget {
           ),
         );
       } else {
-        Fluttertoast.showToast(
-            msg: "E-mail ou senha inválida", gravity: ToastGravity.CENTER);
+        Toasts.showToast(content: "E-mail ou senha inválida");
       }
     } else {
-      Fluttertoast.showToast(msg: "Login inválido");
+      Toasts.showToast(content: "E-mail ou senha inválida");
     }
 
     return result;

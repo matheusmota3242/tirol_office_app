@@ -26,6 +26,8 @@ class AuthHelper {
   String validatePassword(String password) {
     if (password.isEmpty) {
       return 'Por favor, preencha o campo de senha';
+    } else if (!isAlphanumeric(password)) {
+      return 'Sua senha deve conter apenas letras e/ou números';
     } else if (password.length < 6) {
       return 'Sua senha deve conter no mínimo 6 caracteres';
     }
