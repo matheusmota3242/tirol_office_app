@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -32,7 +34,10 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) {
         result = value;
-        usersCollection.doc(value.user.uid).set({'name': name, 'role': false});
+        usersCollection.doc(value.user.uid).set({
+          'name': name,
+          'role': Role().getRoleByEnum(UserRole.WAITING_FOR_APPROVAL)
+        });
       });
     } catch (e) {}
     return result.user != null;

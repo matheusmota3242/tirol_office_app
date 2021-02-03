@@ -181,6 +181,7 @@ class RegisterView extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            // ignore: missing_return
             validator: (value) {
               if (value.isEmpty) {
                 return 'Por favor, confirme sua senha';

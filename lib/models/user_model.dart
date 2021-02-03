@@ -1,20 +1,26 @@
 import 'enums/user_role_enum.dart';
 
 class User {
-  String name;
-  UserRole role;
-  bool status;
-  String email;
-  String password;
+  String _name;
+  String _role;
+  bool _status;
+  String _email;
+  String _password;
 
-  User(this.name, this.role, this.email, this.password);
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'role': role,
+      };
 
-  String get getName => name;
-  set setName(String name) => this.name = name;
+  String get name => _name;
+  set name(String name) => this._name = name;
 
-  String get getEmail => email;
-  set setEmail(String email) => this.email = email;
+  String get role => _role;
+  set role(String role) => this._role = role;
 
-  String get getPassword => password;
-  set setPassword(String password) => this.password = password;
+  String get email => email;
+  set email(String email) => this._email = email;
+
+  String get password => password;
+  set password(String password) => this._password = password;
 }
