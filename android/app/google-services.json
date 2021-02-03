@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1053094222617",
+    "project_id": "tirol-center",
+    "storage_bucket": "tirol-center.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053094222617:android:759fdda453de761e170388",
+        "android_client_info": {
+          "package_name": "com.tirol_office.maintenance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1053094222617-tm6m0g25l36r63jj64iao005876li66b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tirol_office.maintenance",
+            "certificate_hash": "c42865203785cb968850b8d4f385e74378f2e768"
+          }
+        },
+        {
+          "client_id": "1053094222617-53as4uu84dt5em93m30lf3m3hl3m3m7u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIdA1kNYmyL_X_GHabWwKMPO2CCWss6Wc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1053094222617-53as4uu84dt5em93m30lf3m3hl3m3m7u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
