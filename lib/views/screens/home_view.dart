@@ -23,6 +23,7 @@ class HomeView extends StatelessWidget {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
+              return Text('Ocorreu um erro');
             case ConnectionState.waiting:
               return Center(
                 child: CircularProgressIndicator(),

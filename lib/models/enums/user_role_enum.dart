@@ -1,8 +1,8 @@
 class Role {
   Map<UserRole, String> map = {
-    UserRole.ADMIN: 'admin',
-    UserRole.DEFAULT: 'default',
-    UserRole.WAITING_FOR_APPROVAL: 'waiting'
+    UserRole.ADMIN: 'Administrador',
+    UserRole.DEFAULT: 'Comum',
+    UserRole.WAITING_FOR_APPROVAL: 'Aguardando aprovação'
   };
 
   String getRoleByEnum(UserRole userRole) {
@@ -11,9 +11,3 @@ class Role {
 }
 
 enum UserRole { ADMIN, DEFAULT, WAITING_FOR_APPROVAL }
-
-Map<UserRole, String> map = {
-  UserRole.ADMIN: 'admin',
-  UserRole.DEFAULT: 'default',
-  UserRole.WAITING_FOR_APPROVAL: 'waiting'
-};

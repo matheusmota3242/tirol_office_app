@@ -44,7 +44,7 @@ class MenuDrawer extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserListView(title: title, user: user),
+        builder: (context) => UserListView(title: title, currentUser: user),
       ),
     );
   }
