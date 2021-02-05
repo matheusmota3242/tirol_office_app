@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/user_model.dart';
+import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
@@ -23,27 +24,24 @@ class UserListView extends StatelessWidget {
             break;
           default:
             return Scaffold(
-                appBar: AppBarWidget(title),
-                drawer: MenuDrawer(
-                  user: currentUser,
-                ),
-                body: setBody(context, snapshot));
+              appBar: AppBarWidget(title),
+              drawer: MenuDrawer(
+                user: currentUser,
+              ),
+              body: setBody(context, snapshot),
+            );
         }
       },
     );
   }
 
   Widget setBody(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    print('setBody()');
     print(snapshot.connectionState);
     if (snapshot.hasError) {
-      return Center(
-        child: Text('Erro'),
-      );
+      return ErrorView();
     }
 
     if (snapshot.connectionState == ConnectionState.active) {
-      print('Estebeleceu conexão');
       if (snapshot.hasData && snapshot.data.docs.length > 0) {
         return ListView.builder(
           itemCount: snapshot.data.docs.length,
