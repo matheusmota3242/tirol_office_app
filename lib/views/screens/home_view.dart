@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
@@ -9,7 +7,8 @@ import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
-import 'package:tirol_office_app/views/screens/waiting_for_approval_view.dart';
+import 'package:tirol_office_app/views/screens/loading_view.dart';
+import 'package:tirol_office_app/views/screens/users/waiting_for_approval_view.dart';
 import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
@@ -28,13 +27,12 @@ class HomeView extends StatelessWidget {
             case ConnectionState.none:
               return Text('Ocorreu um erro');
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingView();
+
               break;
             default:
               if (snapshot.hasError) {
-                return Text('Ocorreu um erro');
+                return ErrorView();
               }
 
               if (snapshot.connectionState == ConnectionState.done) {
@@ -156,9 +154,7 @@ class HomeView extends StatelessWidget {
                   return ErrorView();
                 }
               }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingView();
           }
         });
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 
 class Dialogs {
   showScannerErrorDialog(BuildContext context) {

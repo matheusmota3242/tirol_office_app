@@ -8,6 +8,12 @@ class Role {
   String getRoleByEnum(UserRole userRole) {
     return map[userRole];
   }
+
+  List getRoles() {
+    var list = new List();
+    map.forEach((key, value) => list.add(value));
+    return list;
+  }
 }
 
 enum UserRole { ADMIN, DEFAULT, WAITING_FOR_APPROVAL }
