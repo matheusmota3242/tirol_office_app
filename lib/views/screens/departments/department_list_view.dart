@@ -9,6 +9,7 @@ class DepartmentListView extends StatelessWidget {
 
   const DepartmentListView({Key key, this.title, this.currentUser})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
