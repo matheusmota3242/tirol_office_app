@@ -1,11 +1,14 @@
 import 'enums/equipment_status_enum.dart';
 
 class Equipment {
-  String name;
-  EquipmentStatus equipmentStatus;
+  String description;
+  EquipmentStatus status;
 
-  String get getName => name;
-  set setName(String name) => this.name = name;
+  String get getDescription => description;
+  set setDescription(String description) => this.description = description;
 
-  Equipment(this.name, this.equipmentStatus);
+  EquipmentStatus get getStatus => status;
+  set setStatus(EquipmentStatus status) => this.status = status;
+
+  Equipment(this.description, this.status);
 }

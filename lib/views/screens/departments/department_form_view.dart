@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
+import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 
 class DepartmentFormView extends StatelessWidget {
@@ -8,6 +11,7 @@ class DepartmentFormView extends StatelessWidget {
   var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
   @override
   Widget build(BuildContext context) {
+    _departmentService = Provider.of<DepartmentService>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Novo departamento'),
@@ -17,15 +21,64 @@ class DepartmentFormView extends StatelessWidget {
         child: ListView(
           children: [
             departmentNameField,
-            Container(
-              child: Row(
-                children: [
-                  Text('Nenhum equipamento adicionado.'),
-                  IconButton(
-                    onPressed: () => addEquipmentDialog(context),
-                    icon: Icon(Icons.add_circle),
-                  )
-                ],
+            SizedBox(
+              height: 10.0,
+            ),
+            Divider(
+              color: Colors.grey[600],
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              'Equipamentos',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700]),
+            ),
+            SizedBox(
+              height: 12.0,
+            ),
+            Observer(
+              builder: (_) => Container(
+                child: _departmentService.getEquipment == null
+                    ? Row(
+                        children: [
+                          Text(
+                            'Nenhum equipamento adicionado.',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          IconButton(
+                            onPressed: () => addEquipmentDialog(context),
+                            color: Theme.of(context).buttonColor,
+                            icon: Icon(Icons.add_circle),
+                          )
+                        ],
+                      )
+                    : Card(
+                        child: Container(
+                          height: 68.0,
+                          padding: EdgeInsets.all(12.0),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                child: Text(
+                                    '${_departmentService.equipment.getDescription}'),
+                              ),
+                              Positioned(
+                                top: 28.0,
+                                child: Text(
+                                    _departmentService.equipment.getStatus ==
+                                            EquipmentStatus.ABLE
+                                        ? 'Funcionando'
+                                        : 'Danificado'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
               ),
             )
           ],
@@ -41,6 +94,7 @@ class DepartmentFormView extends StatelessWidget {
       child: AlertDialog(
         title: Text('Novo equipamento'),
         content: Form(
+          key: _formKey,
           child: Container(
             height: 240.0,
             child: Column(
@@ -88,7 +142,21 @@ class DepartmentFormView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       cancelButton(context),
-                      submitButton(_formKey, context),
+                      RaisedButton(
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            Equipment equipment = new Equipment(
+                                _departmentService.equipmentName,
+                                EquipmentStatus.ABLE);
+                            _departmentService.setEquipment(equipment);
+                            Navigator.of(context, rootNavigator: true).pop();
+                          }
+                        },
+                        child: Text(
+                          'Salvar',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -139,7 +207,8 @@ class DepartmentFormView extends StatelessWidget {
       decoration: InputDecoration(
         alignLabelWithHint: true,
         labelText: 'Nome',
-        labelStyle: TextStyle(color: Colors.grey[800], height: 0.9),
+        labelStyle: TextStyle(
+            color: Colors.grey[700], height: 0.9, fontWeight: FontWeight.w600),
         filled: true,
         counterStyle: TextStyle(color: Colors.red),
         hintText: 'Nome',
@@ -157,7 +226,10 @@ class DepartmentFormView extends StatelessWidget {
     return RaisedButton(
       onPressed: () {
         if (formKey.currentState.validate()) {
-          Navigator.pop(context);
+          Equipment equipment = new Equipment(
+              _departmentService.equipmentName, EquipmentStatus.ABLE);
+          _departmentService.setEquipment(equipment);
+          Navigator.of(context, rootNavigator: true).pop();
         }
       },
       child: Text(

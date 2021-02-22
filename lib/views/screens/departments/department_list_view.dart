@@ -18,7 +18,9 @@ class DepartmentListView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () => pushToDepartmentFormView(context),
-            icon: Icon(Icons.add),
+            icon: Icon(
+              Icons.add,
+            ),
           )
         ],
       ),

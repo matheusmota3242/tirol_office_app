@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/service/department_service.dart';
 
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
 
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider(
           create: (_) => AuthService(),
+        ),
+        Provider(
+          create: (_) => DepartmentService(),
         )
       ],
       child: MaterialApp(
