@@ -17,26 +17,46 @@ class MenuDrawer extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            child: Center(
-              child: Text(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
                 user.name,
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: usernameFontSize,
                     fontWeight: FontWeight.w500),
               ),
-            ),
+              SizedBox(
+                height: 6.0,
+              ),
+              Text(
+                '${user.role}',
+                style: TextStyle(color: Colors.white),
+              ),
+            ]),
             width: double.infinity,
             height: userContainerHeight,
             color: Theme.of(context).appBarTheme.color,
           ),
-          TextButton(
-            onPressed: () => pushToUserListView(context),
-            child: Text('Usuários'),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
+              onPressed: () => pushToUserListView(context),
+              child: Text(
+                'Usuários',
+                style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+              ),
+            ),
           ),
-          TextButton(
-            onPressed: () => pushToDepartmentListView(context),
-            child: Text('Departamentos'),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
+              onPressed: () => pushToDepartmentListView(context),
+              child: Text(
+                'Departamentos',
+                style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+              ),
+            ),
           )
         ],
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -17,10 +17,10 @@ abstract class DepartmentServiceBase with Store {
   setEquipment(Equipment equipment) => this.equipment = equipment;
 
   String equipmentName;
-
   get getEquipmentName => equipmentName;
-
   setEquipmentName(String value) => equipmentName = value;
+
+  var equipments = <Equipment>[];
 
   // Status do equipamento
   @observable
