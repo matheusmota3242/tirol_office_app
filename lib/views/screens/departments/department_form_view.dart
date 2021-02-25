@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'dart:math' as math;
 
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class DepartmentFormView extends StatefulWidget {
   _DepartmentFormViewState createState() => _DepartmentFormViewState();
@@ -18,10 +20,8 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
   var _departmentService = DepartmentService();
   AnimationController _animationController;
   var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
-  static const List<IconData> fabIcons = const [
-    Icons.ac_unit,
-    Icons.ac_unit_sharp
-  ];
+  static const List<IconData> fabIcons = const [Icons.done, Icons.close];
+  static const List<Color> fabIconsColors = const [Colors.green, Colors.red];
 
   @override
   void initState() {
@@ -52,10 +52,10 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
               ),
               child: FloatingActionButton(
                 heroTag: null,
-                backgroundColor: Colors.blue,
+                backgroundColor: fabIconsColors[index],
                 mini: true,
-                child: Icon(fabIcons[index], color: Colors.red),
-                onPressed: () {},
+                child: Icon(fabIcons[index], color: Colors.white),
+                onPressed: () => index == 0 ? saveDepartment() : cancel(),
               ),
             ),
           );
@@ -63,6 +63,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
         }).toList()
           ..add(
             FloatingActionButton(
+              backgroundColor: themeData.buttonColor,
               heroTag: null,
               child: AnimatedBuilder(
                 animation: _animationController,
@@ -89,7 +90,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
         padding: EdgeInsets.all(20.0),
         child: ListView(
           children: [
-            departmentNameField,
+            departmentNameField(),
             SizedBox(
               height: 10.0,
             ),
@@ -202,29 +203,28 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
             ),
             Observer(
               builder: (_) => Container(
-                  child: _departmentService.equipments.isEmpty
-                      ? Row(
-                          children: [
-                            Text(
-                              'Nenhum equipamento adicionado.',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        )
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _departmentService.equipments.length,
-                          itemBuilder: (context, index) {
-                            var department =
-                                _departmentService.equipments[index];
+                child: _departmentService.equipments.isEmpty
+                    ? Row(
+                        children: [
+                          Text(
+                            'Nenhum equipamento adicionado.',
+                            style: themeData.textTheme.bodyText1,
+                          ),
+                        ],
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _departmentService.equipments.length,
+                        itemBuilder: (context, index) {
+                          var department = _departmentService.equipments[index];
 
-                            return DepartmentFormEquipmentItem(
-                              description: department.description,
-                              status: department.status,
-                            );
-                          },
-                        )),
+                          return DepartmentFormEquipmentItem(
+                            description: department.description,
+                            status: department.status,
+                          );
+                        },
+                      ),
+              ),
             )
           ],
         ),
@@ -268,25 +268,31 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
   }
 
   // Campo nome do deprtamento a ser adicionado
-  Widget departmentNameField = Container(
-    child: TextFormField(
-      decoration: InputDecoration(
-        alignLabelWithHint: true,
-        labelText: 'Nome',
-        labelStyle: TextStyle(
-            color: Colors.grey[700], height: 0.9, fontWeight: FontWeight.w600),
-        filled: true,
-        counterStyle: TextStyle(color: Colors.red),
-        hintText: 'Nome',
-        contentPadding: EdgeInsets.only(
-          left: 10.0,
-        ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
+  Widget departmentNameField() {
+    return Container(
+      child: TextFormField(
+        onChanged: (value) =>
+            _departmentService.department.setName(value.trim()),
+        decoration: InputDecoration(
+          alignLabelWithHint: true,
+          labelText: 'Nome',
+          labelStyle: TextStyle(
+              color: Colors.grey[700],
+              height: 0.9,
+              fontWeight: FontWeight.w600),
+          filled: true,
+          counterStyle: TextStyle(color: Colors.red),
+          hintText: 'Nome',
+          contentPadding: EdgeInsets.only(
+            left: 10.0,
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
   Widget submitButton(GlobalKey<FormState> formKey, BuildContext context) {
     return RaisedButton(
@@ -294,7 +300,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
         if (formKey.currentState.validate()) {
           Equipment equipment = new Equipment(
               _departmentService.equipmentName, EquipmentStatus.ABLE);
-          _departmentService.setEquipment(equipment);
+          _departmentService.setCurrentEquipment(equipment);
           Navigator.of(context, rootNavigator: true).pop();
         }
       },
@@ -318,5 +324,22 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
 
   setEquipmentName(String value) {
     _departmentService.setEquipmentName(value);
+  }
+
+  void saveDepartment() {
+    print("Entrou");
+    _departmentService.department.setEquipments(_departmentService.equipments);
+    _departmentService.save();
+    Toasts.showToast(content: 'Departamento criado com sucesso!');
+    Navigator.pushNamed(context, RouteHelper.departments,
+        arguments: {'title': 'Departamentos'});
+  }
+
+  void cancel() {
+    _departmentService.setDepartment(null);
+    _departmentService.equipments.clear();
+    _departmentService.setEquipmentName('');
+    _departmentService.setEquipmentStatus(null);
+    Navigator.pop(context);
   }
 }

@@ -11,4 +11,7 @@ class Equipment {
   set setStatus(EquipmentStatus status) => this.status = status;
 
   Equipment(this.description, this.status);
+
+  Map<String, dynamic> toJson() =>
+      {'description': description, 'status': status.toString()};
 }

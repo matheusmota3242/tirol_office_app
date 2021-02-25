@@ -1,4 +1,6 @@
 import 'package:mobx/mobx.dart';
+import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 
@@ -8,13 +10,22 @@ class DepartmentService = DepartmentServiceBase with _$DepartmentService;
 
 abstract class DepartmentServiceBase with Store {
   @observable
-  Equipment equipment;
+  Department department = Department();
 
   @computed
-  get getEquipment => equipment;
+  get getDepartment => department;
 
   @action
-  setEquipment(Equipment equipment) => this.equipment = equipment;
+  setDepartment(Department department) => this.department = department;
+
+  @observable
+  Equipment currentEquipment;
+
+  @computed
+  get getCurrentEquipment => currentEquipment;
+
+  @action
+  setCurrentEquipment(Equipment equipment) => this.currentEquipment = equipment;
 
   String equipmentName;
   get getEquipmentName => equipmentName;
@@ -32,13 +43,8 @@ abstract class DepartmentServiceBase with Store {
   @action
   setEquipmentStatus(String value) => equipmentStatus = value;
 
-  void instantiateEquipment() {
-    EquipmentStatus statusEnum;
-    if (equipmentStatus == 'Funcionando') {
-      statusEnum = EquipmentStatus.ABLE;
-    } else {
-      statusEnum = EquipmentStatus.DISABLE;
-    }
-    equipment = new Equipment(equipmentName, statusEnum);
+  void save() {
+    print('Entrou em save()');
+    FirestoreDB().db_departments.add(department.toJson());
   }
 }

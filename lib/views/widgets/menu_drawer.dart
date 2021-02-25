@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/helpers/route_helper.dart';
 
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
@@ -41,20 +42,41 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => pushToUserListView(context),
-              child: Text(
-                'Usuários',
-                style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
-              ),
-            ),
+                onPressed: () => pushToUserListView(context),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.people,
+                      color: Colors.grey[700],
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      'Usuários',
+                      style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                    ),
+                  ],
+                )),
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
               onPressed: () => pushToDepartmentListView(context),
-              child: Text(
-                'Departamentos',
-                style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.room_preferences,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    'Departamentos',
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
               ),
             ),
           )
@@ -76,12 +98,7 @@ class MenuDrawer extends StatelessWidget {
 
   void pushToDepartmentListView(BuildContext context) {
     String title = 'Departamentos';
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            DepartmentListView(title: title, currentUser: user),
-      ),
-    );
+    Navigator.pushNamed(context, RouteHelper.departments,
+        arguments: {'title': 'Departamentos'});
   }
 }

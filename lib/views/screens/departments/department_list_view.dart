@@ -4,14 +4,15 @@ import 'package:tirol_office_app/views/screens/departments/department_form_view.
 import 'package:tirol_office_app/views/widgets/appbar.dart';
 
 class DepartmentListView extends StatelessWidget {
-  final String title;
-  final User currentUser;
+  //final Object title;
+  //final User currentUser;
 
-  const DepartmentListView({Key key, this.title, this.currentUser})
-      : super(key: key);
+  const DepartmentListView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Map args = ModalRoute.of(context).settings.arguments as Map;
+    String title = args['title'];
     return Scaffold(
       appBar: AppBar(
         title: Text(title),

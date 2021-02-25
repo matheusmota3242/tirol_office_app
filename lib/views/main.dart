@@ -6,6 +6,7 @@ import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
+import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +57,10 @@ class MyApp extends StatelessWidget {
                 fontSize: 15.0,
                 color: Colors.grey[700],
                 fontWeight: FontWeight.w500),
+            bodyText1: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey[700]),
           ),
           appBarTheme: AppBarTheme(
             color: Color(0xFF7999B7),
@@ -66,6 +71,9 @@ class MyApp extends StatelessWidget {
           // closer together (more dense) than on mobile platforms.
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        routes: {
+          'departments': (_) => DepartmentListView(),
+        },
         home: LoginView(),
       ),
     );
