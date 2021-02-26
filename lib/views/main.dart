@@ -44,21 +44,26 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           primaryColor: Color(0xFFBF1E2E),
           buttonColor: Color(0xFF166D97),
+          backgroundColor: Colors.grey[200],
           textTheme: TextTheme(
-            headline6: TextStyle(
+            headline5: TextStyle(
                 fontSize: 18.0,
                 color: Colors.grey[700],
                 fontWeight: FontWeight.w500),
-            subtitle1: TextStyle(
-                fontSize: 17.0,
+            headline6: TextStyle(
+                fontSize: 16.0,
                 color: Colors.grey[700],
                 fontWeight: FontWeight.w500),
-            subtitle2: TextStyle(
+            subtitle1: TextStyle(
                 fontSize: 15.0,
                 color: Colors.grey[700],
                 fontWeight: FontWeight.w500),
+            subtitle2: TextStyle(
+                fontSize: 14.0,
+                color: Colors.grey[700],
+                fontWeight: FontWeight.w500),
             bodyText1: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Colors.grey[700]),
           ),

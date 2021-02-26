@@ -54,12 +54,14 @@ class HomeView extends StatelessWidget {
                         user: _user,
                       ),
                       body: Container(
+                        color: Colors.grey[200],
                         padding: EdgeInsets.all(12.0),
                         child: ListView(
                           children: [
                             Container(
                               height: 132.0,
                               child: Card(
+                                shadowColor: Colors.transparent,
                                 child: Container(
                                   padding: EdgeInsets.all(12.0),
                                   child: Stack(

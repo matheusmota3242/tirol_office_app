@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:tirol_office_app/helpers/equipment_helper.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'dart:math' as math;
 
@@ -188,8 +189,9 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                     ).then((result) {
                       if (result) {
                         Equipment equipment = new Equipment(
-                            _departmentService.equipmentName,
-                            EquipmentStatus.ABLE);
+                          _departmentService.equipmentName,
+                          EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
+                        );
                         setState(() {
                           _departmentService.equipments.add(equipment);
                         });
@@ -299,7 +301,9 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
       onPressed: () {
         if (formKey.currentState.validate()) {
           Equipment equipment = new Equipment(
-              _departmentService.equipmentName, EquipmentStatus.ABLE);
+            _departmentService.equipmentName,
+            EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
+          );
           _departmentService.setCurrentEquipment(equipment);
           Navigator.of(context, rootNavigator: true).pop();
         }
@@ -331,8 +335,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
     _departmentService.department.setEquipments(_departmentService.equipments);
     _departmentService.save();
     Toasts.showToast(content: 'Departamento criado com sucesso!');
-    Navigator.pushNamed(context, RouteHelper.departments,
-        arguments: {'title': 'Departamentos'});
+    Navigator.pop(context);
   }
 
   void cancel() {

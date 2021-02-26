@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/helpers/equipment_helper.dart';
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 
 class DepartmentFormEquipmentItem extends StatelessWidget {
   final String description;
-  final EquipmentStatus status;
+  final String status;
 
   const DepartmentFormEquipmentItem({Key key, this.description, this.status})
       : super(key: key);
@@ -33,7 +34,9 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
                     width: 6.0,
                   ),
                   Text(
-                    status == EquipmentStatus.ABLE
+                    status ==
+                            EquipmentHelper()
+                                .getRoleByEnum(EquipmentStatus.ABLE)
                         ? 'Funcionando'
                         : 'Danificado',
                     style: TextStyle(fontSize: 15.0, color: Colors.grey[700]),
