@@ -71,85 +71,64 @@ class DepartmentListView extends StatelessWidget {
               child: Theme(
                 data: theme.copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
-                  title: Text(
-                    name,
-                    style: theme.textTheme.headline6,
-                  ),
-                  tilePadding: EdgeInsets.all(0),
-                  childrenPadding: EdgeInsets.all(0),
-                  //childrenPadding: EdgeInsets.all(0),
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Text('Equipamentos',
-                          //     style: theme.textTheme.subtitle1),
-
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: equipments.isNotEmpty
-                                  ? equipments
-                                      .map(
-                                        (equipment) => Column(children: [
-                                          // equipment == equipments[0]
-                                          //     ? Container()
-                                          //     : Row(children: [
-                                          //         Expanded(
-                                          //             child: Divider(
-                                          //           color: Colors.grey,
-                                          //         ))
-                                          //       ]),
-                                          Card(
-                                            shadowColor: Colors.transparent,
-                                            child: Container(
-                                              padding: EdgeInsets.all(12.0),
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Text(
-                                                      equipment.getDescription
-                                                          .toString(),
-                                                      style: theme
-                                                          .textTheme.subtitle2,
-                                                      textAlign:
-                                                          TextAlign.start,
+                    title: Text(
+                      name,
+                      style: theme.textTheme.headline6,
+                    ),
+                    tilePadding: EdgeInsets.all(0),
+                    childrenPadding: EdgeInsets.all(0),
+                    //childrenPadding: EdgeInsets.all(0),
+                    children: equipments.isNotEmpty
+                        ? [
+                            Card(
+                              shadowColor: Colors.transparent,
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children:
+                                      // Text('Equipamentos',
+                                      //     style: theme.textTheme.subtitle1),
+                                      equipments
+                                          .map(
+                                            (equipment) => Container(
+                                              padding: equipments.last ==
+                                                      equipment
+                                                  ? EdgeInsets.only(bottom: 0)
+                                                  : EdgeInsets.only(bottom: 12),
+                                              child: Container(
+                                                width: double.maxFinite,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(equipment
+                                                        .getDescription),
+                                                    Icon(
+                                                      Icons.done,
+                                                      color: Colors.green,
                                                     ),
-                                                  ),
-                                                  SizedBox(height: 10.0),
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Text(
-                                                      equipment.getStatus,
-                                                      style: TextStyle(
-                                                          color: Colors.green,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           )
-                                        ]),
-                                      )
-                                      .toList()
-                                  : [
-                                      Text(
-                                        'Não há equipamentos nesse departamento.',
-                                        style:
-                                            TextStyle(color: Colors.grey[700]),
-                                      ),
-                                    ])
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                                          .toList(),
+                                ),
+                              ),
+                            )
+                          ]
+                        : [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Não há equipamentos nesse departamento.',
+                                style: TextStyle(color: Colors.grey[700]),
+                              ),
+                            ),
+                          ]),
               ),
             );
           }),

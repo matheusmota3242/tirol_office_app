@@ -228,8 +228,8 @@ class LoginView extends StatelessWidget {
   }
 
   dynamic login(BuildContext context, AuthService authService) async {
-    var result =
-        await authService.loginWithEmail(email: _email, password: _password);
+    var result = await authService.loginWithEmail(
+        email: _email, password: _password, context: context);
     if (result is bool) {
       if (result) {
         Navigator.of(context).push(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
+import 'package:tirol_office_app/service/qrcode_service.dart';
 
 class Dialogs {
   showScannerErrorDialog(BuildContext context) {
@@ -19,7 +20,7 @@ class Dialogs {
     );
   }
 
-  showCheckinDialog(BuildContext context, String response) {
+  showCheckinDialog(BuildContext context, String response, String username) {
     showDialog(
       context: context,
       child: AlertDialog(
@@ -31,7 +32,10 @@ class Dialogs {
             child: Text('Cancelar'),
           ),
           FlatButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              QRCodeService().save(response, username);
+              Navigator.pop(context);
+            },
             child: Text('Sim'),
           )
         ],

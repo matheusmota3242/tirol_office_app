@@ -45,6 +45,9 @@ abstract class DepartmentServiceBase with Store {
 
   void save() {
     print('Entrou em save()');
-    FirestoreDB().db_departments.add(department.toJson());
+    FirestoreDB()
+        .db_departments
+        .doc(department.getName)
+        .set(department.toJson());
   }
 }
