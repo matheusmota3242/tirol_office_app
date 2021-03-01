@@ -107,7 +107,7 @@ class DepartmentListView extends StatelessWidget {
                                                     Text(equipment
                                                         .getDescription),
                                                     Icon(
-                                                      Icons.done,
+                                                      Icons.check_circle,
                                                       color: Colors.green,
                                                     ),
                                                   ],

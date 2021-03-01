@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/service/qrcode_service.dart';
 
@@ -35,6 +37,29 @@ class Dialogs {
             onPressed: () {
               QRCodeService().save(response, username);
               Navigator.pop(context);
+            },
+            child: Text('Sim'),
+          )
+        ],
+      ),
+    );
+  }
+
+  showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        title: Text('Logout'),
+        content: Text('Tem certeza que deseja sair?'),
+        actions: [
+          RaisedButton(
+            onPressed: () => Navigator.pop(context),
+            color: Colors.red,
+            child: Text('Cancelar'),
+          ),
+          RaisedButton(
+            onPressed: () {
+              Provider.of<AuthService>(context, listen: false).logout(context);
             },
             child: Text('Sim'),
           )

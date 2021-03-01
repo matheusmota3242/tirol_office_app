@@ -5,9 +5,13 @@ class UserService {
   User _user = User();
 
   void setUser(DocumentSnapshot snapshot) {
-    print(snapshot);
     _user.name = snapshot.data()['name'];
     _user.role = snapshot.data()['role'];
+  }
+
+  void cleanUser() {
+    _user.name = null;
+    _user.role = null;
   }
 
   getUser() {

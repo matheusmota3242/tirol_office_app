@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -5,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 
@@ -55,5 +58,12 @@ class AuthService {
       });
     } catch (e) {}
     return result.user != null;
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await _auth.signOut();
+    _userService = Provider.of<UserService>(context, listen: false);
+    _userService.cleanUser();
+    Navigator.pushNamed(context, RouteHelper.login);
   }
 }

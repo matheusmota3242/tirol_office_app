@@ -82,6 +82,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           'departments': (_) => DepartmentListView(),
+          'login': (_) => LoginView()
         },
         home: LoginView(),
       ),

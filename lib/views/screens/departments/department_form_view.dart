@@ -111,7 +111,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                         content: Form(
                           key: _formKey,
                           child: Container(
-                            height: 240.0,
+                            height: 190.0,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -158,33 +158,35 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 30.0),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      cancelButton(context),
-                                      RaisedButton(
-                                        onPressed: () {
-                                          if (_formKey.currentState
-                                              .validate()) {
-                                            Navigator.of(context).pop(true);
-                                          }
-                                        },
-                                        child: Text(
-                                          'Salvar',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                // SizedBox(height: 30.0),
+                                // Container(
+                                //   alignment: Alignment.center,
+                                //   child: Row(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.spaceEvenly,
+                                //     children: [
+
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
                         ),
+                        actions: [
+                          cancelButton(context),
+                          RaisedButton(
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                Navigator.of(context).pop(true);
+                              }
+                            },
+                            child: Text(
+                              'Salvar',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ).then((result) {
                       if (result) {

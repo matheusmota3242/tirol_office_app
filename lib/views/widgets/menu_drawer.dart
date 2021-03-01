@@ -5,6 +5,7 @@ import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
 import 'package:tirol_office_app/views/screens/users/user_list_view.dart';
+import 'package:tirol_office_app/views/widgets/dialogs.dart';
 
 class MenuDrawer extends StatelessWidget {
   final User user;
@@ -79,6 +80,48 @@ class MenuDrawer extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
+              onPressed: () => null,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.miscellaneous_services,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    'Serviços',
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
+              onPressed: () => logout(context),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.logout,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    'Sair',
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
           )
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,5 +143,10 @@ class MenuDrawer extends StatelessWidget {
     String title = 'Departamentos';
     Navigator.pushNamed(context, RouteHelper.departments,
         arguments: {'title': 'Departamentos'});
+  }
+
+  // Logout
+  void logout(BuildContext context) {
+    Dialogs().showLogoutDialog(context);
   }
 }
