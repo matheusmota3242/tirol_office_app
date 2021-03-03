@@ -6,7 +6,7 @@ import 'package:tirol_office_app/service/user_service.dart';
 
 class AppBarWidget extends PreferredSize {
   final String title;
-  final QRCodeService _qrCodeService = QRCodeService();
+  QRCodeService _qrCodeService = QRCodeService();
 
   AppBarWidget(this.title);
 
@@ -15,7 +15,8 @@ class AppBarWidget extends PreferredSize {
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<UserService>(context).getUser();
+    var user = Provider.of<UserService>(context).getUser;
+    _qrCodeService = Provider.of<QRCodeService>(context, listen: false);
     return AppBar(
       //automaticallyImplyLeading: false,
       title: Text(this.title),

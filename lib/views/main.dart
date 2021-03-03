@@ -4,10 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/service/department_service.dart';
+import 'package:tirol_office_app/service/qrcode_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
+import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
+import 'package:tirol_office_app/views/screens/processes/process_details_view.dart';
+import 'package:tirol_office_app/views/screens/users/user_list_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         Provider(
           create: (_) => UserService(),
+        ),
+        Provider(
+          create: (_) => QRCodeService(),
         )
       ],
       child: MaterialApp(
@@ -81,8 +88,11 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         routes: {
+          'login': (_) => LoginView(),
+          'processes': (_) => ProcessListView(),
+          'processDetails': (_) => ProcessDetailsView(),
           'departments': (_) => DepartmentListView(),
-          'login': (_) => LoginView()
+          'users': (_) => UserListView(),
         },
         home: LoginView(),
       ),

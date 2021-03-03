@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 
 import 'package:tirol_office_app/models/user_model.dart';
@@ -9,12 +10,14 @@ import 'package:tirol_office_app/views/widgets/dialogs.dart';
 
 class MenuDrawer extends StatelessWidget {
   final User user;
-  const MenuDrawer({Key key, this.user}) : super(key: key);
+  final String currentPage;
+  const MenuDrawer({Key key, this.user, this.currentPage}) : super(key: key);
   static const double usernameFontSize = 20.0;
   static const double userContainerHeight = 180.0;
 
   @override
   Widget build(BuildContext context) {
+    print(user.name);
     return Drawer(
       child: Column(
         children: [
@@ -41,29 +44,34 @@ class MenuDrawer extends StatelessWidget {
             color: Theme.of(context).appBarTheme.color,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 10.0),
+            padding: EdgeInsets.only(left: 10.0, top: 8.0),
             child: TextButton(
-                onPressed: () => pushToUserListView(context),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.people,
-                      color: Colors.grey[700],
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Text(
-                      'Usuários',
-                      style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
-                    ),
-                  ],
-                )),
+              onPressed: () => currentPage != PageHelper.processes
+                  ? pushToProcessListView(context)
+                  : null,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.qr_code,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    PageHelper.processes,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => pushToDepartmentListView(context),
+              onPressed: () => currentPage != PageHelper.departaments
+                  ? pushToDepartmentListView(context)
+                  : null,
               child: Row(
                 children: [
                   Icon(
@@ -74,12 +82,34 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    'Departamentos',
+                    PageHelper.departaments,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
               ),
             ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
+                onPressed: () => currentPage != PageHelper.users
+                    ? pushToUserListView(context)
+                    : null,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.people,
+                      color: Colors.grey[700],
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      PageHelper.users,
+                      style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                    ),
+                  ],
+                )),
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.0),
@@ -95,7 +125,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    'Serviços',
+                    PageHelper.services,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -130,19 +160,20 @@ class MenuDrawer extends StatelessWidget {
   }
 
   void pushToUserListView(BuildContext context) {
-    String title = 'Usuários';
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserListView(title: title, currentUser: user),
+        builder: (context) => UserListView(currentUser: user),
       ),
     );
   }
 
   void pushToDepartmentListView(BuildContext context) {
-    String title = 'Departamentos';
-    Navigator.pushNamed(context, RouteHelper.departments,
-        arguments: {'title': 'Departamentos'});
+    Navigator.pushNamed(context, RouteHelper.departments);
+  }
+
+  void pushToProcessListView(BuildContext context) {
+    Navigator.pushNamed(context, RouteHelper.processes);
   }
 
   // Logout

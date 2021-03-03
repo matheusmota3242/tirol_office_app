@@ -5,6 +5,8 @@ import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 
 class QRCodeService {
+  Process currentProcess = Process();
+
   // Método que escaneia o QRCode
   void scanQRCode(BuildContext context, String username) async {
     String response = await FlutterBarcodeScanner.scanBarcode(
@@ -25,18 +27,17 @@ class QRCodeService {
     process.setDepartmentId = response;
     process.setStart = DateTime.now();
     process.setResponsible = username;
+    currentProcess = process;
     FirestoreDB()
         .db_processes
         .doc(process.getDepartmentId)
         .get()
         .then((snapshot) {
       if (!snapshot.exists) {
-        FirestoreDB()
-            .db_processes
-            .doc(process.getDepartmentId)
-            .set(process.toJson());
+        FirestoreDB().db_processes.add(process.toJson());
       } else {
         process.setEnd = DateTime.now();
+        currentProcess.setEnd = process.getEnd;
         FirestoreDB()
             .db_processes
             .doc(process.getDepartmentId)

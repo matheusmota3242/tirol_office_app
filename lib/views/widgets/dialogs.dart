@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/service/qrcode_service.dart';
 
@@ -36,7 +37,7 @@ class Dialogs {
           FlatButton(
             onPressed: () {
               QRCodeService().save(response, username);
-              Navigator.pop(context);
+              Navigator.popAndPushNamed(context, RouteHelper.processDetails);
             },
             child: Text('Sim'),
           )

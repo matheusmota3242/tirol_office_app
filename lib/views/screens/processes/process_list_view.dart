@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/models/user_model.dart';
@@ -15,14 +16,15 @@ import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/process_card_item.dart';
 
-class HomeView extends StatelessWidget {
+class ProcessListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String title = 'Home';
+    String title = PageHelper.processes;
     final _authService = Provider.of<AuthService>(context);
     final _userService = Provider.of<UserService>(context);
     final _processes = FirestoreDB().db_processes;
     User _user = User();
+    print('enroui');
     return StreamBuilder(
         stream: _processes.snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -41,7 +43,7 @@ class HomeView extends StatelessWidget {
 
               if (snapshot.connectionState == ConnectionState.active) {
                 if (snapshot.hasData) {
-                  _user = _userService.getUser();
+                  _user = _userService.getUser;
 
                   if (_user.role ==
                       Role().getRoleByEnum(UserRole.WAITING_FOR_APPROVAL)) {
@@ -54,6 +56,7 @@ class HomeView extends StatelessWidget {
                       appBar: AppBarWidget(title),
                       drawer: MenuDrawer(
                         user: _user,
+                        currentPage: title,
                       ),
                       body: Container(
                         color: Colors.grey[200],
@@ -65,6 +68,7 @@ class HomeView extends StatelessWidget {
                             Process process = Process.fromJson(doc);
                             return ProcessCardItem(
                               process: process,
+                              isProcessDetailsView: false,
                             );
                           },
                         ),

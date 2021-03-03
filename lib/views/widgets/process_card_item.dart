@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/helpers/datetime_helper.dart';
+import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 
 class ProcessCardItem extends StatelessWidget {
   final Process process;
+  final bool isProcessDetailsView;
 
-  const ProcessCardItem({Key key, this.process}) : super(key: key);
+  const ProcessCardItem({Key key, this.process, this.isProcessDetailsView})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final DateTimeHelper _dateTimeHelper = DateTimeHelper();
+    final theme = Theme.of(context);
+
     return Container(
       height: 132.0,
       child: Card(
@@ -16,13 +23,20 @@ class ProcessCardItem extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
-                  child: Text(
-                    process.getDepartmentId,
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800]),
-                  ),
+                  child: this.isProcessDetailsView
+                      ? Text(
+                          process.getDepartmentId,
+                          style: theme.textTheme.headline5,
+                        )
+                      : GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, RouteHelper.processDetails,
+                              arguments: {'process': process}),
+                          child: Text(
+                            process.getDepartmentId,
+                            style: theme.textTheme.headline5,
+                          ),
+                        ),
                   top: 0,
                   left: 0),
               Positioned(
@@ -46,21 +60,26 @@ class ProcessCardItem extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey[800]),
+                          color: Colors.grey[700]),
                     ),
                     SizedBox(
                       width: 6.0,
                     ),
-                    Text(
-                      process.start.hour.toString() +
-                          ':' +
-                          process.start.minute.toString() +
-                          " | " +
-                          process.end?.hour.toString() +
-                          ":" +
-                          process.end?.minute.toString(),
-                      style: TextStyle(fontSize: 15.0, color: Colors.grey[800]),
-                    ),
+                    process.getEnd != null
+                        ? Text(
+                            '${_dateTimeHelper.formatTime(process.getStart)} | ${_dateTimeHelper.formatTime(process.getEnd)}',
+                            style: theme.textTheme.bodyText1,
+                            // process.start.hour.toString() +
+                            //     ':' +
+                            //     process.start.minute.toString() +
+                            //     " | " +
+                            //     process.end?.hour.toString() +
+                            //     ":" +
+                            //     process.end?.minute.toString(),
+                          )
+                        : Text(
+                            '${_dateTimeHelper.formatTime(process.getStart)} | --:--',
+                            style: theme.textTheme.bodyText1),
                   ],
                 ),
                 top: 40.0,
@@ -73,14 +92,14 @@ class ProcessCardItem extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey[800]),
+                          color: Colors.grey[700]),
                     ),
                     SizedBox(
                       width: 6.0,
                     ),
                     Text(
                       process.getResponsible,
-                      style: TextStyle(fontSize: 15.0, color: Colors.grey[800]),
+                      style: theme.textTheme.bodyText1,
                     ),
                   ],
                 ),

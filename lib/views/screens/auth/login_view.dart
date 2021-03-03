@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/helpers/auth_helper.dart';
+import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/views/screens/auth/forgot_password_view.dart';
 import 'package:tirol_office_app/views/screens/auth/register_view.dart';
-import 'package:tirol_office_app/views/screens/home_view.dart';
+import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class LoginView extends StatelessWidget {
@@ -232,11 +233,7 @@ class LoginView extends StatelessWidget {
         email: _email, password: _password, context: context);
     if (result is bool) {
       if (result) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => HomeView(),
-          ),
-        );
+        Navigator.pushNamed(context, RouteHelper.processes);
       } else {
         Toasts.showToast(content: "E-mail ou senha inválida");
       }

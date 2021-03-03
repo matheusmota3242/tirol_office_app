@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/user_model.dart';
+import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
@@ -10,16 +13,16 @@ import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class UserListView extends StatelessWidget {
-  final String title;
   final User currentUser;
   final _users = FirestoreDB().db_users;
 
-  UserListView({Key key, this.currentUser, this.title}) : super(key: key);
+  UserListView({Key key, this.currentUser}) : super(key: key);
 
   var choices = <String>['Alterar papel do usuário'];
 
   @override
   Widget build(BuildContext context) {
+    final title = PageHelper.users;
     return StreamBuilder(
       stream: _users.snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -33,6 +36,10 @@ class UserListView extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: Text(title),
+              ),
+              drawer: MenuDrawer(
+                user: Provider.of<UserService>(context).getUser,
+                currentPage: title,
               ),
               body: setBody(context, snapshot),
             );

@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/service/user_service.dart';
 
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
+import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class DepartmentListView extends StatelessWidget {
   //final Object title;
@@ -15,8 +19,7 @@ class DepartmentListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map args = ModalRoute.of(context).settings.arguments as Map;
-    String title = args['title'];
+    String title = PageHelper.departaments;
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -28,6 +31,10 @@ class DepartmentListView extends StatelessWidget {
             ),
           )
         ],
+      ),
+      drawer: MenuDrawer(
+        user: Provider.of<UserService>(context).getUser,
+        currentPage: title,
       ),
       body: StreamBuilder(
         stream: FirestoreDB().db_departments.snapshots(),

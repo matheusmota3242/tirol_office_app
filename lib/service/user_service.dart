@@ -14,7 +14,5 @@ class UserService {
     _user.role = null;
   }
 
-  getUser() {
-    return _user;
-  }
+  get getUser => _user;
 }
