@@ -17,5 +17,5 @@ class Equipment {
         status = json['status'];
 
   Map<String, dynamic> toJson() =>
-      {'description': description, 'status': status.toString()};
+      {'description': description, 'status': status};
 }

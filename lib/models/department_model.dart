@@ -3,27 +3,33 @@ import 'dart:convert';
 import 'equipment_model.dart';
 
 class Department {
-  String name;
-  List<Equipment> equipments;
+  String _name;
+  List<Equipment> _equipments;
+  bool _needsAttention;
 
-  Department();
+  Department() {
+    _needsAttention = false;
+  }
 
-  String get getName => name;
-  setName(String name) => this.name = name;
+  String get name => _name;
+  setName(String name) => this._name = name;
 
-  List get getEquipments => equipments;
-  setEquipments(List equipments) => this.equipments = equipments;
+  List get equipments => _equipments;
+  set equipments(List equipments) => this._equipments = equipments;
+
+  bool get needsAttention => this._needsAttention;
+  set needsAttention(bool needsAttention) =>
+      this._needsAttention = needsAttention;
 
   Department.fromJson(Map<String, dynamic> data)
-      : name = data['name'],
-        equipments = List<Equipment>.from(
-          data['equipments'].map(
-            (equipment) => Equipment.fromJson(equipment),
-          ),
-        );
+      : _name = data['name'],
+        _equipments = List<Equipment>.from(data['equipments']
+            .map((equipment) => Equipment.fromJson(equipment))),
+        _needsAttention = data['needsAttention'];
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'equipments': equipments.map((e) => e.toJson()).toList(),
+        'name': _name,
+        'equipments': _equipments.map((e) => e.toJson()).toList(),
+        'needsAttention': _needsAttention
       };
 }

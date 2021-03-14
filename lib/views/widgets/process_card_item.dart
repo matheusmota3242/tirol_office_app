@@ -105,13 +105,6 @@ class ProcessCardItem extends StatelessWidget {
                 ),
                 top: 80.0,
               ),
-              Positioned(
-                  child: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {},
-                  ),
-                  right: 0,
-                  top: 22.0)
             ],
           ),
         ),

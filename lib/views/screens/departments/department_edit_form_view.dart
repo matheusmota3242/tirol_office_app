@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/helpers/equipment_helper.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
+import 'package:tirol_office_app/models/department_model.dart';
 import 'dart:math' as math;
 
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
@@ -11,11 +12,15 @@ import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
-class DepartmentFormView extends StatefulWidget {
-  _DepartmentFormViewState createState() => _DepartmentFormViewState();
+class DepartmentEditFormView extends StatefulWidget {
+  final Department department;
+
+  const DepartmentEditFormView({Key key, @required this.department})
+      : super(key: key);
+  _DepartmentEditFormViewState createState() => _DepartmentEditFormViewState();
 }
 
-class _DepartmentFormViewState extends State<DepartmentFormView>
+class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
     with TickerProviderStateMixin {
   //var equipmentStatus;
   var _departmentService = DepartmentService();
@@ -34,9 +39,10 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
   @override
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
+    _departmentService.setCurrentDepartment(widget.department);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo departamento'),
+        title: Text('Editar departamento'),
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
@@ -207,7 +213,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
             ),
             Observer(
               builder: (_) => Container(
-                child: _departmentService.equipments.isEmpty
+                child: _departmentService.currentDepartment.equipments.isEmpty
                     ? Row(
                         children: [
                           Text(
@@ -218,13 +224,15 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                       )
                     : ListView.builder(
                         shrinkWrap: true,
-                        itemCount: _departmentService.equipments.length,
+                        itemCount: _departmentService
+                            .currentDepartment.equipments.length,
                         itemBuilder: (context, index) {
-                          var department = _departmentService.equipments[index];
+                          var equipment = _departmentService
+                              .currentDepartment.equipments[index];
 
                           return DepartmentFormEquipmentItem(
-                            description: department.description,
-                            status: department.status,
+                            description: equipment.description,
+                            status: equipment.status,
                           );
                         },
                       ),
@@ -286,7 +294,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
               fontWeight: FontWeight.w600),
           filled: true,
           counterStyle: TextStyle(color: Colors.red),
-          hintText: 'Nome',
+          hintText: widget.department.name,
           contentPadding: EdgeInsets.only(
             left: 10.0,
           ),

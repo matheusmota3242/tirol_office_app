@@ -9,13 +9,13 @@ part of 'department_service.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$DepartmentService on DepartmentServiceBase, Store {
-  Computed<dynamic> _$getDepartmentComputed;
+  Computed<dynamic> _$currentDepartmentComputed;
 
   @override
-  dynamic get getDepartment =>
-      (_$getDepartmentComputed ??= Computed<dynamic>(() => super.getDepartment,
-              name: 'DepartmentServiceBase.getDepartment'))
-          .value;
+  dynamic get currentDepartment => (_$currentDepartmentComputed ??=
+          Computed<dynamic>(() => super.currentDepartment,
+              name: 'DepartmentServiceBase.currentDepartment'))
+      .value;
   Computed<dynamic> _$getCurrentEquipmentComputed;
 
   @override
@@ -31,18 +31,19 @@ mixin _$DepartmentService on DepartmentServiceBase, Store {
               name: 'DepartmentServiceBase.getEquipmentStatus'))
       .value;
 
-  final _$departmentAtom = Atom(name: 'DepartmentServiceBase.department');
+  final _$_currentDepartmentAtom =
+      Atom(name: 'DepartmentServiceBase._currentDepartment');
 
   @override
-  Department get department {
-    _$departmentAtom.reportRead();
-    return super.department;
+  Department get _currentDepartment {
+    _$_currentDepartmentAtom.reportRead();
+    return super._currentDepartment;
   }
 
   @override
-  set department(Department value) {
-    _$departmentAtom.reportWrite(value, super.department, () {
-      super.department = value;
+  set _currentDepartment(Department value) {
+    _$_currentDepartmentAtom.reportWrite(value, super._currentDepartment, () {
+      super._currentDepartment = value;
     });
   }
 
@@ -82,11 +83,11 @@ mixin _$DepartmentService on DepartmentServiceBase, Store {
       ActionController(name: 'DepartmentServiceBase');
 
   @override
-  dynamic setDepartment(Department department) {
+  void setCurrentDepartment(Department department) {
     final _$actionInfo = _$DepartmentServiceBaseActionController.startAction(
-        name: 'DepartmentServiceBase.setDepartment');
+        name: 'DepartmentServiceBase.setCurrentDepartment');
     try {
-      return super.setDepartment(department);
+      return super.setCurrentDepartment(department);
     } finally {
       _$DepartmentServiceBaseActionController.endAction(_$actionInfo);
     }
@@ -117,10 +118,9 @@ mixin _$DepartmentService on DepartmentServiceBase, Store {
   @override
   String toString() {
     return '''
-department: ${department},
 currentEquipment: ${currentEquipment},
 equipmentStatus: ${equipmentStatus},
-getDepartment: ${getDepartment},
+currentDepartment: ${currentDepartment},
 getCurrentEquipment: ${getCurrentEquipment},
 getEquipmentStatus: ${getEquipmentStatus}
     ''';

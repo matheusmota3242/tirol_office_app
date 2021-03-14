@@ -5,4 +5,10 @@ class DateTimeHelper {
     DateFormat formatter = DateFormat("Hm");
     return formatter.format(dateTime);
   }
+
+  String generateProcessDateForId(DateTime dateTime) {
+    return dateTime.day.toString() +
+        dateTime.month.toString() +
+        dateTime.year.toString();
+  }
 }

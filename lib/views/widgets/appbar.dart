@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/service/qrcode_service.dart';
+import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 
 class AppBarWidget extends PreferredSize {
   final String title;
-  QRCodeService _qrCodeService = QRCodeService();
+  ProcessService _ProcessService = ProcessService();
 
   AppBarWidget(this.title);
 
@@ -16,7 +16,7 @@ class AppBarWidget extends PreferredSize {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserService>(context).getUser;
-    _qrCodeService = Provider.of<QRCodeService>(context, listen: false);
+    _ProcessService = Provider.of<ProcessService>(context, listen: false);
     return AppBar(
       //automaticallyImplyLeading: false,
       title: Text(this.title),
@@ -25,7 +25,7 @@ class AppBarWidget extends PreferredSize {
         IconButton(icon: Icon(Icons.date_range), onPressed: () {}),
         IconButton(
           icon: Icon(Icons.qr_code),
-          onPressed: () => _qrCodeService.scanQRCode(context, user.name),
+          onPressed: () => _ProcessService.scanQRCode(context, user.name),
         ),
       ],
     );

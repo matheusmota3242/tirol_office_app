@@ -9,6 +9,8 @@ import 'package:tirol_office_app/service/user_service.dart';
 
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
+import 'package:tirol_office_app/views/screens/loading_view.dart';
+import 'package:tirol_office_app/views/widgets/department_card_item.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class DepartmentListView extends StatelessWidget {
@@ -41,9 +43,7 @@ class DepartmentListView extends StatelessWidget {
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingView();
               break;
             default:
               return setBody(context, snapshot);
@@ -72,71 +72,9 @@ class DepartmentListView extends StatelessWidget {
             String name = docs[index]['name'];
             var data = docs[index].data();
             Department department = Department.fromJson(data);
-            List<Equipment> equipments = department.getEquipments;
-            return ListTileTheme(
-              contentPadding: EdgeInsets.all(0),
-              child: Theme(
-                data: theme.copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
-                    title: Text(
-                      name,
-                      style: theme.textTheme.headline6,
-                    ),
-                    tilePadding: EdgeInsets.all(0),
-                    childrenPadding: EdgeInsets.all(0),
-                    //childrenPadding: EdgeInsets.all(0),
-                    children: equipments.isNotEmpty
-                        ? [
-                            Card(
-                              shadowColor: Colors.transparent,
-                              child: Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children:
-                                      // Text('Equipamentos',
-                                      //     style: theme.textTheme.subtitle1),
-                                      equipments
-                                          .map(
-                                            (equipment) => Container(
-                                              padding: equipments.last ==
-                                                      equipment
-                                                  ? EdgeInsets.only(bottom: 0)
-                                                  : EdgeInsets.only(bottom: 12),
-                                              child: Container(
-                                                width: double.maxFinite,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(equipment
-                                                        .getDescription),
-                                                    Icon(
-                                                      Icons.check_circle,
-                                                      color: Colors.green,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                              ),
-                            )
-                          ]
-                        : [
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Não há equipamentos nesse departamento.',
-                                style: TextStyle(color: Colors.grey[700]),
-                              ),
-                            ),
-                          ]),
-              ),
+
+            return DepartmentCardItem(
+              department: department,
             );
           }),
     );

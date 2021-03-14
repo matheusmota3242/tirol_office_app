@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/service/department_service.dart';
-import 'package:tirol_office_app/service/qrcode_service.dart';
+import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           create: (_) => UserService(),
         ),
         Provider(
-          create: (_) => QRCodeService(),
+          create: (_) => ProcessService(),
         )
       ],
       child: MaterialApp(

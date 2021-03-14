@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
@@ -9,6 +10,7 @@ import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/users/waiting_for_approval_view.dart';
@@ -61,17 +63,19 @@ class ProcessListView extends StatelessWidget {
                       body: Container(
                         color: Colors.grey[200],
                         padding: EdgeInsets.all(12.0),
-                        child: ListView.builder(
-                          itemCount: _docs.length,
-                          itemBuilder: (context, index) {
-                            var doc = _docs[index].data();
-                            Process process = Process.fromJson(doc);
-                            return ProcessCardItem(
-                              process: process,
-                              isProcessDetailsView: false,
-                            );
-                          },
-                        ),
+                        child: _docs.isEmpty
+                            ? EmptyView()
+                            : ListView.builder(
+                                itemCount: _docs.length,
+                                itemBuilder: (context, index) {
+                                  var doc = _docs[index].data();
+                                  Process process = Process.fromJson(doc);
+                                  return ProcessCardItem(
+                                    process: process,
+                                    isProcessDetailsView: false,
+                                  );
+                                },
+                              ),
                       ),
                     );
                   } else {

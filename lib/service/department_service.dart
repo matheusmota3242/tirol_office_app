@@ -10,13 +10,14 @@ class DepartmentService = DepartmentServiceBase with _$DepartmentService;
 
 abstract class DepartmentServiceBase with Store {
   @observable
-  Department department = Department();
+  Department _currentDepartment = Department();
 
   @computed
-  get getDepartment => department;
+  get currentDepartment => _currentDepartment;
 
   @action
-  setDepartment(Department department) => this.department = department;
+  void setCurrentDepartment(Department department) =>
+      this._currentDepartment = department;
 
   @observable
   Equipment currentEquipment;
@@ -47,7 +48,7 @@ abstract class DepartmentServiceBase with Store {
     print('Entrou em save()');
     FirestoreDB()
         .db_departments
-        .doc(department.getName)
-        .set(department.toJson());
+        .doc(currentDepartment.name)
+        .set(currentDepartment.toJson());
   }
 }
