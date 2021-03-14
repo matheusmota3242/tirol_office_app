@@ -231,8 +231,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
                               .currentDepartment.equipments[index];
 
                           return DepartmentFormEquipmentItem(
-                            description: equipment.description,
-                            status: equipment.status,
+                            equipment: equipment,
                           );
                         },
                       ),
@@ -260,14 +259,14 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
         keyboardType: TextInputType.name,
         decoration: InputDecoration(
           alignLabelWithHint: true,
-          labelText: 'Nome',
+          labelText: 'Descrição',
           labelStyle: TextStyle(
               color: Colors.grey[800],
               height: 0.9,
               fontWeight: FontWeight.w600),
           filled: true,
           counterStyle: TextStyle(color: Colors.red),
-          hintText: 'Nome',
+          hintText: 'Descrição',
           contentPadding: EdgeInsets.only(
             left: 10.0,
           ),
@@ -281,10 +280,13 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
 
   // Campo nome do deprtamento a ser adicionado
   Widget departmentNameField() {
+    TextEditingController controller =
+        TextEditingController(text: widget.department.name);
     return Container(
       child: TextFormField(
         onChanged: (value) =>
             _departmentService.currentDepartment.setName(value.trim()),
+        controller: controller,
         decoration: InputDecoration(
           alignLabelWithHint: true,
           labelText: 'Nome',
@@ -294,7 +296,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
               fontWeight: FontWeight.w600),
           filled: true,
           counterStyle: TextStyle(color: Colors.red),
-          hintText: widget.department.name,
+          hintText: 'Nome',
           contentPadding: EdgeInsets.only(
             left: 10.0,
           ),

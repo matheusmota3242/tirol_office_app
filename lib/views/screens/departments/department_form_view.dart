@@ -220,11 +220,10 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                         shrinkWrap: true,
                         itemCount: _departmentService.equipments.length,
                         itemBuilder: (context, index) {
-                          var department = _departmentService.equipments[index];
+                          var equipment = _departmentService.equipments[index];
 
                           return DepartmentFormEquipmentItem(
-                            description: department.description,
-                            status: department.status,
+                            equipment: equipment,
                           );
                         },
                       ),
@@ -252,14 +251,14 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
         keyboardType: TextInputType.name,
         decoration: InputDecoration(
           alignLabelWithHint: true,
-          labelText: 'Nome',
+          labelText: 'Descrição',
           labelStyle: TextStyle(
               color: Colors.grey[800],
               height: 0.9,
               fontWeight: FontWeight.w600),
           filled: true,
           counterStyle: TextStyle(color: Colors.red),
-          hintText: 'Nome',
+          hintText: 'Descrição',
           contentPadding: EdgeInsets.only(
             left: 10.0,
           ),
