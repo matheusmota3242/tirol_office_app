@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/screens/departments/department_edit_form_view.dart';
 
 class DepartmentCardItem extends StatefulWidget {
@@ -97,6 +99,9 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
   }
 
   void handleChoice(String choice) {
+    Provider.of<DepartmentService>(context, listen: false).editedDepartment =
+        widget.department;
+
     if (choice == 'Editar') {
       Navigator.push(
         context,

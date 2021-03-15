@@ -23,9 +23,11 @@ class DepartmentEditFormView extends StatefulWidget {
 class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
     with TickerProviderStateMixin {
   //var equipmentStatus;
-  var _departmentService = DepartmentService();
+
   AnimationController _animationController;
   var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
+
+  // Configurações do FabIcon animado
   static const List<IconData> fabIcons = const [Icons.done, Icons.close];
   static const List<Color> fabIconsColors = const [Colors.green, Colors.red];
 
@@ -39,7 +41,122 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
   @override
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
+    var _departmentService =
+        Provider.of<DepartmentService>(context, listen: false);
     _departmentService.setCurrentDepartment(widget.department);
+    String tempName = widget.department.name;
+
+    // Campo nome do deprtamento a ser adicionado
+    Widget departmentNameField() {
+      TextEditingController controller =
+          TextEditingController(text: widget.department.name);
+      return Container(
+        child: TextFormField(
+          onChanged: (value) => tempName = value,
+          controller: controller,
+          decoration: InputDecoration(
+            alignLabelWithHint: true,
+            labelText: 'Nome',
+            labelStyle: TextStyle(
+                color: Colors.grey[700],
+                height: 0.9,
+                fontWeight: FontWeight.w600),
+            filled: true,
+            counterStyle: TextStyle(color: Colors.red),
+            hintText: 'Nome',
+            contentPadding: EdgeInsets.only(
+              left: 10.0,
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Seleciona o status do equipamento a ser adicionado
+    selectStatusEquipment(String value) {
+      _departmentService.setEquipmentStatus(value);
+    }
+
+    setEquipmentName(String value) {
+      _departmentService.setEquipmentName(value);
+    }
+
+    // Campo nome do equipamento a ser adicionado ao deprtamento
+    Widget equipmentNameField() {
+      return Container(
+        child: TextFormField(
+          validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
+          onChanged: (value) => setEquipmentName(value.trim()),
+          keyboardType: TextInputType.name,
+          decoration: InputDecoration(
+            alignLabelWithHint: true,
+            labelText: 'Descrição',
+            labelStyle: TextStyle(
+                color: Colors.grey[800],
+                height: 0.9,
+                fontWeight: FontWeight.w600),
+            filled: true,
+            counterStyle: TextStyle(color: Colors.red),
+            hintText: 'Descrição',
+            contentPadding: EdgeInsets.only(
+              left: 10.0,
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget submitButton(GlobalKey<FormState> formKey, BuildContext context) {
+      return RaisedButton(
+        onPressed: () {
+          if (formKey.currentState.validate()) {
+            Equipment equipment = new Equipment(
+              _departmentService.equipmentName,
+              EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
+            );
+            _departmentService.setCurrentEquipment(equipment);
+            Navigator.of(context, rootNavigator: true).pop();
+          }
+        },
+        child: Text(
+          'Salvar',
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
+
+    Widget cancelButton(BuildContext context) {
+      return RaisedButton(
+        color: Colors.red,
+        onPressed: () => Navigator.pop(context),
+        child: Text(
+          'Cancelar',
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
+
+    void update() {
+      _departmentService.editedDepartment.setName(tempName);
+      _departmentService.update();
+      Toasts.showToast(content: 'Departamento atualizado com sucesso!');
+      Navigator.pop(context);
+    }
+
+    void cancel() {
+      _departmentService.setCurrentDepartment(null);
+      _departmentService.equipments.clear();
+      _departmentService.setEquipmentName('');
+      _departmentService.setEquipmentStatus(null);
+      Navigator.pop(context);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Editar departamento'),
@@ -62,7 +179,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
                 backgroundColor: fabIconsColors[index],
                 mini: true,
                 child: Icon(fabIcons[index], color: Colors.white),
-                onPressed: () => index == 0 ? saveDepartment() : cancel(),
+                onPressed: () => index == 0 ? update() : cancel(),
               ),
             ),
           );
@@ -229,7 +346,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
                         itemBuilder: (context, index) {
                           var equipment = _departmentService
                               .currentDepartment.equipments[index];
-
+                          equipment.id = index;
                           return DepartmentFormEquipmentItem(
                             equipment: equipment,
                           );
@@ -244,118 +361,4 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
   }
 
   void addEquipmentDialog(BuildContext context) {}
-
-  // Seleciona o status do equipamento a ser adicionado
-  selectStatusEquipment(String value) {
-    _departmentService.setEquipmentStatus(value);
-  }
-
-  // Campo nome do equipamento a ser adicionado ao deprtamento
-  Widget equipmentNameField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
-        onChanged: (value) => setEquipmentName(value.trim()),
-        keyboardType: TextInputType.name,
-        decoration: InputDecoration(
-          alignLabelWithHint: true,
-          labelText: 'Descrição',
-          labelStyle: TextStyle(
-              color: Colors.grey[800],
-              height: 0.9,
-              fontWeight: FontWeight.w600),
-          filled: true,
-          counterStyle: TextStyle(color: Colors.red),
-          hintText: 'Descrição',
-          contentPadding: EdgeInsets.only(
-            left: 10.0,
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Campo nome do deprtamento a ser adicionado
-  Widget departmentNameField() {
-    TextEditingController controller =
-        TextEditingController(text: widget.department.name);
-    return Container(
-      child: TextFormField(
-        onChanged: (value) =>
-            _departmentService.currentDepartment.setName(value.trim()),
-        controller: controller,
-        decoration: InputDecoration(
-          alignLabelWithHint: true,
-          labelText: 'Nome',
-          labelStyle: TextStyle(
-              color: Colors.grey[700],
-              height: 0.9,
-              fontWeight: FontWeight.w600),
-          filled: true,
-          counterStyle: TextStyle(color: Colors.red),
-          hintText: 'Nome',
-          contentPadding: EdgeInsets.only(
-            left: 10.0,
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget submitButton(GlobalKey<FormState> formKey, BuildContext context) {
-    return RaisedButton(
-      onPressed: () {
-        if (formKey.currentState.validate()) {
-          Equipment equipment = new Equipment(
-            _departmentService.equipmentName,
-            EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
-          );
-          _departmentService.setCurrentEquipment(equipment);
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      },
-      child: Text(
-        'Salvar',
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-  }
-
-  Widget cancelButton(BuildContext context) {
-    return RaisedButton(
-      color: Colors.red,
-      onPressed: () => Navigator.pop(context),
-      child: Text(
-        'Cancelar',
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-  }
-
-  setEquipmentName(String value) {
-    _departmentService.setEquipmentName(value);
-  }
-
-  void saveDepartment() {
-    print("Entrou");
-    _departmentService.currentDepartment.equipments =
-        _departmentService.equipments;
-    _departmentService.save();
-    Toasts.showToast(content: 'Departamento criado com sucesso!');
-    Navigator.pop(context);
-  }
-
-  void cancel() {
-    _departmentService.setCurrentDepartment(null);
-    _departmentService.equipments.clear();
-    _departmentService.setEquipmentName('');
-    _departmentService.setEquipmentStatus(null);
-    Navigator.pop(context);
-  }
 }

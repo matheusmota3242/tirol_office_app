@@ -1,33 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 import 'package:tirol_office_app/helpers/equipment_helper.dart';
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/equipment_sevice.dart';
 
-class DepartmentFormEquipmentItem extends StatelessWidget {
+class DepartmentFormEquipmentItem extends StatefulWidget {
   final Equipment equipment;
 
   const DepartmentFormEquipmentItem({Key key, @required this.equipment})
       : super(key: key);
+
+  @override
+  _DepartmentFormEquipmentItem createState() => _DepartmentFormEquipmentItem();
+}
+
+class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
   @override
   Widget build(BuildContext context) {
     final EquipmentService _service = EquipmentService();
-    _service.currentEquipment = equipment;
+    var _departmentService =
 
+        // Service recebe equipamento do componente
+        _service.currentEquipment = widget.equipment;
+
+    // Lista com opções do menu
     var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
 
-    void setEquipmentName(String value) {
-      _service.currentEquipment.setDescription(value);
+    // Variáveis que guardam valores temporários
+    String descriptionTemp = widget.equipment.getDescription;
+    String statusTemp = widget.equipment.getStatus;
+
+    // Atribui nova descrição ao equipamento do service
+    void setEquipmentDescription(String value) {
+      widget.equipment.setDescription = value;
+      //_service.currentEquipment.setDescription(value);
     }
 
-    void selectEquipmentStatus(String value) {
-      _service.currentEquipment.setStatus(value);
+    // Atribui novo status ao equipamento do service
+    void setEquipmentStatus(String value) {
+      widget.equipment.setStatus = value;
     }
 
+    // Botão de cancelar modal
     Widget cancelButton(BuildContext context) {
-      return RaisedButton(
-        color: Colors.red,
+      return ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+        ),
         onPressed: () => Navigator.pop(context),
         child: Text(
           'Cancelar',
@@ -36,13 +58,14 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
       );
     }
 
-    Widget equipmentNameField(String description) {
+    // Campo descrição do equipamento
+    Widget equipmentDescriptionField(String description) {
       TextEditingController controller =
           TextEditingController(text: description);
       return Container(
         child: TextFormField(
           validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
-          onChanged: (value) => setEquipmentName(value.trim()),
+          onChanged: (value) => descriptionTemp = value.trim(),
           controller: controller,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
@@ -66,6 +89,7 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
       );
     }
 
+    // Abre modal de edição
     void edit(Equipment equipment) {
       final _formKey = GlobalKey<FormState>();
 
@@ -80,7 +104,7 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  equipmentNameField(equipment.getDescription),
+                  equipmentDescriptionField(equipment.getDescription),
                   SizedBox(
                     height: 30.0,
                   ),
@@ -103,21 +127,17 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
                     ),
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: 3.0),
-                    child: Observer(
-                      builder: (_) => DropdownButton<String>(
-                        underline: SizedBox(),
-                        isExpanded: true,
-                        value: _service.currentEquipment.getStatus,
-                        onChanged: (value) {
-                          selectEquipmentStatus(value);
-                        },
-                        items: equipmentStatusOptions.map((value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
+                    child: DropdownButton<String>(
+                      underline: SizedBox(),
+                      isExpanded: true,
+                      value: equipment.getStatus,
+                      onChanged: (value) => statusTemp = value,
+                      items: equipmentStatusOptions.map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
                   // SizedBox(height: 30.0),
@@ -137,10 +157,16 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
           ),
           actions: [
             cancelButton(context),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  Navigator.of(context).pop(true);
+                  setState(() {
+                    setEquipmentDescription(descriptionTemp);
+                    setEquipmentStatus(statusTemp);
+                    Provider.of<DepartmentService>(context, listen: false)
+                        .modifyEquipment(widget.equipment);
+                    Navigator.of(context).pop(true);
+                  });
                 }
               },
               child: Text(
@@ -150,11 +176,11 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
             ),
           ],
         ),
-      ).then((result) {
-        if (result) {
-          String val = EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE);
-        }
-      });
+      );
+    }
+
+    void handleChoice(String value) {
+      if (value == 'Editar') edit(widget.equipment);
     }
 
     var themeData = Theme.of(context);
@@ -165,7 +191,7 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              child: Text(equipment.getDescription,
+              child: Text(widget.equipment.getDescription,
                   style: Theme.of(context).textTheme.headline6),
             ),
             Positioned(
@@ -181,7 +207,7 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
                     width: 6.0,
                   ),
                   Text(
-                    equipment.getStatus ==
+                    widget.equipment.getStatus ==
                             EquipmentHelper()
                                 .getRoleByEnum(EquipmentStatus.ABLE)
                         ? 'Funcionando'
@@ -194,10 +220,22 @@ class DepartmentFormEquipmentItem extends StatelessWidget {
             Positioned(
               right: 0,
               top: 9.0,
-              child: IconButton(
-                onPressed: () => edit(equipment),
-                icon: Icon(Icons.more_vert),
+              child: PopupMenuButton(
+                onSelected: (value) => handleChoice(value),
+                padding: EdgeInsets.all(0),
+                itemBuilder: (_) => ['Editar']
+                    .map(
+                      (choice) => PopupMenuItem<String>(
+                        child: Text(choice),
+                        value: choice,
+                      ),
+                    )
+                    .toList(),
               ),
+              // child: IconButton(
+              //   onPressed: () {edit(equipment)},
+              //   icon: Icon(Icons.more_vert),
+              // ),
             ),
           ],
         ),

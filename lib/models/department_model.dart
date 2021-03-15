@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'equipment_model.dart';
 
 class Department {
+  String _id;
+
   String _name;
   List<Equipment> _equipments;
   bool _needsAttention;
@@ -10,6 +12,9 @@ class Department {
   Department() {
     _needsAttention = false;
   }
+
+  String get id => this._id;
+  set id(String value) => this._id = value;
 
   String get name => _name;
   setName(String name) => this._name = name;

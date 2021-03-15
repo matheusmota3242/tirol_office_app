@@ -9,6 +9,11 @@ part 'department_service.g.dart';
 class DepartmentService = DepartmentServiceBase with _$DepartmentService;
 
 abstract class DepartmentServiceBase with Store {
+  Department _editedDepartment;
+
+  Department get editedDepartment => this._editedDepartment;
+  set editedDepartment(Department value) => this._editedDepartment = value;
+
   @observable
   Department _currentDepartment = Department();
 
@@ -50,5 +55,19 @@ abstract class DepartmentServiceBase with Store {
         .db_departments
         .doc(currentDepartment.name)
         .set(currentDepartment.toJson());
+  }
+
+  void update() {
+    FirestoreDB().db_departments.doc(editedDepartment.id).update(
+          editedDepartment.toJson(),
+        );
+  }
+
+  void modifyEquipment(Equipment editedEquipment) {
+    _editedDepartment.equipments.forEach((element) {
+      if (element.getId == editedEquipment.getId && editedDepartment != null) {
+        element = editedEquipment;
+      }
+    });
   }
 }

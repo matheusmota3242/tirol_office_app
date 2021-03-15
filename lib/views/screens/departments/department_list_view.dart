@@ -72,7 +72,7 @@ class DepartmentListView extends StatelessWidget {
             String name = docs[index]['name'];
             var data = docs[index].data();
             Department department = Department.fromJson(data);
-
+            department.id = docs[index].id;
             return DepartmentCardItem(
               department: department,
             );
