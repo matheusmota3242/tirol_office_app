@@ -9,8 +9,10 @@ import 'package:tirol_office_app/service/equipment_sevice.dart';
 
 class DepartmentFormEquipmentItem extends StatefulWidget {
   final Equipment equipment;
+  final bool editing;
 
-  const DepartmentFormEquipmentItem({Key key, @required this.equipment})
+  const DepartmentFormEquipmentItem(
+      {Key key, @required this.equipment, this.editing})
       : super(key: key);
 
   @override
@@ -130,8 +132,11 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                     child: DropdownButton<String>(
                       underline: SizedBox(),
                       isExpanded: true,
-                      value: equipment.getStatus,
-                      onChanged: (value) => statusTemp = value,
+                      value: statusTemp,
+                      onChanged: (value) {
+                        print(value);
+                        statusTemp = value;
+                      },
                       items: equipmentStatusOptions.map((value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -161,10 +166,15 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   setState(() {
-                    setEquipmentDescription(descriptionTemp);
-                    setEquipmentStatus(statusTemp);
-                    Provider.of<DepartmentService>(context, listen: false)
-                        .modifyEquipment(widget.equipment);
+                    if (widget.editing) {
+                      setEquipmentDescription(descriptionTemp);
+                      setEquipmentStatus(statusTemp);
+                      Provider.of<DepartmentService>(context, listen: false)
+                          .modifyEquipment(widget.equipment);
+                    } else {
+                      widget.equipment.setDescription = descriptionTemp;
+                      widget.equipment.setStatus = statusTemp;
+                    }
                     Navigator.of(context).pop(true);
                   });
                 }

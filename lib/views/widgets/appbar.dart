@@ -20,7 +20,8 @@ class AppBarWidget extends PreferredSize {
     return AppBar(
       //automaticallyImplyLeading: false,
       title: Text(this.title),
-      backgroundColor: Theme.of(context).appBarTheme.color,
+      backgroundColor: Theme.of(context).buttonColor,
+      shadowColor: Colors.transparent,
       actions: [
         IconButton(icon: Icon(Icons.date_range), onPressed: () {}),
         IconButton(

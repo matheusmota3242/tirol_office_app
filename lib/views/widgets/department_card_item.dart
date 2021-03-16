@@ -43,6 +43,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                   ),
                   PopupMenuButton(
                     onSelected: (value) => handleChoice(value),
+                    color: Colors.grey[800],
                     padding: EdgeInsets.all(0),
                     itemBuilder: (_) => ['Editar']
                         .map(

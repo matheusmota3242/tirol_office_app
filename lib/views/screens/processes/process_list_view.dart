@@ -61,7 +61,7 @@ class ProcessListView extends StatelessWidget {
                         currentPage: title,
                       ),
                       body: Container(
-                        color: Colors.grey[200],
+                        color: Theme.of(context).buttonColor,
                         padding: EdgeInsets.all(12.0),
                         child: _docs.isEmpty
                             ? EmptyView()

@@ -221,9 +221,10 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                         itemCount: _departmentService.equipments.length,
                         itemBuilder: (context, index) {
                           var equipment = _departmentService.equipments[index];
-
+                          equipment.id = index;
                           return DepartmentFormEquipmentItem(
                             equipment: equipment,
+                            editing: false,
                           );
                         },
                       ),

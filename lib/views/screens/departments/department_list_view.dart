@@ -25,6 +25,7 @@ class DepartmentListView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        shadowColor: Colors.transparent,
         actions: [
           IconButton(
             onPressed: () => pushToDepartmentFormView(context),

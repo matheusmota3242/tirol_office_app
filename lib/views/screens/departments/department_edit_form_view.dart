@@ -349,6 +349,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
                           equipment.id = index;
                           return DepartmentFormEquipmentItem(
                             equipment: equipment,
+                            editing: true,
                           );
                         },
                       ),

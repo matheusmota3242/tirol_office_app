@@ -55,31 +55,31 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           primaryColor: Color(0xFFBF1E2E),
           buttonColor: Color(0xFF166D97),
-          backgroundColor: Colors.grey[200],
+          backgroundColor: Color(0xFF166D97),
           textTheme: TextTheme(
             headline5: TextStyle(
                 fontSize: 18.0,
-                color: Colors.grey[700],
+                color: Colors.grey[800],
                 fontWeight: FontWeight.w500),
             headline6: TextStyle(
                 fontSize: 16.0,
-                color: Colors.grey[700],
+                color: Colors.grey[800],
                 fontWeight: FontWeight.w500),
             subtitle1: TextStyle(
                 fontSize: 15.0,
-                color: Colors.grey[700],
+                color: Colors.grey[800],
                 fontWeight: FontWeight.w500),
             subtitle2: TextStyle(
                 fontSize: 14.0,
-                color: Colors.grey[700],
+                color: Colors.grey[800],
                 fontWeight: FontWeight.w500),
             bodyText1: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: Colors.grey[700]),
+                color: Colors.grey[800]),
           ),
           appBarTheme: AppBarTheme(
-            color: Color(0xFF7999B7),
+            color: Color(0xFF166D97),
           ),
 
           // This makes the visual density adapt to the platform that you run
