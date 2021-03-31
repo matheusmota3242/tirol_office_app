@@ -76,11 +76,17 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                                 SizedBox(
                                   width: 8.0,
                                 ),
-                                Icon(
-                                  Icons.done,
-                                  color: Colors.green[400],
-                                  size: 20.0,
-                                ),
+                                e.getStatus == "Funcionando"
+                                    ? Icon(
+                                        Icons.done,
+                                        color: Colors.green[400],
+                                        size: 20.0,
+                                      )
+                                    : Icon(
+                                        Icons.warning_amber_rounded,
+                                        color: Colors.red[400],
+                                        size: 20.0,
+                                      ),
                               ],
                             ),
                           ),

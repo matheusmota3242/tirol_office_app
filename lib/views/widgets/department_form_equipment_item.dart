@@ -162,17 +162,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                         }).toList(),
                       ),
                     ),
-                    // SizedBox(height: 30.0),
-                    // Container(
-                    //   alignment: Alignment.center,
-                    //   child: Row(
-                    //     mainAxisAlignment:
-                    //         MainAxisAlignment.spaceEvenly,
-                    //     children: [
-
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -183,15 +172,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     updateEquipment();
-                    // if (widget.editing) {
-                    //   setEquipmentDescription(descriptionTemp);
-                    //   setEquipmentStatus(statusTemp);
-                    //   Provider.of<DepartmentService>(context, listen: false)
-                    //       .modifyEquipment(widget.equipment);
-                    // } else {
-                    //   widget.equipment.setDescription = descriptionTemp;
-                    //   widget.equipment.setStatus = statusTemp;
-                    // }
                     Navigator.of(context).pop(true);
                   }
                 },
