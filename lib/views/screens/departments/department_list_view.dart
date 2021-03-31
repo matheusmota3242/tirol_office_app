@@ -66,7 +66,7 @@ class DepartmentListView extends StatelessWidget {
     var theme = Theme.of(context);
     return Container(
       color: theme.backgroundColor,
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(16),
       child: ListView.builder(
           itemCount: docs.length,
           itemBuilder: (_, index) {
@@ -76,6 +76,7 @@ class DepartmentListView extends StatelessWidget {
             department.id = docs[index].id;
             return DepartmentCardItem(
               department: department,
+              lastItem: index == (docs.length - 1) ? true : false,
             );
           }),
     );

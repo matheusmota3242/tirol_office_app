@@ -8,8 +8,9 @@ import 'package:tirol_office_app/views/screens/departments/department_edit_form_
 
 class DepartmentCardItem extends StatefulWidget {
   final Department department;
+  final bool lastItem;
 
-  const DepartmentCardItem({Key key, @required this.department})
+  const DepartmentCardItem({Key key, @required this.department, this.lastItem})
       : super(key: key);
   @override
   _DepartmentCardItemState createState() => _DepartmentCardItemState();
@@ -24,8 +25,9 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
         equipments.length > 0 ? equipments.length - 1 : equipments.length;
     print(heightFactor);
     return Card(
+      margin: EdgeInsets.only(bottom: widget.lastItem ? 0 : 16),
       child: Container(
-        padding: EdgeInsets.fromLTRB(18, 12, 12, 12),
+        padding: EdgeInsets.fromLTRB(20, 12, 12, 12),
         height: 132.0 + (heightFactor * 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

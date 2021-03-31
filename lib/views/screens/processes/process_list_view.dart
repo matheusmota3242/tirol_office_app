@@ -62,7 +62,7 @@ class ProcessListView extends StatelessWidget {
                       ),
                       body: Container(
                         color: Theme.of(context).buttonColor,
-                        padding: EdgeInsets.all(12.0),
+                        padding: EdgeInsets.all(16.0),
                         child: _docs.isEmpty
                             ? EmptyView()
                             : ListView.builder(
@@ -73,6 +73,9 @@ class ProcessListView extends StatelessWidget {
                                   return ProcessCardItem(
                                     process: process,
                                     isProcessDetailsView: false,
+                                    isLastItem: index == (_docs.length - 1)
+                                        ? true
+                                        : false,
                                   );
                                 },
                               ),
