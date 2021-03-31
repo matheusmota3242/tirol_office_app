@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,11 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ProcessService {
   Process currentProcess;
+  DateTime picked;
+
+  ProcessService() {
+    picked = DateTime.now();
+  }
 
   // Método que escaneia o QRCode
   void scanQRCode(BuildContext context, String username) async {
@@ -40,8 +46,7 @@ class ProcessService {
   void save(String response, String username) async {
     Process process = Process();
     var now = DateTime.now();
-    process.setDepartmentId =
-        response + DateTimeHelper().generateProcessDateForId(now);
+    process.setDepartmentId = response;
     process.setStart = now;
     process.setResponsible = username;
     currentProcess = Process();
@@ -65,5 +70,27 @@ class ProcessService {
             .update({'end': process.getEnd});
       }
     });
+  }
+
+  pickDate(BuildContext context) async {
+    return await showDatePicker(
+        context: context,
+        initialDate: picked,
+        firstDate: DateTime(2020),
+        lastDate: DateTime(2050));
+  }
+
+  Future<QuerySnapshot> list() async {
+    print(picked);
+    DateTime pickedStart =
+        DateTime(picked.year, picked.month, picked.day, 0, 1);
+    DateTime pickedEnd =
+        DateTime(picked.year, picked.month, picked.day, 23, 59);
+
+    return await FirestoreDB()
+        .db_processes
+        .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
+        .where('start', isGreaterThanOrEqualTo: Timestamp.fromDate(pickedStart))
+        .get();
   }
 }

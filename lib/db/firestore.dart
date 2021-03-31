@@ -6,4 +6,6 @@ class FirestoreDB {
       FirebaseFirestore.instance.collection("departments");
   CollectionReference db_processes =
       FirebaseFirestore.instance.collection("processes");
+  CollectionReference db_service_providers =
+      FirebaseFirestore.instance.collection("service_providers");
 }

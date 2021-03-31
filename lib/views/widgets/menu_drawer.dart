@@ -114,7 +114,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => null,
+              onPressed: () => pushToServiceProvidersView(context),
               child: Row(
                 children: [
                   Icon(
@@ -168,12 +168,19 @@ class MenuDrawer extends StatelessWidget {
     );
   }
 
+  // Lista de departamentos
   void pushToDepartmentListView(BuildContext context) {
     Navigator.pushNamed(context, RouteHelper.departments);
   }
 
+  // Lista de processos
   void pushToProcessListView(BuildContext context) {
     Navigator.pushNamed(context, RouteHelper.processes);
+  }
+
+  // Lista de prestadores de serviço
+  pushToServiceProvidersView(BuildContext context) {
+    Navigator.pushNamed(context, RouteHelper.serviceProviders);
   }
 
   // Logout

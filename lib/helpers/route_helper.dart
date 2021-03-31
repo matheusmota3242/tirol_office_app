@@ -5,4 +5,6 @@ class RouteHelper {
   static const String departmentsEditForm = 'departmentsEditForm';
   static const String users = 'users';
   static const String processDetails = 'processDetails';
+  static const String serviceProviders = 'serviceProviders';
+  static const String serviceProvidersForm = 'serviceProvidersForm';
 }

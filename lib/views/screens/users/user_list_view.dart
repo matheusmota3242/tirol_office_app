@@ -65,6 +65,7 @@ class UserListView extends StatelessWidget {
             print(docId);
             return ListTile(
               title: Text(name),
+              leading: Icon(Icons.person_outline),
               subtitle: Text(role.toString()),
               trailing: PopupMenuButton<String>(
                 onSelected: (value) =>

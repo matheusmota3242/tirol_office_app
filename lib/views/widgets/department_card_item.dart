@@ -43,7 +43,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                   ),
                   PopupMenuButton(
                     onSelected: (value) => handleChoice(value),
-                    color: Colors.grey[800],
+                    //color: Colors.grey[800],
                     padding: EdgeInsets.all(0),
                     itemBuilder: (_) => ['Editar']
                         .map(
@@ -91,7 +91,10 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    Text('Ainda não há equipamentos cadastrados.')
+                    Text(
+                      'Ainda não há equipamentos cadastrados.',
+                      style: TextStyle(color: Colors.grey[600]),
+                    )
                   ])
           ],
         ),

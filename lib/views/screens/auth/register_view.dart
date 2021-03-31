@@ -113,7 +113,9 @@ class RegisterView extends StatelessWidget {
         (verticalPadding / 2),
       ),
       child: TextFormField(
-        validator: (value) => _authHelper.validateName(value),
+        //validator: (value) => _authHelper.validateName(value),
+        validator: (value) =>
+            value.isEmpty ? 'Por favor, informe seu nome' : null,
         onChanged: (value) => _name = value.trim(),
         keyboardType: TextInputType.name,
         decoration: InputDecoration(

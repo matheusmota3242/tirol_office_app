@@ -33,7 +33,10 @@ class ProcessDetailsView extends StatelessWidget {
     // if (arguments != null) print(arguments['process']);
 
     return Scaffold(
-      appBar: AppBarWidget(PageHelper.processDetails),
+      appBar: AppBar(
+        title: Text(PageHelper.processDetails),
+        shadowColor: Colors.transparent,
+      ),
       backgroundColor: Colors.grey[200],
       body: FutureBuilder(
         future: FirestoreDB().db_departments.doc(process.departmentId).get(),
@@ -46,36 +49,39 @@ class ProcessDetailsView extends StatelessWidget {
           // var data = snapshot.data;
           // print(process.getResponsible);
           // print(data['name']);
-          return Container(
-            padding: EdgeInsets.all(12.0),
-            child: Column(
-              children: [
-                ProcessCardItem(
-                  isProcessDetailsView: true,
-                  process: process,
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Card(
-                  shadowColor: Colors.transparent,
-                  child: Container(
-                    padding: EdgeInsets.all(12.0),
-                    height: double.infinity,
-                    width: double.infinity,
-                    // child: ListView.builder(
-                    //   itemCount: _departmentService
-                    //       .currentDepartment.equipments.length,
-                    //   itemBuilder: (context, index) {
-                    //     var equipments =
-                    //         _departmentService.currentDepartment.equipments;
-                    //     print(equipments[index].getDescription);
-                    //     return Text(equipments[0].getDescription);
-                    //   },
-                    // ),
+          return Scaffold(
+            body: Container(
+              color: Theme.of(context).buttonColor,
+              padding: EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  ProcessCardItem(
+                    isProcessDetailsView: true,
+                    process: process,
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: 12,
+                  ),
+                  // Card(
+                  //   shadowColor: Colors.transparent,
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(12.0),
+                  //     height: double.infinity,
+                  //     width: double.infinity,
+                  //     // child: ListView.builder(
+                  //     //   itemCount: _departmentService
+                  //     //       .currentDepartment.equipments.length,
+                  //     //   itemBuilder: (context, index) {
+                  //     //     var equipments =
+                  //     //         _departmentService.currentDepartment.equipments;
+                  //     //     print(equipments[index].getDescription);
+                  //     //     return Text(equipments[0].getDescription);
+                  //     //   },
+                  //     // ),
+                  //   ),
+                  // )
+                ],
+              ),
             ),
           );
         },

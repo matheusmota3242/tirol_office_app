@@ -23,10 +23,10 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
   @override
   Widget build(BuildContext context) {
     final EquipmentService _service = EquipmentService();
-    var _departmentService =
+    //var _departmentService =
 
-        // Service recebe equipamento do componente
-        _service.currentEquipment = widget.equipment;
+    // Service recebe equipamento do componente
+    _service.currentEquipment = widget.equipment;
 
     // Lista com opções do menu
     var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
@@ -34,6 +34,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     // Variáveis que guardam valores temporários
     String descriptionTemp = widget.equipment.getDescription;
     String statusTemp = widget.equipment.getStatus;
+    //print("statusTemp: " + statusTemp);
 
     // Atribui nova descrição ao equipamento do service
     void setEquipmentDescription(String value) {
@@ -91,101 +92,117 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
       );
     }
 
+    // Atualiza equipamento após confirmação do modal
+    void updateEquipment() {
+      setState(() {
+        setEquipmentDescription(descriptionTemp);
+        setEquipmentStatus(statusTemp);
+        if (widget.editing) {
+          Provider.of<DepartmentService>(context, listen: false)
+              .modifyEquipment(widget.equipment);
+        }
+      });
+    }
+
     // Abre modal de edição
     void edit(Equipment equipment) {
       final _formKey = GlobalKey<FormState>();
 
       showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          title: Text('Novo equipamento'),
-          content: Form(
-            key: _formKey,
-            child: Container(
-              height: 190.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  equipmentDescriptionField(equipment.getDescription),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Status atual do equipamento',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+        builder: (_) => StatefulBuilder(builder: (_, setState) {
+          return AlertDialog(
+            title: Text('Novo equipamento'),
+            content: Form(
+              key: _formKey,
+              child: Container(
+                height: 190.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    equipmentDescriptionField(equipment.getDescription),
+                    SizedBox(
+                      height: 30.0,
                     ),
-                  ),
-                  SizedBox(
-                    height: 16.0,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4.0),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Status atual do equipamento',
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ),
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: 3.0),
-                    child: DropdownButton<String>(
-                      underline: SizedBox(),
-                      isExpanded: true,
-                      value: statusTemp,
-                      onChanged: (value) {
-                        print(value);
-                        statusTemp = value;
-                      },
-                      items: equipmentStatusOptions.map((value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                    SizedBox(
+                      height: 16.0,
                     ),
-                  ),
-                  // SizedBox(height: 30.0),
-                  // Container(
-                  //   alignment: Alignment.center,
-                  //   child: Row(
-                  //     mainAxisAlignment:
-                  //         MainAxisAlignment.spaceEvenly,
-                  //     children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(4.0),
+                        ),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.only(left: 3.0),
+                      child: DropdownButton<String>(
+                        underline: SizedBox(),
+                        isExpanded: true,
+                        value: statusTemp,
+                        onChanged: (value) {
+                          setState(() {
+                            print('novo valor: ' + value);
+                            widget.equipment.setStatus = value;
+                            statusTemp = value;
+                          });
+                        },
+                        items: equipmentStatusOptions.map((value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    // SizedBox(height: 30.0),
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   child: Row(
+                    //     mainAxisAlignment:
+                    //         MainAxisAlignment.spaceEvenly,
+                    //     children: [
 
-                  //     ],
-                  //   ),
-                  // ),
-                ],
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ),
-          ),
-          actions: [
-            cancelButton(context),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  setState(() {
-                    if (widget.editing) {
-                      setEquipmentDescription(descriptionTemp);
-                      setEquipmentStatus(statusTemp);
-                      Provider.of<DepartmentService>(context, listen: false)
-                          .modifyEquipment(widget.equipment);
-                    } else {
-                      widget.equipment.setDescription = descriptionTemp;
-                      widget.equipment.setStatus = statusTemp;
-                    }
+            actions: [
+              cancelButton(context),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    updateEquipment();
+                    // if (widget.editing) {
+                    //   setEquipmentDescription(descriptionTemp);
+                    //   setEquipmentStatus(statusTemp);
+                    //   Provider.of<DepartmentService>(context, listen: false)
+                    //       .modifyEquipment(widget.equipment);
+                    // } else {
+                    //   widget.equipment.setDescription = descriptionTemp;
+                    //   widget.equipment.setStatus = statusTemp;
+                    // }
                     Navigator.of(context).pop(true);
-                  });
-                }
-              },
-              child: Text(
-                'Salvar',
-                style: TextStyle(color: Colors.white),
+                  }
+                },
+                child: Text(
+                  'Salvar',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       );
     }
 
