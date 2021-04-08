@@ -1,8 +1,9 @@
+import 'package:tirol_office_app/helpers/equipment_helper.dart';
+
 import 'enums/equipment_status_enum.dart';
 
 class Equipment {
   int id;
-
   String description;
   String status;
 
@@ -15,7 +16,10 @@ class Equipment {
   String get getStatus => status;
   set setStatus(String status) => this.status = status;
 
-  Equipment(this.description, this.status);
+  //Equipment(this.description, this.status)
+  Equipment() {
+    this.status = EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE);
+  }
 
   Equipment.fromJson(Map<String, dynamic> json)
       : description = json['description'],

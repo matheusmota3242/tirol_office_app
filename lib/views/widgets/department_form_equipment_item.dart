@@ -23,6 +23,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
   @override
   Widget build(BuildContext context) {
     final EquipmentService _service = EquipmentService();
+    print(widget.equipment);
     //var _departmentService =
 
     // Service recebe equipamento do componente

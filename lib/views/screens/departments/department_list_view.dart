@@ -8,6 +8,7 @@ import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
+import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/widgets/department_card_item.dart';
@@ -28,7 +29,17 @@ class DepartmentListView extends StatelessWidget {
         shadowColor: Colors.transparent,
         actions: [
           IconButton(
-            onPressed: () => pushToDepartmentFormView(context),
+            // !!!
+            //onPressed: () => pushToDepartmentFormView(context),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => DepartmentTestView(
+                  currentDepartment: new Department(),
+                  edit: false,
+                ),
+              ),
+            ),
             icon: Icon(
               Icons.add,
             ),

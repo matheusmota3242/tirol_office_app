@@ -20,7 +20,7 @@ class ProcessCardItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: isLastItem ? 0 : 16.0),
       shadowColor: Colors.transparent,
       child: Container(
-        height: 132.0,
+        height: 168.0,
         padding: EdgeInsets.all(12.0),
         child: Stack(
           children: [
@@ -33,7 +33,11 @@ class ProcessCardItem extends StatelessWidget {
                     : GestureDetector(
                         onTap: () => Navigator.pushNamed(
                             context, RouteHelper.processDetails,
-                            arguments: {'process': process}),
+                            arguments: {
+                              'process': process,
+                              'isProcessDetailsView':
+                                  this.isProcessDetailsView ? false : true
+                            }),
                         child: Text(
                           process.getDepartmentId,
                           style: theme.textTheme.headline5,
@@ -55,22 +59,23 @@ class ProcessCardItem extends StatelessWidget {
               right: 0,
             ),
             Positioned(
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Horário:',
+                    'Horário',
                     style: TextStyle(
                         fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                         color: Colors.grey[700]),
                   ),
                   SizedBox(
-                    width: 6.0,
+                    height: 6.0,
                   ),
                   process.getEnd != null
                       ? Text(
                           '${_dateTimeHelper.formatTime(process.getStart)} | ${_dateTimeHelper.formatTime(process.getEnd)}',
-                          style: theme.textTheme.bodyText1,
+                          style: theme.textTheme.subtitle1,
                           // process.start.hour.toString() +
                           //     ':' +
                           //     process.start.minute.toString() +
@@ -87,25 +92,26 @@ class ProcessCardItem extends StatelessWidget {
               top: 40.0,
             ),
             Positioned(
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Responsável:',
+                    'Responsável',
                     style: TextStyle(
                         fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                         color: Colors.grey[700]),
                   ),
                   SizedBox(
-                    width: 6.0,
+                    height: 6.0,
                   ),
                   Text(
                     process.getResponsible,
-                    style: theme.textTheme.bodyText1,
+                    style: theme.textTheme.subtitle1,
                   ),
                 ],
               ),
-              top: 80.0,
+              top: 100.0,
             ),
           ],
         ),

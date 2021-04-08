@@ -33,6 +33,7 @@ class ProcessService {
       var doc = await FirestoreDB().db_departments.doc(response).get();
 
       if (doc.exists) {
+        // Caso o departamento lido exista
         var department = Department.fromJson(doc.data());
         Provider.of<DepartmentService>(context, listen: false)
             .setCurrentDepartment(department);
@@ -56,12 +57,14 @@ class ProcessService {
         .doc(process.getDepartmentId)
         .get()
         .then((snapshot) {
+      // Caso o processo não exista no banco...
       if (!snapshot.exists) {
         FirestoreDB()
             .db_processes
             .doc(process.getDepartmentId)
             .set(process.toJson());
       } else {
+        print(snapshot.data());
         process.setEnd = DateTime.now();
         currentProcess.setEnd = process.getEnd;
         FirestoreDB()
@@ -81,7 +84,6 @@ class ProcessService {
   }
 
   Future<QuerySnapshot> list() async {
-    print(picked);
     DateTime pickedStart =
         DateTime(picked.year, picked.month, picked.day, 0, 1);
     DateTime pickedEnd =

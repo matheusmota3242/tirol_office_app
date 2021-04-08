@@ -57,6 +57,7 @@ class ProcessDetailsView extends StatelessWidget {
                 children: [
                   ProcessCardItem(
                     isProcessDetailsView: true,
+                    isLastItem: false,
                     process: process,
                   ),
                   SizedBox(

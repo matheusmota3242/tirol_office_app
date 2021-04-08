@@ -5,6 +5,7 @@ import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/screens/departments/department_edit_form_view.dart';
+import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
 
 class DepartmentCardItem extends StatefulWidget {
   final Department department;
@@ -118,7 +119,10 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => DepartmentEditFormView(department: widget.department),
+          // !!!
+          //builder: (_) => DepartmentEditFormView(department: widget.department),
+          builder: (_) => DepartmentTestView(
+              currentDepartment: widget.department, edit: true),
         ),
       );
     }

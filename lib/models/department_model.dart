@@ -11,6 +11,7 @@ class Department {
 
   Department() {
     _needsAttention = false;
+    _equipments = <Equipment>[];
   }
 
   String get id => this._id;

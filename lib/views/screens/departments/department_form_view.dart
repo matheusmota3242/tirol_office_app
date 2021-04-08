@@ -190,10 +190,14 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                       ),
                     ).then((result) {
                       if (result) {
-                        Equipment equipment = new Equipment(
-                          _departmentService.equipmentName,
-                          EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
-                        );
+                        Equipment equipment = new Equipment();
+                        equipment.setDescription =
+                            _departmentService.equipmentName;
+
+                        // Equipment equipment = new Equipment(
+                        //   _departmentService.equipmentName,
+                        //   EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
+                        // );
                         setState(() {
                           _departmentService.equipments.add(equipment);
                         });
@@ -302,10 +306,9 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
     return RaisedButton(
       onPressed: () {
         if (formKey.currentState.validate()) {
-          Equipment equipment = new Equipment(
-            _departmentService.equipmentName,
-            EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
-          );
+          Equipment equipment = new Equipment();
+          equipment.setDescription = _departmentService.equipmentName;
+
           _departmentService.setCurrentEquipment(equipment);
           Navigator.of(context, rootNavigator: true).pop();
         }
