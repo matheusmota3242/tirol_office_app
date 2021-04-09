@@ -49,18 +49,32 @@ abstract class DepartmentServiceBase with Store {
   @action
   setEquipmentStatus(String value) => equipmentStatus = value;
 
-  void save() {
+  // void save() {
+  //   print('Entrou em save()');
+  //   FirestoreDB()
+  //       .db_departments
+  //       .doc(currentDepartment.name)
+  //       .set(currentDepartment.toJson());
+  // }
+  void save(Department department) {
     print('Entrou em save()');
-    FirestoreDB()
-        .db_departments
-        .doc(currentDepartment.name)
-        .set(currentDepartment.toJson());
+    FirestoreDB().db_departments.add(department.toJson());
   }
 
-  void update() {
-    FirestoreDB().db_departments.doc(editedDepartment.id).update(
-          editedDepartment.toJson(),
+  // void update(Department department) {
+  //   FirestoreDB().db_departments.doc(editedDepartment.id).update(
+  //         editedDepartment.toJson(),
+  //       );
+  // }
+  void update(Department department) {
+    print('Entrou em update()');
+    FirestoreDB().db_departments.doc(department.id).update(
+          department.toJson(),
         );
+  }
+
+  void remove(Department department) {
+    FirestoreDB().db_departments.doc(department.id).delete();
   }
 
   void modifyEquipment(Equipment editedEquipment) {

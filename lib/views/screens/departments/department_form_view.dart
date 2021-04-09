@@ -339,7 +339,8 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
     print("Entrou");
     _departmentService.currentDepartment.equipments =
         _departmentService.equipments;
-    _departmentService.save();
+    // !!!
+    //_departmentService.save();
     Toasts.showToast(content: 'Departamento criado com sucesso!');
     Navigator.pop(context);
   }

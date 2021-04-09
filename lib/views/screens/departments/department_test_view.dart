@@ -3,7 +3,9 @@ import 'package:tirol_office_app/models/department_model.dart';
 import 'dart:math' as math;
 
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class DepartmentTestView extends StatefulWidget {
   final Department currentDepartment;
@@ -21,7 +23,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
   static const List<IconData> fabIcons = const [Icons.done, Icons.close];
   static const List<Color> fabIconsColors = const [Colors.green, Colors.red];
   AnimationController _animationController;
-
+  DepartmentService _service = DepartmentService();
   @override
   void initState() {
     _animationController = AnimationController(
@@ -33,6 +35,19 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
   }
 
   bool checkEdition() => widget.edit ? true : false;
+
+  void submit() {
+    String msg = '';
+    if (checkEdition()) {
+      _service.update(widget.currentDepartment);
+      msg = 'Departamendo editado com sucesso';
+    } else {
+      _service.save(widget.currentDepartment);
+      msg = 'Departamendo salvo com sucesso';
+    }
+    Navigator.pop(context);
+    Toasts.showToast(content: msg);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +77,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                 mini: true,
                 child: Icon(fabIcons[index], color: Colors.white),
                 // !!!build
-                onPressed: () => index == 0 ? null : null,
+                onPressed: () => index == 0 ? submit() : Navigator.pop(context),
               ),
             ),
           );
@@ -224,6 +239,13 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
             RaisedButton(
               onPressed: () {
                 if (formKey.currentState.validate()) {
+                  // setState(() {
+                  //   widget.currentDepartment.equipments.add(equipment);
+                  //   // Checando edição da página
+                  //   checkEdition()
+                  //       ? _service.update(widget.currentDepartment)
+                  //       : _service.save(widget.currentDepartment);
+                  // });
                   Navigator.of(context).pop(true);
                 }
               },
@@ -239,6 +261,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       if (result) {
         setState(() {
           widget.currentDepartment.equipments.add(equipment);
+          // Checando edição da página
         });
         // !!!
         // Equipment equipment = new Equipment(
@@ -258,8 +281,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
         TextEditingController(text: widget.currentDepartment?.name);
     return Container(
       child: TextFormField(
-        // !!!
-        onChanged: (value) => null,
+        onChanged: (value) => widget.currentDepartment.setName(value),
         controller: controller,
         decoration: InputDecoration(
           alignLabelWithHint: true,

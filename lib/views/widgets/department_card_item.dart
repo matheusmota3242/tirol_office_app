@@ -6,6 +6,7 @@ import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/screens/departments/department_edit_form_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class DepartmentCardItem extends StatefulWidget {
   final Department department;
@@ -18,13 +19,14 @@ class DepartmentCardItem extends StatefulWidget {
 }
 
 class _DepartmentCardItemState extends State<DepartmentCardItem> {
+  DepartmentService _service = DepartmentService();
+
   @override
   Widget build(BuildContext context) {
     List<Equipment> equipments = widget.department.equipments;
     var theme = Theme.of(context);
     var heightFactor =
         equipments.length > 0 ? equipments.length - 1 : equipments.length;
-    print(heightFactor);
     return Card(
       margin: EdgeInsets.only(bottom: widget.lastItem ? 0 : 16),
       child: Container(
@@ -48,7 +50,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                     onSelected: (value) => handleChoice(value),
                     //color: Colors.grey[800],
                     padding: EdgeInsets.all(0),
-                    itemBuilder: (_) => ['Editar']
+                    itemBuilder: (_) => ['Editar', 'Remover']
                         .map(
                           (choice) => PopupMenuItem<String>(
                             child: Text(choice),
@@ -111,20 +113,27 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
     );
   }
 
+  void pushToEditDepartmentView() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        // !!!
+        //builder: (_) => DepartmentEditFormView(department: widget.department),
+        builder: (_) => DepartmentTestView(
+            currentDepartment: widget.department, edit: true),
+      ),
+    );
+  }
+
   void handleChoice(String choice) {
     Provider.of<DepartmentService>(context, listen: false).editedDepartment =
         widget.department;
 
-    if (choice == 'Editar') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          // !!!
-          //builder: (_) => DepartmentEditFormView(department: widget.department),
-          builder: (_) => DepartmentTestView(
-              currentDepartment: widget.department, edit: true),
-        ),
-      );
+    if (choice == 'Editar')
+      pushToEditDepartmentView();
+    else if (choice == 'Remover') {
+      _service.remove(widget.department);
+      Toasts.showToast(content: 'Departamento removido com sucesso');
     }
   }
 }
