@@ -10,11 +10,13 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 class Dialogs {
   // Filtra processos por data
   showProcessFilterDialog(BuildContext context) async {
+    print('entrou no datepicker');
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime.now());
+    print(picked);
     return picked;
   }
 

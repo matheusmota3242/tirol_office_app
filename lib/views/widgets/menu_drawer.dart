@@ -22,6 +22,11 @@ class MenuDrawer extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).appBarTheme.color,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10))),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(
@@ -41,7 +46,6 @@ class MenuDrawer extends StatelessWidget {
             ]),
             width: double.infinity,
             height: userContainerHeight,
-            color: Theme.of(context).appBarTheme.color,
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.0, top: 8.0),

@@ -83,16 +83,29 @@ class ProcessService {
         lastDate: DateTime(2050));
   }
 
-  Future<QuerySnapshot> list() async {
+  // Future<QuerySnapshot> list() async {
+  //   DateTime pickedStart =
+  //       DateTime(picked.year, picked.month, picked.day, 0, 1);
+  //   DateTime pickedEnd =
+  //       DateTime(picked.year, picked.month, picked.day, 23, 59);
+
+  //   return await FirestoreDB()
+  //       .db_processes
+  //       .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
+  //       .where('start', isGreaterThanOrEqualTo: Timestamp.fromDate(pickedStart))
+  //       .get();
+  // }
+  Future<QuerySnapshot> queryByDate(DateTime picked) async {
+    picked = DateTime(picked.year, picked.month, picked.day, 12, 00);
     DateTime pickedStart =
-        DateTime(picked.year, picked.month, picked.day, 0, 1);
+        DateTime(picked.year, picked.month, picked.day, 0, 00);
     DateTime pickedEnd =
         DateTime(picked.year, picked.month, picked.day, 23, 59);
-
+    print(picked);
     return await FirestoreDB()
         .db_processes
-        .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
         .where('start', isGreaterThanOrEqualTo: Timestamp.fromDate(pickedStart))
+        .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
         .get();
   }
 }

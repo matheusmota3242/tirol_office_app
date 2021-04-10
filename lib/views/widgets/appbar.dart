@@ -19,15 +19,21 @@ class AppBarWidget extends PreferredSize {
     var user = Provider.of<UserService>(context).getUser;
     var _processService = Provider.of<ProcessService>(context, listen: false);
 
+    showFilterDialog() async {
+      var picked = await Dialogs().showProcessFilterDialog(context);
+      var querySnapshot = await _processService.queryByDate(picked);
+      print(querySnapshot.docs);
+    }
+
     return AppBar(
-      //automaticallyImplyLeading: false,
+      //automaticallyImplyLeading: false,>
       title: Text(this.title),
       backgroundColor: Theme.of(context).buttonColor,
       shadowColor: Colors.transparent,
       actions: [
         IconButton(
           icon: Icon(Icons.date_range),
-          onPressed: () => null,
+          onPressed: () => showFilterDialog(),
         ),
         IconButton(
           icon: Icon(Icons.qr_code),
