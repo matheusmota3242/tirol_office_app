@@ -156,15 +156,15 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
           children: [
             serviceProviderNameField(),
             SizedBox(
-              height: 12.0,
+              height: PageHelper.bodyPadding,
             ),
             serviceProviderEmailField(),
             SizedBox(
-              height: 12.0,
+              height: PageHelper.bodyPadding,
             ),
             serviceProviderPhoneField(),
             SizedBox(
-              height: 12.0,
+              height: PageHelper.bodyPadding,
             ),
             serviceProviderCategoryField(),
           ],

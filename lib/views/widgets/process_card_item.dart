@@ -20,8 +20,8 @@ class ProcessCardItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: isLastItem ? 0 : 16.0),
       shadowColor: Colors.transparent,
       child: Container(
-        height: 168.0,
-        padding: EdgeInsets.all(12.0),
+        height: 182.0,
+        padding: EdgeInsets.all(20.0),
         child: Stack(
           children: [
             Positioned(

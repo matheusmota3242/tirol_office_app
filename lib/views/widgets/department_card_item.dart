@@ -31,7 +31,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
       margin: EdgeInsets.only(bottom: widget.lastItem ? 0 : 16),
       child: Container(
         padding: EdgeInsets.fromLTRB(20, 12, 12, 12),
-        height: 132.0 + (heightFactor * 30),
+        height: 112.0 + (heightFactor * 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -65,10 +65,18 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
             // SizedBox(
             //   height: 12.0,
             // ),
-            Text(
-              'Equipamentos',
-              style: theme.textTheme.subtitle1,
-            ),
+            // Text(
+            //   'Equipamentos',
+            //   style: TextStyle(
+            //       fontSize: 15.0,
+            //       fontWeight: FontWeight.w400,
+            //       color: Colors.grey[700]),
+            // ),
+            // Container(
+            //   width: double.infinity,
+            //   height: 1.0,
+            //   color: Colors.grey[500],
+            // ),
             equipments.isNotEmpty
                 ? Column(
                     children: equipments
@@ -77,7 +85,10 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                             margin: EdgeInsets.only(top: 10.0),
                             child: Row(
                               children: [
-                                Text(e.description),
+                                Text(
+                                  e.description,
+                                  style: theme.textTheme.subtitle1,
+                                ),
                                 SizedBox(
                                   width: 8.0,
                                 ),

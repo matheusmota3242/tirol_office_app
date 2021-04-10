@@ -121,7 +121,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
             ),
             Row(
               children: [
-                Text('Equipamentos', style: themeData.textTheme.headline6),
+                Text('Equipamentos', style: themeData.textTheme.headline5),
                 IconButton(
                   onPressed: () {
                     final _formKey = GlobalKey<FormState>();
@@ -138,7 +138,8 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                       children: [
                         Text(
                           'Nenhum equipamento adicionado.',
-                          style: themeData.textTheme.bodyText1,
+                          style: TextStyle(
+                              fontSize: 14.0, color: Colors.grey[600]),
                         ),
                       ],
                     )
@@ -167,7 +168,10 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       context: context,
       builder: (_) => StatefulBuilder(builder: (_, setState) {
         return AlertDialog(
-          title: Text('Novo equipamento'),
+          title: Text(
+            'Novo equipamento',
+            style: Theme.of(context).textTheme.headline5,
+          ),
           content: Form(
             key: formKey,
             child: Container(
@@ -214,7 +218,10 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                       items: equipmentStatusOptions.map((value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Container(
+                            padding: EdgeInsets.only(left: 6.0),
+                            child: Text(value),
+                          ),
                         );
                       }).toList(),
                     ),
@@ -235,25 +242,35 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
             ),
           ),
           actions: [
-            cancelButton(context),
-            RaisedButton(
-              onPressed: () {
-                if (formKey.currentState.validate()) {
-                  // setState(() {
-                  //   widget.currentDepartment.equipments.add(equipment);
-                  //   // Checando edição da página
-                  //   checkEdition()
-                  //       ? _service.update(widget.currentDepartment)
-                  //       : _service.save(widget.currentDepartment);
-                  // });
-                  Navigator.of(context).pop(true);
-                }
-              },
-              child: Text(
-                'Salvar',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            Container(
+                padding: EdgeInsets.only(right: 14.0, bottom: 8.0),
+                child: Row(
+                  children: [
+                    cancelButton(context),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState.validate()) {
+                          // setState(() {
+                          //   widget.currentDepartment.equipments.add(equipment);
+                          //   // Checando edição da página
+                          //   checkEdition()
+                          //       ? _service.update(widget.currentDepartment)
+                          //       : _service.save(widget.currentDepartment);
+                          // });
+                          Navigator.of(context).pop(true);
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).buttonColor),
+                      ),
+                      child: Text(
+                        'Salvar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ))
           ],
         );
       }),
@@ -338,12 +355,14 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
   }
 
   Widget cancelButton(BuildContext context) {
-    return RaisedButton(
-      color: Colors.red,
+    return TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      ),
       onPressed: () => Navigator.pop(context),
       child: Text(
         'Cancelar',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Theme.of(context).buttonColor),
       ),
     );
   }

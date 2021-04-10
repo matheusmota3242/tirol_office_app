@@ -8,7 +8,7 @@ class PageHelper {
   static const users = 'Usuários';
   static const processDetails = 'Detalhes do processo';
 
-  static const bodyPadding = 12.0;
+  static const bodyPadding = 20.0;
 
   static const List<IconData> fabIcons = const [Icons.done, Icons.close];
   static const List<Color> fabIconsColors = const [Colors.green, Colors.red];

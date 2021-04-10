@@ -50,14 +50,14 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
 
     // Botão de cancelar modal
     Widget cancelButton(BuildContext context) {
-      return ElevatedButton(
+      return TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
         ),
         onPressed: () => Navigator.pop(context),
         child: Text(
           'Cancelar',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).buttonColor),
         ),
       );
     }
@@ -168,17 +168,28 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
               ),
             ),
             actions: [
-              cancelButton(context),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    updateEquipment();
-                    Navigator.of(context).pop(true);
-                  }
-                },
-                child: Text(
-                  'Salvar',
-                  style: TextStyle(color: Colors.white),
+              Container(
+                padding: EdgeInsets.only(right: 14.0, bottom: 8.0),
+                child: Row(
+                  children: [
+                    cancelButton(context),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).buttonColor),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          updateEquipment();
+                          Navigator.of(context).pop(true);
+                        }
+                      },
+                      child: Text(
+                        'Salvar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
