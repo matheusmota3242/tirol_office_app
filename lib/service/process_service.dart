@@ -30,11 +30,14 @@ class ProcessService {
     } else {
       // Caso reconheça como um código QR válido...
 
-      var doc = await FirestoreDB().db_departments.doc(response).get();
+      var doc = await FirestoreDB()
+          .db_departments
+          .where('name', isEqualTo: response)
+          .get();
 
-      if (doc.exists) {
+      if (doc.size > 0) {
         // Caso o departamento lido exista
-        var department = Department.fromJson(doc.data());
+        var department = Department.fromJson(doc.docs[0].data());
         Provider.of<DepartmentService>(context, listen: false)
             .setCurrentDepartment(department);
         Dialogs().showCheckinDialog(context, response, username);
@@ -44,9 +47,10 @@ class ProcessService {
   }
 
   // Método que salva o processo no banco de dados
-  void save(String response, String username) async {
+  void save(String response, String username, String userId) async {
     Process process = Process();
     var now = DateTime.now();
+    process.setUserId = userId;
     process.setDepartmentId = response;
     process.setStart = now;
     process.setResponsible = username;
@@ -59,10 +63,7 @@ class ProcessService {
         .then((snapshot) {
       // Caso o processo não exista no banco...
       if (!snapshot.exists) {
-        FirestoreDB()
-            .db_processes
-            .doc(process.getDepartmentId)
-            .set(process.toJson());
+        FirestoreDB().db_processes.add(process.toJson());
       } else {
         print(snapshot.data());
         process.setEnd = DateTime.now();

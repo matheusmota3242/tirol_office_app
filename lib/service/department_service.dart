@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/models/process_model.dart';
 
 part 'department_service.g.dart';
 
@@ -67,7 +69,6 @@ abstract class DepartmentServiceBase with Store {
   //       );
   // }
   void update(Department department) {
-    print('Entrou em update()');
     FirestoreDB().db_departments.doc(department.id).update(
           department.toJson(),
         );
@@ -83,5 +84,12 @@ abstract class DepartmentServiceBase with Store {
         element = editedEquipment;
       }
     });
+  }
+
+  queryByProcess(Process process) async {
+    return await FirestoreDB()
+        .db_departments
+        .where('name', isEqualTo: process.departmentId)
+        .get();
   }
 }

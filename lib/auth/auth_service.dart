@@ -30,7 +30,7 @@ class AuthService {
         var userResponse =
             await FirestoreDB().db_users.doc(result.user.uid).get();
         _userService = Provider.of<UserService>(context, listen: false);
-        _userService.setUser(userResponse);
+        _userService.setUser(userResponse, result.user.uid);
       } catch (e) {
         print(e);
       }

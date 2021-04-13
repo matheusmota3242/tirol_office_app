@@ -1,10 +1,18 @@
 import 'department_model.dart';
 
 class Process {
+  String id;
   String departmentId;
+  String userId;
   DateTime start;
   DateTime end;
   String responsible;
+
+  get getId => this.id;
+  set setId(String id) => this.id = id;
+
+  get getUserId => this.userId;
+  set setUserId(String userId) => this.userId = userId;
 
   get getResponsible => this.responsible;
   set setResponsible(responsible) => this.responsible = responsible;

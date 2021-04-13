@@ -19,9 +19,14 @@ class ProcessDetailsView extends StatelessWidget {
     var _processService = Provider.of<ProcessService>(context);
     var _departmentService = Provider.of<DepartmentService>(context);
     var _userService = Provider.of<UserService>(context);
+
     Process process = arguments == null
         ? _processService.currentProcess
         : arguments['process'];
+
+    _userService.getUser.id == process.getUserId
+        ? print('Usuário dono do processo')
+        : print('Usuário nao e dono do processo');
 
     // if (arguments['process'] == null) {
     //   process = arguments['process'];
@@ -63,24 +68,39 @@ class ProcessDetailsView extends StatelessWidget {
                   SizedBox(
                     height: 12,
                   ),
-                  // Card(
-                  //   shadowColor: Colors.transparent,
-                  //   child: Container(
-                  //     padding: EdgeInsets.all(12.0),
-                  //     height: double.infinity,
-                  //     width: double.infinity,
-                  //     // child: ListView.builder(
-                  //     //   itemCount: _departmentService
-                  //     //       .currentDepartment.equipments.length,
-                  //     //   itemBuilder: (context, index) {
-                  //     //     var equipments =
-                  //     //         _departmentService.currentDepartment.equipments;
-                  //     //     print(equipments[index].getDescription);
-                  //     //     return Text(equipments[0].getDescription);
-                  //     //   },
-                  //     // ),
-                  //   ),
-                  // )
+                  FutureBuilder(
+                      future: _departmentService.queryByProcess(process),
+                      builder: (_, AsyncSnapshot<dynamic> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return LoadingView();
+                          case ConnectionState.none:
+                            return ErrorView();
+                            break;
+                          default:
+                            print(snapshot.data.docs[0].data());
+                            return Container();
+                          //     return Card(
+                          //   shadowColor: Colors.transparent,
+                          //   child: Container(
+                          //     child: ListView.builder(itemCount: snapshot., itemBuilder: ())
+                          //       // padding: EdgeInsets.all(12.0),
+                          //       // height: double.infinity,
+                          //       // width: double.infinity,
+                          //       // child: ListView.builder(
+                          //       //   itemCount: _departmentService
+                          //       //       .currentDepartment.equipments.length,s
+                          //       //   itemBuilder: (context, index) {
+                          //       //     var equipments =
+                          //       //         _departmentService.currentDepartment.equipments;
+                          //       //     print(equipments[index].getDescription);
+                          //       //     return Text(equipments[0].getDescription);
+                          //       //   },
+                          //       // ),
+                          //       ),
+                          // );
+                        }
+                      })
                 ],
               ),
             ),

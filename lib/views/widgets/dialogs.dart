@@ -5,6 +5,7 @@ import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/process_service.dart';
+import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class Dialogs {
@@ -46,20 +47,37 @@ class Dialogs {
         title: Text('Checkin'),
         content: Text('Deseja realizar o checkin em ' + response + '?'),
         actions: [
-          FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
-          ),
-          FlatButton(
-            onPressed: () {
-              processService.save(response, username);
-              if (processService.currentProcess != null) {
-                Navigator.popAndPushNamed(context, RouteHelper.processDetails);
-              } else {
-                Navigator.pop(context);
-              }
-            },
-            child: Text('Sim'),
+          Container(
+            padding: EdgeInsets.only(right: 5.0),
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    processService.save(
+                        response,
+                        username,
+                        Provider.of<UserService>(context, listen: false)
+                            .getUser
+                            .id);
+                    if (processService.currentProcess != null) {
+                      Navigator.popAndPushNamed(
+                          context, RouteHelper.processDetails);
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).buttonColor),
+                  ),
+                  child: Text('Sim'),
+                )
+              ],
+            ),
           )
         ],
       ),

@@ -42,7 +42,6 @@ class ProcessListView extends StatelessWidget {
           future: ProcessService().queryByDate(pickedDateMobx.getPicked),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            print('snapshot:' + snapshot.toString());
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 return Text('Ocorreu um erro');
@@ -96,6 +95,7 @@ class ProcessListView extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     var doc = _docs[index].data();
                                     Process process = Process.fromJson(doc);
+                                    process.setId = _docs[index].id;
                                     return ProcessCardItem(
                                       process: process,
                                       isProcessDetailsView: false,

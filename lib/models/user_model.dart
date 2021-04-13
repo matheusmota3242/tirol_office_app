@@ -1,6 +1,7 @@
 import 'enums/user_role_enum.dart';
 
 class User {
+  String _id;
   String _name;
   String _role;
   bool _status;
@@ -11,6 +12,9 @@ class User {
         'name': name,
         'role': role,
       };
+
+  String get id => _id;
+  set id(String id) => this._id = id;
 
   String get name => _name;
   set name(String name) => this._name = name;
