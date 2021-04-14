@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/page_helper.dart';
+import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
@@ -58,16 +59,16 @@ class ProcessDetailsView extends StatelessWidget {
             body: Container(
               color: Theme.of(context).buttonColor,
               padding: EdgeInsets.all(12.0),
-              child: Column(
+              child: ListView(
                 children: [
                   ProcessCardItem(
                     isProcessDetailsView: true,
                     isLastItem: false,
                     process: process,
                   ),
-                  SizedBox(
-                    height: 12,
-                  ),
+                  // SizedBox(
+                  //   height: 12,
+                  // ),
                   FutureBuilder(
                       future: _departmentService.queryByProcess(process),
                       builder: (_, AsyncSnapshot<dynamic> snapshot) {
@@ -79,26 +80,87 @@ class ProcessDetailsView extends StatelessWidget {
                             break;
                           default:
                             print(snapshot.data.docs[0].data());
-                            return Container();
-                          //     return Card(
-                          //   shadowColor: Colors.transparent,
-                          //   child: Container(
-                          //     child: ListView.builder(itemCount: snapshot., itemBuilder: ())
-                          //       // padding: EdgeInsets.all(12.0),
-                          //       // height: double.infinity,
-                          //       // width: double.infinity,
-                          //       // child: ListView.builder(
-                          //       //   itemCount: _departmentService
-                          //       //       .currentDepartment.equipments.length,s
-                          //       //   itemBuilder: (context, index) {
-                          //       //     var equipments =
-                          //       //         _departmentService.currentDepartment.equipments;
-                          //       //     print(equipments[index].getDescription);
-                          //       //     return Text(equipments[0].getDescription);
-                          //       //   },
-                          //       // ),
-                          //       ),
-                          // );
+                            Department department = Department.fromJson(
+                                snapshot.data.docs[0].data());
+
+                            return Column(
+                              children: [
+                                Card(
+                                  margin: EdgeInsets.all(0),
+                                  shadowColor: Colors.transparent,
+                                  child: Container(
+                                    width: double.maxFinite,
+                                    padding: EdgeInsets.all(20.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Equipamentos',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6,
+                                        ),
+                                        SizedBox(
+                                          height: 12.0,
+                                        ),
+                                        Column(
+                                          children: department.equipments
+                                              .map(
+                                                  (e) => Text(e.getDescription))
+                                              .toList(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 16.0,
+                                ),
+                                Card(
+                                  margin: EdgeInsets.all(0),
+                                  child: Container(
+                                    padding: EdgeInsets.all(20.0),
+                                    width: double.maxFinite,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Observações',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6,
+                                        ),
+                                        SizedBox(
+                                          height: 12.0,
+                                        ),
+                                        TextFormField(
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 5,
+                                          decoration: InputDecoration(
+                                            alignLabelWithHint: true,
+                                            labelStyle: TextStyle(
+                                                color: Colors.grey[700],
+                                                height: 0.9,
+                                                fontWeight: FontWeight.w600),
+                                            filled: true,
+                                            counterStyle:
+                                                TextStyle(color: Colors.red),
+                                            contentPadding: EdgeInsets.all(
+                                              10.0,
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
                         }
                       })
                 ],
@@ -126,7 +188,10 @@ class ProcessDetailsView extends StatelessWidget {
           Card(
             shadowColor: Colors.transparent,
             child: Container(
-              child: Text(process.departmentId),
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                children: [],
+              ),
             ),
           )
         ],
