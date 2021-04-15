@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
+import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/process_model.dart';
+import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
@@ -38,7 +40,8 @@ class Dialogs {
     );
   }
 
-  showCheckinDialog(BuildContext context, String response, String username) {
+  showCheckinDialog(BuildContext context, String response, String username,
+      Department department) {
     ProcessService processService =
         Provider.of<ProcessService>(context, listen: false);
     showDialog(
@@ -57,13 +60,17 @@ class Dialogs {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    if (department != null)
+                      DepartmentService().update(department);
+
                     processService.save(
                         response,
                         username,
                         Provider.of<UserService>(context, listen: false)
                             .getUser
                             .id);
-                    if (processService.currentProcess != null) {
+                    if (processService.currentProcess != null &&
+                        department == null) {
                       Navigator.popAndPushNamed(
                           context, RouteHelper.processDetails);
                     } else {

@@ -8,8 +8,13 @@ class PageHelper {
   static const users = 'Usuários';
   static const processDetails = 'Detalhes do processo';
 
-  static const bodyPadding = 20.0;
+  static const double bodyPadding = 12.0;
+  static const double cardBorderRadius = 8.0;
 
+  static const Icon qrCodeIcon = Icon(Icons.qr_code);
   static const List<IconData> fabIcons = const [Icons.done, Icons.close];
-  static const List<Color> fabIconsColors = const [Colors.green, Colors.red];
+  static const List<Color> fabIconsColors = const [
+    Color(0xFF166D97),
+    Color(0xffef5350)
+  ];
 }

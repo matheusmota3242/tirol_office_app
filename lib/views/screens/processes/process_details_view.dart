@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
+
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
@@ -13,13 +15,36 @@ import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/process_card_item.dart';
 
-class ProcessDetailsView extends StatelessWidget {
+class ProcessDetailsView extends StatefulWidget {
+  @override
+  _ProcessDetailsViewState createState() => _ProcessDetailsViewState();
+}
+
+class _ProcessDetailsViewState extends State<ProcessDetailsView>
+    with TickerProviderStateMixin {
+  static const List<IconData> fabIcons = const [Icons.done, Icons.close];
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    super.initState();
+  }
+
+  bool isEquipmentDamagaed(String status) =>
+      status == 'Funcionando' ? true : false;
+
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
     var _processService = Provider.of<ProcessService>(context);
     var _departmentService = Provider.of<DepartmentService>(context);
     var _userService = Provider.of<UserService>(context);
+    var themeData = Theme.of(context);
+    Department _currentDepartment = new Department();
 
     Process process = arguments == null
         ? _processService.currentProcess
@@ -42,7 +67,64 @@ class ProcessDetailsView extends StatelessWidget {
       appBar: AppBar(
         title: Text(PageHelper.processDetails),
         shadowColor: Colors.transparent,
+        actions: [
+          IconButton(
+            icon: PageHelper.qrCodeIcon,
+            onPressed: () => _processService.scanQRCode(
+                context, _userService.getUser.name, _currentDepartment),
+          )
+        ],
       ),
+      // floatingActionButton: Column(
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: List.generate(PageHelper.fabIcons.length, (int index) {
+      //     Widget child = Container(
+      //       height: 70.0,
+      //       width: 56.0,
+      //       alignment: FractionalOffset.topCenter,
+      //       child: ScaleTransition(
+      //         scale: CurvedAnimation(
+      //           parent: _animationController,
+      //           curve: Interval(0.0, 1.0 - index / fabIcons.length / 2.0,
+      //               curve: Curves.easeOut),
+      //         ),
+      //         child: FloatingActionButton(
+      //           heroTag: null,
+      //           backgroundColor: PageHelper.fabIconsColors[index],
+      //           mini: true,
+      //           child: Icon(fabIcons[index], color: Colors.white),
+      //           // !!!build
+      //           onPressed: () => index == 0 ? null : Navigator.pop(context),
+      //         ),
+      //       ),
+      //     );
+      //     return child;
+      //   }).toList()
+      //     ..add(
+      //       FloatingActionButton(
+      //         backgroundColor: Colors.grey,
+      //         heroTag: null,
+      //         child: AnimatedBuilder(
+      //           animation: _animationController,
+      //           builder: (context, child) => Transform(
+      //             transform: new Matrix4.rotationZ(
+      //                 _animationController.value * 0.5 * math.pi),
+      //             alignment: FractionalOffset.center,
+      //             child: Icon(_animationController.isDismissed
+      //                 ? Icons.share
+      //                 : Icons.close),
+      //           ),
+      //         ),
+      //         onPressed: () {
+      //           if (_animationController.isDismissed) {
+      //             _animationController.forward();
+      //           } else {
+      //             _animationController.reverse();
+      //           }
+      //         },
+      //       ),
+      //     ),
+      // ),
       backgroundColor: Colors.grey[200],
       body: FutureBuilder(
         future: FirestoreDB().db_departments.doc(process.departmentId).get(),
@@ -79,8 +161,7 @@ class ProcessDetailsView extends StatelessWidget {
                             return ErrorView();
                             break;
                           default:
-                            print(snapshot.data.docs[0].data());
-                            Department department = Department.fromJson(
+                            _currentDepartment = Department.fromJson(
                                 snapshot.data.docs[0].data());
 
                             return Column(
@@ -105,11 +186,29 @@ class ProcessDetailsView extends StatelessWidget {
                                           height: 12.0,
                                         ),
                                         Column(
-                                          children: department.equipments
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: _currentDepartment
+                                              .equipments
                                               .map(
-                                                  (e) => Text(e.getDescription))
+                                                (e) => _processService
+                                                        .hasOwnership(
+                                                            process.getUserId,
+                                                            _userService
+                                                                .getUser.id)
+                                                    ? CheckboxListTile(
+                                                        contentPadding:
+                                                            EdgeInsets.all(0),
+                                                        title: Text(
+                                                            e.getDescription),
+                                                        value:
+                                                            isEquipmentDamagaed(
+                                                                e.getStatus),
+                                                        onChanged: null)
+                                                    : Text(e.getDescription),
+                                              )
                                               .toList(),
-                                        ),
+                                        )
                                       ],
                                     ),
                                   ),

@@ -30,6 +30,7 @@ class Process {
 
   Process.fromJson(Map<String, dynamic> json)
       : departmentId = json['departmentId'],
+        userId = json['userId'],
         start = DateTime.parse(json['start'].toDate().toString()),
         end = json['end'] == null
             ? null

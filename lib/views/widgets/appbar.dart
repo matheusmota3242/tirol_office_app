@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
@@ -36,8 +37,8 @@ class AppBarWidget extends PreferredSize {
           onPressed: () => showFilterDialog(),
         ),
         IconButton(
-          icon: Icon(Icons.qr_code),
-          onPressed: () => _processService.scanQRCode(context, user.name),
+          icon: PageHelper.qrCodeIcon,
+          onPressed: () => _processService.scanQRCode(context, null, user.name),
         ),
       ],
     );

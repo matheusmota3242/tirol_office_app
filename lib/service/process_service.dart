@@ -20,7 +20,8 @@ class ProcessService {
   }
 
   // Método que escaneia o QRCode
-  void scanQRCode(BuildContext context, String username) async {
+  void scanQRCode(
+      BuildContext context, String username, Department department) async {
     String response = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000', "Cancelar", true, ScanMode.QR);
 
@@ -40,7 +41,7 @@ class ProcessService {
         var department = Department.fromJson(doc.docs[0].data());
         Provider.of<DepartmentService>(context, listen: false)
             .setCurrentDepartment(department);
-        Dialogs().showCheckinDialog(context, response, username);
+        Dialogs().showCheckinDialog(context, response, username, department);
       } else
         Toasts.showToast(content: 'Departamento não existe');
     }
@@ -48,24 +49,34 @@ class ProcessService {
 
   // Método que salva o processo no banco de dados
   void save(String response, String username, String userId) async {
-    Process process = Process();
     var now = DateTime.now();
-    process.setUserId = userId;
-    process.setDepartmentId = response;
-    process.setStart = now;
-    process.setResponsible = username;
-    currentProcess = Process();
-    currentProcess = process;
-    FirestoreDB()
-        .db_processes
-        .doc(process.getDepartmentId)
-        .get()
-        .then((snapshot) {
-      // Caso o processo não exista no banco...
-      if (!snapshot.exists) {
-        FirestoreDB().db_processes.add(process.toJson());
-      } else {
-        print(snapshot.data());
+    var processes;
+    try {
+      processes = await FirestoreDB()
+          .db_processes
+          .where(
+            'start',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+              DateTimeHelper().convertToInitialDate(now),
+            ),
+          )
+          .where(
+            'start',
+            isLessThanOrEqualTo: Timestamp.fromDate(
+              DateTimeHelper().convertToEndDate(now),
+            ),
+          )
+          .where('departmentId', isEqualTo: response)
+          .get();
+    } catch (e) {}
+    Process process;
+    // Caso o processo não exista no banco...
+    if (processes.size > 0) {
+      process = Process();
+      process = Process.fromJson(processes.docs
+          .data()
+          .firstWhere((element) => element['departmentId'] == response));
+      if (process != null) {
         process.setEnd = DateTime.now();
         currentProcess.setEnd = process.getEnd;
         FirestoreDB()
@@ -73,7 +84,14 @@ class ProcessService {
             .doc(process.getDepartmentId)
             .update({'end': process.getEnd});
       }
-    });
+    } else {
+      process = Process();
+      process.setResponsible = username;
+      process.setUserId = userId;
+      process.setDepartmentId = response;
+      process.setStart = now;
+      FirestoreDB().db_processes.add(process.toJson());
+    }
   }
 
   pickDate(BuildContext context) async {
@@ -109,4 +127,7 @@ class ProcessService {
         .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
         .get();
   }
+
+  hasOwnership(String processOwnerId, String userId) =>
+      processOwnerId == userId ? true : false;
 }
