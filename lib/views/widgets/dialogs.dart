@@ -40,8 +40,8 @@ class Dialogs {
     );
   }
 
-  showCheckinDialog(BuildContext context, String response, String username,
-      Department department) {
+  showCheckinDialog(BuildContext context, String response,
+      Department department, observations) {
     ProcessService processService =
         Provider.of<ProcessService>(context, listen: false);
     showDialog(
@@ -55,27 +55,21 @@ class Dialogs {
             child: Row(
               children: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
                   child: Text('Cancelar'),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (department != null)
-                      DepartmentService().update(department);
-
-                    processService.save(
-                        response,
-                        username,
-                        Provider.of<UserService>(context, listen: false)
-                            .getUser
-                            .id);
-                    if (processService.currentProcess != null &&
-                        department == null) {
-                      Navigator.popAndPushNamed(
-                          context, RouteHelper.processDetails);
-                    } else {
-                      Navigator.pop(context);
-                    }
+                    Navigator.of(context).pop(true);
+                    // if (processService.currentProcess != null &&
+                    //     department == null) {
+                    //   Navigator.popAndPushNamed(
+                    //       context, RouteHelper.processDetails);
+                    // } else {
+                    //   Navigator.pop(context);
+                    // }
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
@@ -88,7 +82,18 @@ class Dialogs {
           )
         ],
       ),
-    );
+    ).then((result) async {
+      if (result) {
+        if (department != null) DepartmentService().update(department);
+
+        await processService.save(
+            response,
+            Provider.of<UserService>(context, listen: false).getUser,
+            observations);
+
+        Navigator.popAndPushNamed(context, RouteHelper.processes);
+      }
+    });
   }
 
   showLogoutDialog(BuildContext context) {

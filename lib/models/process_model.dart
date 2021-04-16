@@ -7,6 +7,7 @@ class Process {
   DateTime start;
   DateTime end;
   String responsible;
+  String observations;
 
   get getId => this.id;
   set setId(String id) => this.id = id;
@@ -25,6 +26,9 @@ class Process {
 
   get getEnd => this.end;
   set setEnd(end) => this.end = end;
+
+  get getObservations => this.observations;
+  set setObservations(String observations) => this.observations = observations;
 
   Process();
 

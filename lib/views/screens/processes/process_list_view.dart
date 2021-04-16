@@ -31,7 +31,7 @@ class ProcessListView extends StatelessWidget {
     final _processService = ProcessService();
     PickedDateMobx pickedDateMobx = PickedDateMobx();
     final _processes = FirestoreDB().db_processes;
-
+    print('Entrou em proces_list_view');
     showFilterDialog(BuildContext context) async {
       var pickedTimestamp = await Dialogs().showProcessFilterDialog(context);
       if (pickedTimestamp != null) pickedDateMobx.setPicked(pickedTimestamp);
@@ -76,8 +76,8 @@ class ProcessListView extends StatelessWidget {
                             ),
                             IconButton(
                               icon: Icon(Icons.qr_code),
-                              onPressed: () => _processService.scanQRCode(
-                                  context, _user.name, null),
+                              onPressed: () =>
+                                  _processService.scanQRCode(context, null),
                             ),
                           ],
                         ),

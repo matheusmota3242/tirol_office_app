@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/page_helper.dart';
+import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
@@ -20,20 +21,7 @@ class ProcessDetailsView extends StatefulWidget {
   _ProcessDetailsViewState createState() => _ProcessDetailsViewState();
 }
 
-class _ProcessDetailsViewState extends State<ProcessDetailsView>
-    with TickerProviderStateMixin {
-  static const List<IconData> fabIcons = const [Icons.done, Icons.close];
-  AnimationController _animationController;
-
-  @override
-  void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    super.initState();
-  }
-
+class _ProcessDetailsViewState extends State<ProcessDetailsView> {
   bool isEquipmentDamagaed(String status) =>
       status == 'Funcionando' ? true : false;
 
@@ -54,6 +42,11 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView>
         ? print('Usuário dono do processo')
         : print('Usuário nao e dono do processo');
 
+    scanQRCode() async {
+      await _processService.scanQRCode(
+          context, _currentDepartment, process.getObservations);
+    }
+
     // if (arguments['process'] == null) {
     //   process = arguments['process'];
     // } else {
@@ -70,8 +63,9 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView>
         actions: [
           IconButton(
             icon: PageHelper.qrCodeIcon,
-            onPressed: () => _processService.scanQRCode(
-                context, _userService.getUser.name, _currentDepartment),
+            onPressed: () {
+              scanQRCode();
+            },
           )
         ],
       ),
@@ -163,7 +157,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView>
                           default:
                             _currentDepartment = Department.fromJson(
                                 snapshot.data.docs[0].data());
-
+                            _currentDepartment.id = snapshot.data.docs[0].id;
                             return Column(
                               children: [
                                 Card(
@@ -205,7 +199,24 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView>
                                                             isEquipmentDamagaed(
                                                                 e.getStatus),
                                                         onChanged: null)
-                                                    : Text(e.getDescription),
+                                                    : Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 8.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(e
+                                                                .getDescription),
+                                                            Icon(e.getStatus ==
+                                                                    'Funcionando'
+                                                                ? Icons.done
+                                                                : Icons.warning)
+                                                          ],
+                                                        ),
+                                                      ),
                                               )
                                               .toList(),
                                         )
@@ -235,6 +246,8 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView>
                                           height: 12.0,
                                         ),
                                         TextFormField(
+                                          onChanged: (value) =>
+                                              process.setObservations = value,
                                           keyboardType: TextInputType.multiline,
                                           maxLines: 5,
                                           decoration: InputDecoration(

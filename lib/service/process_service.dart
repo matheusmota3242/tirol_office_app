@@ -7,6 +7,7 @@ import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
+import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
@@ -20,8 +21,8 @@ class ProcessService {
   }
 
   // Método que escaneia o QRCode
-  void scanQRCode(
-      BuildContext context, String username, Department department) async {
+  void scanQRCode(BuildContext context,
+      [Department department, String observations]) async {
     String response = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000', "Cancelar", true, ScanMode.QR);
 
@@ -31,24 +32,23 @@ class ProcessService {
     } else {
       // Caso reconheça como um código QR válido...
 
-      var doc = await FirestoreDB()
-          .db_departments
-          .where('name', isEqualTo: response)
-          .get();
+      // var doc = await FirestoreDB()
+      //     .db_departments
+      //     .where('name', isEqualTo: response)
+      //     .get();
 
-      if (doc.size > 0) {
-        // Caso o departamento lido exista
-        var department = Department.fromJson(doc.docs[0].data());
-        Provider.of<DepartmentService>(context, listen: false)
-            .setCurrentDepartment(department);
-        Dialogs().showCheckinDialog(context, response, username, department);
-      } else
-        Toasts.showToast(content: 'Departamento não existe');
+      // if (doc.size > 0) {
+      //   // Caso o departamento lido exista
+      //   var department = Department.fromJson(doc.docs[0].data());
+      //   Provider.of<DepartmentService>(context, listen: false)
+      //       .setCurrentDepartment(department);
+      await Dialogs()
+          .showCheckinDialog(context, response, department, observations);
     }
   }
 
   // Método que salva o processo no banco de dados
-  void save(String response, String username, String userId) async {
+  void save(String response, User user, String observations) async {
     var now = DateTime.now();
     var processes;
     try {
@@ -68,26 +68,36 @@ class ProcessService {
           )
           .where('departmentId', isEqualTo: response)
           .get();
-    } catch (e) {}
+    } catch (e) {
+      print('Erro: $e');
+    }
     Process process;
     // Caso o processo não exista no banco...
     if (processes.size > 0) {
       process = Process();
-      process = Process.fromJson(processes.docs
-          .data()
-          .firstWhere((element) => element['departmentId'] == response));
+
+      var docs = processes.docs;
+      for (var doc in docs) {
+        if (doc.data()['departmentId'] == response) {
+          process = Process.fromJson(doc.data());
+          process.setId = doc.id;
+        }
+      }
       if (process != null) {
         process.setEnd = DateTime.now();
-        currentProcess.setEnd = process.getEnd;
+        process.setObservations = observations;
         FirestoreDB()
             .db_processes
-            .doc(process.getDepartmentId)
-            .update({'end': process.getEnd});
+            .doc(process.getId)
+            .update({'end': process.getEnd, 'observations': observations})
+            .then((value) =>
+                print('Documento ${process.getId} atualizado com sucesso!'))
+            .catchError((error, stackTrace) => print('$error : $stackTrace'));
       }
     } else {
       process = Process();
-      process.setResponsible = username;
-      process.setUserId = userId;
+      process.setResponsible = user.name;
+      process.setUserId = user.id;
       process.setDepartmentId = response;
       process.setStart = now;
       FirestoreDB().db_processes.add(process.toJson());
