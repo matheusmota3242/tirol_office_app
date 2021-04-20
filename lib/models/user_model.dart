@@ -13,6 +13,14 @@ class User {
         'role': role,
       };
 
+  User.fromJson(Map<String, dynamic> json)
+      : _name = json['name'],
+        _role = json['role'],
+        _status = json['status'],
+        _email = json['email'];
+
+  User();
+
   String get id => _id;
   set id(String id) => this._id = id;
 

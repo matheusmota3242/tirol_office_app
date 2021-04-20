@@ -1,4 +1,5 @@
 class ServiceProvider {
+  String _id;
   String _name;
   String _category;
   String _phone;
@@ -10,6 +11,17 @@ class ServiceProvider {
         'phone': _phone,
         'email': _email,
       };
+
+  ServiceProvider.fromJson(Map<String, dynamic> json)
+      : _name = json['name'] == null ? '(vazio)' : json['name'],
+        _category = json['category'] == null ? '(vazio)' : json['category'],
+        _phone = json['phone'] == null ? '(vazio)' : json['phone'],
+        _email = json['email'] == null ? '(vazio)' : json['email'];
+
+  ServiceProvider();
+
+  String get id => this._id;
+  set id(String value) => this._id = value;
 
   String get name => this._name;
   set name(String value) => this._name = value;

@@ -7,6 +7,7 @@ class PageHelper {
   static const servicesForm = 'Novo serviço';
   static const users = 'Usuários';
   static const processDetails = 'Detalhes do processo';
+  static const serviceProvider = 'Detalhes do serviço';
 
   static const double bodyPadding = 12.0;
   static const double cardBorderRadius = 8.0;

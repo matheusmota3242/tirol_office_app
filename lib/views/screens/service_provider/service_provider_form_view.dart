@@ -8,6 +8,10 @@ import 'package:tirol_office_app/service/service_provider_service.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ServiceProviderFormView extends StatefulWidget {
+  final ServiceProvider serviceProvider;
+
+  const ServiceProviderFormView({Key key, this.serviceProvider})
+      : super(key: key);
   _ServiceProviderFormViewState createState() =>
       _ServiceProviderFormViewState();
 }
@@ -31,8 +35,8 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
     AuthHelper _authHelper = AuthHelper();
     var themeData = Theme.of(context);
 
-    void save() {
-      _service.save(currentServiceProvider);
+    void persist() {
+      _service.persist(this.widget.serviceProvider);
       Navigator.pop(context);
       Toasts.showToast(content: 'Serviço adicionado com sucesso');
     }
@@ -46,9 +50,12 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
     }
 
     Widget serviceProviderNameField() {
+      TextEditingController controller =
+          TextEditingController(text: this.widget.serviceProvider.name);
       return Container(
         child: TextFormField(
-          onChanged: (value) => currentServiceProvider.name = value,
+          controller: controller,
+          onChanged: (value) => this.widget.serviceProvider.name = value,
           decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: 'Nome',
@@ -71,9 +78,11 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
     }
 
     Widget serviceProviderEmailField() {
+      TextEditingController controller =
+          TextEditingController(text: this.widget.serviceProvider.email);
       return Container(
         child: TextFormField(
-          onChanged: (value) => currentServiceProvider.email = value,
+          onChanged: (value) => this.widget.serviceProvider.email = value,
           validator: (value) => validateEmail(value),
           decoration: InputDecoration(
             alignLabelWithHint: true,
@@ -97,9 +106,12 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
     }
 
     Widget serviceProviderPhoneField() {
+      TextEditingController controller =
+          TextEditingController(text: this.widget.serviceProvider.phone);
       return Container(
         child: TextFormField(
-          onChanged: (value) => currentServiceProvider.phone = value,
+          onChanged: (value) => this.widget.serviceProvider.phone = value,
+          controller: controller,
           decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: 'Telefone',
@@ -109,7 +121,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
                 fontWeight: FontWeight.w600),
             filled: true,
             counterStyle: TextStyle(color: Colors.red),
-            hintText: '(99) 99999-9999',
+            hintText: '999999999',
             contentPadding: EdgeInsets.only(
               left: 10.0,
             ),
@@ -122,9 +134,12 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
     }
 
     Widget serviceProviderCategoryField() {
+      TextEditingController controller =
+          TextEditingController(text: this.widget.serviceProvider.category);
       return Container(
         child: TextFormField(
-          onChanged: (value) => currentServiceProvider.category = value,
+          onChanged: (value) => this.widget.serviceProvider.category = value,
+          controller: controller,
           decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: 'Categoria',
@@ -189,7 +204,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
                 backgroundColor: PageHelper.fabIconsColors[index],
                 mini: true,
                 child: Icon(PageHelper.fabIcons[index], color: Colors.white),
-                onPressed: () => index == 0 ? save() : cancel(),
+                onPressed: () => index == 0 ? persist() : cancel(),
               ),
             ),
           );

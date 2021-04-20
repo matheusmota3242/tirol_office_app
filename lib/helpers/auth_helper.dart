@@ -16,6 +16,7 @@ class AuthHelper {
   }
 
   String validateEmail(String email) {
+    print(email);
     if (email.isEmpty) {
       return 'Por favor, preencha o campo de e-mail';
     } else if (!checkEmail(email)) {

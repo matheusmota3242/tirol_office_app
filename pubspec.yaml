@@ -30,17 +30,18 @@ dependencies:
   cupertino_icons: ^1.0.0
   flutter_svg:
   flutter_barcode_scanner:
-  firebase_core: ^0.7.0
-  firebase_auth: ^0.20.0+1
-  cloud_firestore: ^0.16.0
+  firebase_core: ^1.0.4
+  firebase_auth: ^1.1.1
+  cloud_firestore: 
   mobx: ^1.2.1+4
   flutter_mobx: ^1.1.0+2 
   provider: ^4.3.3
   fluttertoast: ^7.1.6
   email_validator: '^1.0.5'
   string_validator: ^0.1.4
-  intl: ^0.16.1
-
+  intl: 
+  flutter_localizations:
+    sdk: flutter
 
 
 dev_dependencies:

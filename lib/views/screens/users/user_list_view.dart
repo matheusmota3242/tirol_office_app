@@ -12,13 +12,17 @@ import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
-class UserListView extends StatelessWidget {
-  final User currentUser;
-  final _users = FirestoreDB().db_users;
+class UserListView extends StatefulWidget {
+  @override
+  _UserListViewState createState() => _UserListViewState();
+}
 
-  UserListView({Key key, this.currentUser}) : super(key: key);
+class _UserListViewState extends State<UserListView> {
+  User currentUser;
+  var _users = FirestoreDB().db_users;
 
   var choices = <String>['Alterar papel do usuário'];
+  String selectedRole = '';
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +63,15 @@ class UserListView extends StatelessWidget {
         return ListView.builder(
           itemCount: snapshot.data.docs.length,
           itemBuilder: (context, index) {
-            String name = snapshot.data.docs[index]['name'];
-            String role = snapshot.data.docs[index]['role'];
-            String docId = snapshot.data.docs[index].id;
-            print(docId);
+            User user = User.fromJson(snapshot.data.docs[index].data());
+
+            user.id = snapshot.data.docs[index].id;
             return ListTile(
-              title: Text(name),
+              title: Text(user.name),
               leading: Icon(Icons.person_outline),
-              subtitle: Text(role.toString()),
+              subtitle: Text(user.role.toString()),
               trailing: PopupMenuButton<String>(
-                onSelected: (value) =>
-                    onSelectedChoice(value, context, docId, name),
+                onSelected: (value) => onSelectedChoice(value, context, user),
                 icon: Icon(Icons.more_vert),
                 itemBuilder: (BuildContext context) {
                   return choices.map((String choice) {
@@ -104,40 +106,65 @@ class UserListView extends StatelessWidget {
         );
   }
 
-  onSelectedChoice(
-      String choice, BuildContext context, String docId, String name) {
+  onSelectedChoice(String choice, BuildContext context, User user) {
     switch (choice) {
       case 'Alterar papel do usuário':
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                  //title: Text('Alterar papel do usuário'),
-                  content: Container(
-                height: 260.0,
-                child: Column(
-                  children: <Widget>[
-                    Text('Selecione o papel a ser atribuído ao usuário $name'),
-                    SizedBox(height: 20.0),
-                    Container(
-                      width: double.maxFinite,
-                      height: 200,
-                      child: ListView.builder(
-                        itemCount: Role().getRoles().length,
-                        itemBuilder: (context, index) {
-                          var role = Role().getRoles()[index];
-                          return TextButton(
-                              child: Text(role),
-                              onPressed: () {
-                                changeFirestoreUserRole(role, docId);
-                                Navigator.pop(context);
-                              });
-                        },
+              return StatefulBuilder(builder: (_, setState) {
+                selectedRole = user.role;
+                return AlertDialog(
+                    //title: Text('Alterar papel do usuário'),
+                    content: Container(
+                  height: 310.0,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                          'Selecione o papel a ser atribuído ao usuário ${user.name}'),
+                      SizedBox(height: 20.0),
+                      Container(
+                        width: double.maxFinite,
+                        height: 200,
+                        child: ListView.builder(
+                          itemCount: Role().getRoles().length,
+                          itemBuilder: (context, index) {
+                            var role = Role().getRoles()[index];
+                            print(user.role);
+                            return RadioListTile(
+                                title: Text(role),
+                                value: selectedRole == role ? 1 : 0,
+                                groupValue: 1,
+                                onChanged: (value) {
+                                  setState(() {
+                                    user.role = role;
+                                    selectedRole = user.role;
+                                  });
+                                });
+                          },
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              ));
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('Cancelar')),
+                            ElevatedButton(
+                                onPressed: () {
+                                  changeFirestoreUserRole(
+                                      selectedRole, user.id);
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Salvar'))
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ));
+              });
             });
         break;
       default:

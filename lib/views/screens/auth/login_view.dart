@@ -89,7 +89,7 @@ class LoginView extends StatelessWidget {
           _horizontalPadding, verticalPadding),
       child: TextFormField(
         onChanged: (value) => _email = value.trim(),
-        validator: (value) => validateEmail(_email),
+        validator: (value) => validateEmail(value),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           filled: true,

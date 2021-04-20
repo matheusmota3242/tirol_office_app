@@ -18,7 +18,17 @@ class Dialogs {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
-        lastDate: DateTime.now());
+        lastDate: DateTime.now(),
+        builder: (context, child) {
+          return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: Colors.red,
+                accentColor: Colors.red,
+                colorScheme:
+                    ColorScheme.light(primary: const Color(0xFF166D97)),
+              ),
+              child: child);
+        });
     print(picked);
     return picked;
   }
