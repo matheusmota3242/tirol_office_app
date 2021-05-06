@@ -29,7 +29,7 @@ class LoginView extends StatelessWidget {
           child: ListView(
             children: [
               _loginImage(screenHeight),
-              _titlePage(screenHeight),
+              //_titlePage(screenHeight),
               _emailField(screenHeight),
               _passwordField(screenHeight),
               _forgotPasswordButton(screenHeight, context),
@@ -45,14 +45,14 @@ class LoginView extends StatelessWidget {
 
   // Imagem da página
   Widget _loginImage(double screenHeight) {
-    var heightImage = 150.0;
+    var heightImage = 120.0;
     var paddingTop = (screenHeight / 12);
-    var paddingBottom = (screenHeight / 30);
+    var paddingBottom = (screenHeight / 15);
     return SizedBox(
       child: Padding(
         padding: EdgeInsets.only(top: paddingTop, bottom: paddingBottom),
-        child: SvgPicture.asset(
-          'assets/images/login.svg',
+        child: Image.asset(
+          'assets/images/logo.png',
           height: heightImage,
         ),
       ),
