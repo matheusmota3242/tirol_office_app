@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/mobx/picked_date_mobx.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
@@ -31,7 +32,6 @@ class ProcessListView extends StatelessWidget {
     final _processService = ProcessService();
     PickedDateMobx pickedDateMobx = PickedDateMobx();
     final _processes = FirestoreDB().db_processes;
-    print('Entrou em proces_list_view');
     showFilterDialog(BuildContext context) async {
       var pickedTimestamp = await Dialogs().showProcessFilterDialog(context);
       if (pickedTimestamp != null) pickedDateMobx.setPicked(pickedTimestamp);
@@ -85,27 +85,32 @@ class ProcessListView extends StatelessWidget {
                           user: _user,
                           currentPage: title,
                         ),
-                        body: Container(
-                          color: Theme.of(context).buttonColor,
-                          padding: EdgeInsets.all(16.0),
-                          child: _docs.isEmpty
-                              ? EmptyView()
-                              : ListView.builder(
-                                  itemCount: _docs.length,
-                                  itemBuilder: (context, index) {
-                                    var doc = _docs[index].data();
-                                    Process process = Process.fromJson(doc);
-                                    process.setId = _docs[index].id;
-                                    return ProcessCardItem(
-                                      process: process,
-                                      isProcessDetailsView: false,
-                                      isLastItem: index == (_docs.length - 1)
-                                          ? true
-                                          : false,
-                                    );
-                                  },
-                                ),
-                        ),
+                        body: Column(
+                            // color: Theme.of(context).buttonColor,
+                            // padding: EdgeInsets.all(16.0),
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                  '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${pickedDateMobx.getPicked.month}'),
+                              _docs.isEmpty
+                                  ? EmptyView()
+                                  : ListView.builder(
+                                      itemCount: _docs.length,
+                                      itemBuilder: (context, index) {
+                                        var doc = _docs[index].data();
+                                        Process process = Process.fromJson(doc);
+                                        process.setId = _docs[index].id;
+                                        return ProcessCardItem(
+                                          process: process,
+                                          isProcessDetailsView: false,
+                                          isLastItem:
+                                              index == (_docs.length - 1)
+                                                  ? true
+                                                  : false,
+                                        );
+                                      },
+                                    ),
+                            ]),
                       );
                     } else {
                       return ErrorView();

@@ -87,6 +87,7 @@ class RegisterView extends StatelessWidget {
         onChanged: (value) => _email = value.trim(),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
+          prefixIcon: Icon(Icons.email),
           filled: true,
           contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
               fieldVerticalPadding, fieldRightPadding, fieldVerticalPadding),
@@ -119,6 +120,7 @@ class RegisterView extends StatelessWidget {
         onChanged: (value) => _name = value.trim(),
         keyboardType: TextInputType.name,
         decoration: InputDecoration(
+          prefixIcon: Icon(Icons.person),
           filled: true,
           contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
               fieldVerticalPadding, fieldRightPadding, fieldVerticalPadding),
@@ -150,6 +152,7 @@ class RegisterView extends StatelessWidget {
             onChanged: (value) => _password = value.trim(),
             obscureText: true,
             decoration: InputDecoration(
+              prefixIcon: Icon(Icons.lock),
               filled: true,
               counterStyle: TextStyle(color: Colors.red),
               hintText: 'Senha',
@@ -195,6 +198,7 @@ class RegisterView extends StatelessWidget {
             onChanged: (value) => _passwordConfirm = value.trim(),
             obscureText: true,
             decoration: InputDecoration(
+              prefixIcon: Icon(Icons.lock),
               filled: true,
               counterStyle: TextStyle(color: Colors.red),
               hintText: 'Confirmar senha',

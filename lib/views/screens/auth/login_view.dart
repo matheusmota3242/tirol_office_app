@@ -92,10 +92,11 @@ class LoginView extends StatelessWidget {
         validator: (value) => validateEmail(value),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
+          prefixIcon: Icon(Icons.email),
           filled: true,
           contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
               fieldVerticalPadding, fieldRightPadding, fieldVerticalPadding),
-          hintText: 'Usuário',
+          hintText: 'E-mail',
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
           ),
@@ -120,6 +121,7 @@ class LoginView extends StatelessWidget {
             onChanged: (value) => _password = value.trim(),
             validator: (value) => validatePassword(value),
             decoration: InputDecoration(
+              prefixIcon: Icon(Icons.lock),
               filled: true,
               counterStyle: TextStyle(color: Colors.red),
               hintText: 'Senha',
