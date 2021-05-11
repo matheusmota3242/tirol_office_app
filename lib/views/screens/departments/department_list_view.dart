@@ -28,20 +28,24 @@ class DepartmentListView extends StatelessWidget {
         title: Text(title),
         shadowColor: Colors.transparent,
         actions: [
-          IconButton(
-            // !!!
-            //onPressed: () => pushToDepartmentFormView(context),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => DepartmentTestView(
-                  currentDepartment: new Department(),
-                  edit: false,
+          Visibility(
+            visible: Provider.of<UserService>(context).getUser.role ==
+                    'Administrador'
+                ? true
+                : false,
+            child: IconButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DepartmentTestView(
+                    currentDepartment: new Department(),
+                    edit: false,
+                  ),
                 ),
               ),
-            ),
-            icon: Icon(
-              Icons.add,
+              icon: Icon(
+                Icons.add,
+              ),
             ),
           )
         ],

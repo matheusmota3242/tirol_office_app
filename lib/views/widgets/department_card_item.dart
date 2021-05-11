@@ -4,6 +4,7 @@ import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
+import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/views/screens/departments/department_edit_form_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
@@ -46,20 +47,26 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                       style: theme.textTheme.headline5,
                     ),
                   ),
-                  PopupMenuButton(
-                    onSelected: (value) => handleChoice(value),
+                  Visibility(
+                    visible: Provider.of<UserService>(context).getUser.role ==
+                            'Administrador'
+                        ? true
+                        : false,
+                    child: PopupMenuButton(
+                      onSelected: (value) => handleChoice(value),
 
-                    //color: Colors.grey[800],
-                    padding: EdgeInsets.all(0),
-                    itemBuilder: (_) => ['Editar', 'Remover']
-                        .map(
-                          (choice) => PopupMenuItem<String>(
-                            child: Text(choice),
-                            value: choice,
-                          ),
-                        )
-                        .toList(),
-                  ),
+                      //color: Colors.grey[800],
+                      padding: EdgeInsets.all(0),
+                      itemBuilder: (_) => ['Editar', 'Remover']
+                          .map(
+                            (choice) => PopupMenuItem<String>(
+                              child: Text(choice),
+                              value: choice,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -142,6 +149,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
   }
 
   void handleChoice(String choice) {
+    print('choice: $choice');
     Provider.of<DepartmentService>(context, listen: false).editedDepartment =
         widget.department;
 

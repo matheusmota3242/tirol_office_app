@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/service_provider_model.dart';
 import 'package:tirol_office_app/service/service_provider_service.dart';
+import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
@@ -22,9 +24,15 @@ class ServiceProviderListView extends StatelessWidget {
       appBar: AppBar(
         title: Text(PageHelper.services),
         actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => pushToServiceProvidersFormView(context),
+          Visibility(
+            visible: Provider.of<UserService>(context).getUser.role ==
+                    'Administrador'
+                ? true
+                : false,
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () => pushToServiceProvidersFormView(context),
+            ),
           )
         ],
       ),
@@ -64,20 +72,27 @@ class ServiceProviderListView extends StatelessWidget {
                         ),
                         subtitle: Text(serviceProvider.category),
 
-                        trailing: PopupMenuButton<String>(
-                          itemBuilder: (_) => [
-                            PopupMenuItem(
-                              value: 'Editar',
-                              child: Text('Editar'),
-                            ),
-                            PopupMenuItem(
-                              value: 'Remover',
-                              child: Text('Remover'),
-                            ),
-                          ],
-                          onSelected: (value) =>
-                              _handleChoice(context, value, serviceProvider),
-                          icon: Icon(Icons.more_vert),
+                        trailing: Visibility(
+                          visible:
+                              Provider.of<UserService>(context).getUser.role ==
+                                      'Administrador'
+                                  ? true
+                                  : false,
+                          child: PopupMenuButton<String>(
+                            itemBuilder: (_) => [
+                              PopupMenuItem(
+                                value: 'Editar',
+                                child: Text('Editar'),
+                              ),
+                              PopupMenuItem(
+                                value: 'Remover',
+                                child: Text('Remover'),
+                              ),
+                            ],
+                            onSelected: (value) =>
+                                _handleChoice(context, value, serviceProvider),
+                            icon: Icon(Icons.more_vert),
+                          ),
                         ),
                       );
                     });

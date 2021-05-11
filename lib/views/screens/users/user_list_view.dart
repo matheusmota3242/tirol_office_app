@@ -26,6 +26,7 @@ class _UserListViewState extends State<UserListView> {
 
   @override
   Widget build(BuildContext context) {
+    currentUser = Provider.of<UserService>(context).getUser;
     final title = PageHelper.users;
     return StreamBuilder(
       stream: _users.snapshots(),
@@ -42,7 +43,7 @@ class _UserListViewState extends State<UserListView> {
                 title: Text(title),
               ),
               drawer: MenuDrawer(
-                user: Provider.of<UserService>(context).getUser,
+                user: currentUser,
                 currentPage: title,
               ),
               body: setBody(context, snapshot),
@@ -70,17 +71,20 @@ class _UserListViewState extends State<UserListView> {
               title: Text(user.name),
               leading: Icon(Icons.person_outline),
               subtitle: Text(user.role.toString()),
-              trailing: PopupMenuButton<String>(
-                onSelected: (value) => onSelectedChoice(value, context, user),
-                icon: Icon(Icons.more_vert),
-                itemBuilder: (BuildContext context) {
-                  return choices.map((String choice) {
-                    return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice),
-                    );
-                  }).toList();
-                },
+              trailing: Visibility(
+                visible: currentUser.role == 'Administrador' ? true : false,
+                child: PopupMenuButton<String>(
+                  onSelected: (value) => onSelectedChoice(value, context, user),
+                  icon: Icon(Icons.more_vert),
+                  itemBuilder: (BuildContext context) {
+                    return choices.map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice),
+                      );
+                    }).toList();
+                  },
+                ),
               ),
             );
           },

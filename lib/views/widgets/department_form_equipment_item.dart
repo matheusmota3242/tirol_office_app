@@ -243,7 +243,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
               child: PopupMenuButton(
                 onSelected: (value) => handleChoice(value),
                 padding: EdgeInsets.all(0),
-                itemBuilder: (_) => ['Editar']
+                itemBuilder: (_) => ['Editar', 'Remover']
                     .map(
                       (choice) => PopupMenuItem<String>(
                         child: Text(choice),
