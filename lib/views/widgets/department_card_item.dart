@@ -48,6 +48,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                   ),
                   PopupMenuButton(
                     onSelected: (value) => handleChoice(value),
+
                     //color: Colors.grey[800],
                     padding: EdgeInsets.all(0),
                     itemBuilder: (_) => ['Editar', 'Remover']
@@ -84,6 +85,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                           (e) => Container(
                             margin: EdgeInsets.only(top: 10.0),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   e.description,
@@ -92,17 +94,20 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                                 SizedBox(
                                   width: 8.0,
                                 ),
-                                e.getStatus == "Funcionando"
-                                    ? Icon(
-                                        Icons.done,
-                                        color: Colors.green[400],
-                                        size: 20.0,
-                                      )
-                                    : Icon(
-                                        Icons.warning_amber_rounded,
-                                        color: Colors.red[400],
-                                        size: 20.0,
-                                      ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10.0),
+                                  child: e.getStatus == "Funcionando"
+                                      ? Icon(
+                                          Icons.done,
+                                          color: Colors.green[400],
+                                          size: 20.0,
+                                        )
+                                      : Icon(
+                                          Icons.warning_amber_rounded,
+                                          color: Colors.red[400],
+                                          size: 20.0,
+                                        ),
+                                )
                               ],
                             ),
                           ),

@@ -21,10 +21,8 @@ class DateTimeHelper {
   }
 
   String convertIntToStringWeekday(int weekday) {
+    print('weekday: $weekday');
     switch (weekday) {
-      case 0:
-        return 'Dom';
-        break;
       case 1:
         return 'Seg';
         break;
@@ -43,6 +41,52 @@ class DateTimeHelper {
       case 6:
         return 'Sáb';
         break;
+      case 7:
+        return 'Dom';
+        break;
+      default:
+    }
+  }
+
+  String convertIntToStringMonth(int month) {
+    switch (month) {
+      case 0:
+        return 'janeiro';
+        break;
+      case 1:
+        return 'fevereiro';
+        break;
+      case 2:
+        return 'março';
+        break;
+      case 3:
+        return 'abril';
+        break;
+      case 4:
+        return 'maio';
+        break;
+      case 5:
+        return 'junho';
+        break;
+      case 6:
+        return 'julho';
+        break;
+      case 7:
+        return 'agosto';
+        break;
+      case 8:
+        return 'setembro';
+        break;
+      case 9:
+        return 'outubro';
+        break;
+      case 10:
+        return 'novembro';
+        break;
+      case 11:
+        return 'dezembro';
+        break;
+
       default:
     }
   }

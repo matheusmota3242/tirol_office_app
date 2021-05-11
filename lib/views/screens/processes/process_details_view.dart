@@ -210,10 +210,19 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                                           children: [
                                                             Text(e
                                                                 .getDescription),
-                                                            Icon(e.getStatus ==
-                                                                    'Funcionando'
-                                                                ? Icons.done
-                                                                : Icons.warning)
+                                                            Icon(
+                                                              e.getStatus ==
+                                                                      'Funcionando'
+                                                                  ? Icons.done
+                                                                  : Icons
+                                                                      .warning_amber_rounded,
+                                                              color: e.getStatus ==
+                                                                      'Funcionando'
+                                                                  ? Colors.green[
+                                                                      400]
+                                                                  : Colors
+                                                                      .red[400],
+                                                            )
                                                           ],
                                                         ),
                                                       ),

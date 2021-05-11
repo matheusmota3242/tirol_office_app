@@ -64,9 +64,11 @@ class ProcessListView extends StatelessWidget {
                         _user.role == Role().getRoleByEnum(UserRole.DEFAULT)) {
                       var _docs = snapshot.data.docs;
                       return Scaffold(
+                        backgroundColor: Theme.of(context).buttonColor,
                         appBar: AppBar(
                           //automaticallyImplyLeading: false,>
                           title: Text(title),
+                          //backgroundColor: Theme.of(context).buttonColor,
                           backgroundColor: Theme.of(context).buttonColor,
                           shadowColor: Colors.transparent,
                           actions: [
@@ -85,32 +87,57 @@ class ProcessListView extends StatelessWidget {
                           user: _user,
                           currentPage: title,
                         ),
-                        body: Column(
-                            // color: Theme.of(context).buttonColor,
-                            // padding: EdgeInsets.all(16.0),
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${pickedDateMobx.getPicked.month}'),
-                              _docs.isEmpty
-                                  ? EmptyView()
-                                  : ListView.builder(
-                                      itemCount: _docs.length,
-                                      itemBuilder: (context, index) {
-                                        var doc = _docs[index].data();
-                                        Process process = Process.fromJson(doc);
-                                        process.setId = _docs[index].id;
-                                        return ProcessCardItem(
-                                          process: process,
-                                          isProcessDetailsView: false,
-                                          isLastItem:
-                                              index == (_docs.length - 1)
-                                                  ? true
-                                                  : false,
-                                        );
-                                      },
-                                    ),
-                            ]),
+                        body: Padding(
+                          padding: const EdgeInsets.all(PageHelper.bodyPadding),
+                          child: Column(
+                              // color: Theme.of(context).buttonColor,
+                              // padding: EdgeInsets.all(16.0),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper().convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                _docs.isEmpty
+                                    ? Padding(
+                                        padding: EdgeInsets.only(
+                                            top: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                4),
+                                        child: EmptyView(),
+                                      )
+                                    : Expanded(
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 16.0),
+                                          child: ListView.builder(
+                                            itemCount: _docs.length,
+                                            itemBuilder: (context, index) {
+                                              var doc = _docs[index].data();
+                                              Process process =
+                                                  Process.fromJson(doc);
+                                              process.setId = _docs[index].id;
+                                              return ProcessCardItem(
+                                                process: process,
+                                                isProcessDetailsView: false,
+                                                isLastItem:
+                                                    index == (_docs.length - 1)
+                                                        ? true
+                                                        : false,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                              ]),
+                        ),
                       );
                     } else {
                       return ErrorView();

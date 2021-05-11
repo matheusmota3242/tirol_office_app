@@ -98,10 +98,10 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
       setState(() {
         setEquipmentDescription(descriptionTemp);
         setEquipmentStatus(statusTemp);
-        if (widget.editing) {
-          Provider.of<DepartmentService>(context, listen: false)
-              .modifyEquipment(widget.equipment);
-        }
+        // if (widget.editing) {
+        //   Provider.of<DepartmentService>(context, listen: false)
+        //       .modifyEquipment(widget.equipment);
+        // }
       });
     }
 
@@ -111,7 +111,8 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
 
       showDialog(
         context: context,
-        builder: (_) => StatefulBuilder(builder: (_, setState) {
+        builder: (_) =>
+            StatefulBuilder(builder: (BuildContext context, setState) {
           return AlertDialog(
             title: Text('Novo equipamento'),
             content: Form(
