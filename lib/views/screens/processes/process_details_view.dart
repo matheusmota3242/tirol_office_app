@@ -47,6 +47,56 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
           context, _currentDepartment, process.getObservations);
     }
 
+    Widget observationsField() {
+      TextEditingController controller =
+          TextEditingController(text: process.getObservations);
+      return Card(
+        margin: EdgeInsets.all(0),
+        child: Container(
+          padding: EdgeInsets.all(20.0),
+          width: double.maxFinite,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Observações',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(
+                height: 12.0,
+              ),
+              TextFormField(
+                onChanged: (value) => process.setObservations = value,
+                controller: controller,
+                readOnly: _processService.hasOwnership(
+                            process.userId, _userService.getUser.id) ||
+                        process.end != null
+                    ? true
+                    : false,
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  alignLabelWithHint: true,
+                  labelStyle: TextStyle(
+                      color: Colors.grey[700],
+                      height: 0.9,
+                      fontWeight: FontWeight.w600),
+                  filled: true,
+                  counterStyle: TextStyle(color: Colors.red),
+                  contentPadding: EdgeInsets.all(
+                    10.0,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
     // if (arguments['process'] == null) {
     //   process = arguments['process'];
     // } else {
@@ -179,56 +229,62 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                         SizedBox(
                                           height: 12.0,
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: _currentDepartment
-                                              .equipments
-                                              .map(
-                                                (e) => _processService
-                                                        .hasOwnership(
-                                                            process.getUserId,
-                                                            _userService
-                                                                .getUser.id)
-                                                    ? CheckboxListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.all(0),
-                                                        title: Text(
-                                                            e.getDescription),
-                                                        value:
-                                                            isEquipmentDamagaed(
-                                                                e.getStatus),
-                                                        onChanged: null)
-                                                    : Container(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                top: 8.0),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(e
-                                                                .getDescription),
-                                                            Icon(
-                                                              e.getStatus ==
-                                                                      'Funcionando'
-                                                                  ? Icons.done
-                                                                  : Icons
-                                                                      .warning_amber_rounded,
-                                                              color: e.getStatus ==
-                                                                      'Funcionando'
-                                                                  ? Colors.green[
-                                                                      400]
-                                                                  : Colors
-                                                                      .red[400],
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
+                                        _currentDepartment.equipments.isEmpty
+                                            ? Text(
+                                                'Não há equipamentos cadastrados')
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children:
+                                                    _currentDepartment
+                                                        .equipments
+                                                        .map(
+                                                          (e) => _processService
+                                                                  .hasOwnership(
+                                                                      process
+                                                                          .getUserId,
+                                                                      _userService
+                                                                          .getUser
+                                                                          .id)
+                                                              ? CheckboxListTile(
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              0),
+                                                                  title: Text(e
+                                                                      .getDescription),
+                                                                  value: isEquipmentDamagaed(e
+                                                                      .getStatus),
+                                                                  onChanged:
+                                                                      null)
+                                                              : Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                              top: 8.0),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(e
+                                                                          .getDescription),
+                                                                      Icon(
+                                                                        e.getStatus ==
+                                                                                'Funcionando'
+                                                                            ? Icons.done
+                                                                            : Icons.warning_amber_rounded,
+                                                                        color: e.getStatus ==
+                                                                                'Funcionando'
+                                                                            ? Colors.green[400]
+                                                                            : Colors.red[400],
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                        )
+                                                        .toList(),
                                               )
-                                              .toList(),
-                                        )
                                       ],
                                     ),
                                   ),
@@ -236,50 +292,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                 SizedBox(
                                   height: 16.0,
                                 ),
-                                Card(
-                                  margin: EdgeInsets.all(0),
-                                  child: Container(
-                                    padding: EdgeInsets.all(20.0),
-                                    width: double.maxFinite,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Observações',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6,
-                                        ),
-                                        SizedBox(
-                                          height: 12.0,
-                                        ),
-                                        TextFormField(
-                                          onChanged: (value) =>
-                                              process.setObservations = value,
-                                          keyboardType: TextInputType.multiline,
-                                          maxLines: 5,
-                                          decoration: InputDecoration(
-                                            alignLabelWithHint: true,
-                                            labelStyle: TextStyle(
-                                                color: Colors.grey[700],
-                                                height: 0.9,
-                                                fontWeight: FontWeight.w600),
-                                            filled: true,
-                                            counterStyle:
-                                                TextStyle(color: Colors.red),
-                                            contentPadding: EdgeInsets.all(
-                                              10.0,
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide.none,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
+                                observationsField()
                               ],
                             );
                         }

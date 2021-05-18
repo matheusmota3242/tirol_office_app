@@ -9,6 +9,7 @@ import 'package:tirol_office_app/service/user_service.dart';
 
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
+import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/widgets/department_card_item.dart';
@@ -54,6 +55,7 @@ class DepartmentListView extends StatelessWidget {
         user: Provider.of<UserService>(context).getUser,
         currentPage: title,
       ),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: StreamBuilder(
         stream: FirestoreDB().db_departments.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -79,6 +81,7 @@ class DepartmentListView extends StatelessWidget {
 
     var docs = snapshot.data.docs;
     var theme = Theme.of(context);
+    if (docs.isEmpty) return EmptyView();
     return Container(
       color: theme.backgroundColor,
       padding: EdgeInsets.all(16),

@@ -36,6 +36,7 @@ class Process {
       : departmentId = json['departmentId'],
         userId = json['userId'],
         start = DateTime.parse(json['start'].toDate().toString()),
+        observations = json['observations'],
         end = json['end'] == null
             ? null
             : DateTime.parse(json['end'].toDate().toString()),

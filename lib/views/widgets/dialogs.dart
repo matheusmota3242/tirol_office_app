@@ -54,45 +54,48 @@ class Dialogs {
       Department department, observations) {
     ProcessService processService =
         Provider.of<ProcessService>(context, listen: false);
+
     showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Checkin'),
-        content: Text('Deseja realizar o checkin em ' + response + '?'),
-        actions: [
-          Container(
-            padding: EdgeInsets.only(right: 5.0),
-            child: Row(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text('Cancelar'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                    // if (processService.currentProcess != null &&
-                    //     department == null) {
-                    //   Navigator.popAndPushNamed(
-                    //       context, RouteHelper.processDetails);
-                    // } else {
-                    //   Navigator.pop(context);
-                    // }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Theme.of(context).buttonColor),
-                  ),
-                  child: Text('Sim'),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    ).then((result) async {
+        context: context,
+        builder: (_) =>
+            StatefulBuilder(builder: (BuildContext context, setState) {
+              return AlertDialog(
+                title: Text('Checkin'),
+                content: Text('Deseja realizar o checkin em ' + response + '?'),
+                actions: [
+                  Container(
+                    padding: EdgeInsets.only(right: 5.0),
+                    child: Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: Text('Cancelar'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                            // if (processService.currentProcess != null &&
+                            //     department == null) {
+                            //   Navigator.popAndPushNamed(
+                            //       context, RouteHelper.processDetails);
+                            // } else {
+                            //   Navigator.pop(context);
+                            // }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).buttonColor),
+                          ),
+                          child: Text('Sim'),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              );
+            })).then((result) async {
       if (result) {
         if (department != null) DepartmentService().update(department);
 

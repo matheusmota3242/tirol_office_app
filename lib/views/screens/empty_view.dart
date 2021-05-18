@@ -7,7 +7,7 @@ class EmptyView extends StatelessWidget {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.transparent,
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
@@ -26,7 +26,7 @@ class EmptyView extends StatelessWidget {
             Text(
               'Não há itens cadastrados',
               style: TextStyle(
-                  color: Colors.grey[800],
+                  color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.w500),
             )
