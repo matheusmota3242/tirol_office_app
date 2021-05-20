@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
@@ -30,7 +31,8 @@ class AuthService {
         var userResponse =
             await FirestoreDB().db_users.doc(result.user.uid).get();
         _userService = Provider.of<UserService>(context, listen: false);
-        _userService.setUser(userResponse, result.user.uid);
+        _userService.setUserByUid(userResponse, result.user.uid);
+        await saveUserIdInMemory(result.user.uid);
       } catch (e) {
         print(e);
       }
@@ -39,6 +41,19 @@ class AuthService {
       return result.user != null;
     }
     return null;
+  }
+
+  saveUserIdInMemory(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid', uid);
+    print('saveUserIdInMemory');
+  }
+
+  void cleanUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    print('cleanUserInfo');
+    print(prefs.getString('uid'));
+    prefs.clear();
   }
 
   Future signUp(
@@ -64,6 +79,7 @@ class AuthService {
     await _auth.signOut();
     _userService = Provider.of<UserService>(context, listen: false);
     _userService.cleanUser();
+    cleanUserInfo();
     Navigator.pushNamed(context, RouteHelper.login);
   }
 }

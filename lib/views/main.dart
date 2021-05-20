@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
@@ -21,15 +22,24 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
-  runApp(MaterialApp(localizationsDelegates: [
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate
-  ], supportedLocales: [
-    const Locale('pt', 'BR')
-  ], home: MyApp()));
+  var prefs = await SharedPreferences.getInstance();
+
+  runApp(
+    MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [const Locale('pt', 'BR')],
+      home: MyApp(uid: prefs.getString('uid')),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
+  final String uid;
+
+  const MyApp({Key key, this.uid}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -104,7 +114,11 @@ class MyApp extends StatelessWidget {
           'serviceProviders': (_) => ServiceProviderListView(),
           'serviceProvidersForm': (_) => ServiceProviderFormView()
         },
-        home: LoginView(),
+        home: uid == null
+            ? LoginView()
+            : ProcessListView(
+                uid: uid,
+              ),
       ),
     );
   }
