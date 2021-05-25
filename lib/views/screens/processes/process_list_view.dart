@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/db/firestore.dart';
@@ -24,9 +25,6 @@ import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/process_card_item.dart';
 
 class ProcessListView extends StatefulWidget {
-  final String uid;
-
-  const ProcessListView({Key key, this.uid}) : super(key: key);
   @override
   _ProcessListViewState createState() => _ProcessListViewState();
 }
@@ -45,7 +43,9 @@ class _ProcessListViewState extends State<ProcessListView> {
     setState(() {
       loadingUser = true;
     });
-    user = await FirestoreDB().findById(widget.uid);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    user.name = prefs.getString('username');
+    user.role = prefs.getString('role');
     setState(() {
       loadingUser = false;
     });

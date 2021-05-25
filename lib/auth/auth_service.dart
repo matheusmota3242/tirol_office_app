@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,13 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
+import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   CollectionReference usersCollection = FirestoreDB().db_users;
   UserService _userService = UserService();
-  User user;
+  auth.User user;
 
   Future loginWithEmail(
       {@required String email,
@@ -32,7 +33,8 @@ class AuthService {
             await FirestoreDB().db_users.doc(result.user.uid).get();
         _userService = Provider.of<UserService>(context, listen: false);
         _userService.setUserByUid(userResponse, result.user.uid);
-        await saveUserIdInMemory(result.user.uid);
+        var user = User.fromJson(userResponse.data());
+        await saveUserInMemory(user.name, user.role);
       } catch (e) {
         print(e);
       }
@@ -43,16 +45,16 @@ class AuthService {
     return null;
   }
 
-  saveUserIdInMemory(String uid) async {
+  saveUserInMemory(String username, String role) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('uid', uid);
+    prefs.setString('username', username);
+    prefs.setString('role', role);
     print('saveUserIdInMemory');
   }
 
   void cleanUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     print('cleanUserInfo');
-    print(prefs.getString('uid'));
     prefs.clear();
   }
 
