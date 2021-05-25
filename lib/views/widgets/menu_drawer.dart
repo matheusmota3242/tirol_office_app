@@ -174,17 +174,20 @@ class MenuDrawer extends StatelessWidget {
 
   // Lista de departamentos
   void pushToDepartmentListView(BuildContext context) {
-    Navigator.pushNamed(context, RouteHelper.departments);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteHelper.departments, (Route<dynamic> route) => false);
   }
 
   // Lista de processos
   void pushToProcessListView(BuildContext context) {
-    Navigator.pushNamed(context, RouteHelper.processes);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteHelper.processes, (Route<dynamic> route) => false);
   }
 
   // Lista de prestadores de serviço
   pushToServiceProvidersView(BuildContext context) {
-    Navigator.pushNamed(context, RouteHelper.serviceProviders);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteHelper.serviceProviders, (Route<dynamic> route) => false);
   }
 
   // Logout

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tirol_office_app/helpers/auth_helper.dart';
+import 'package:tirol_office_app/helpers/validation_helper.dart';
 import 'dart:math' as math;
 
 import 'package:tirol_office_app/helpers/page_helper.dart';
@@ -32,17 +32,15 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
   Widget build(BuildContext context) {
     ServiceProviderService _service = ServiceProviderService();
     ServiceProvider currentServiceProvider = ServiceProvider();
-    AuthHelper _authHelper = AuthHelper();
+    ValidationHelper _validationHelper = ValidationHelper();
     var themeData = Theme.of(context);
-
+    GlobalKey<FormState> _formKey = GlobalKey();
     void persist() {
-      _service.persist(this.widget.serviceProvider);
-      Navigator.pop(context);
-      Toasts.showToast(content: 'Serviço adicionado com sucesso');
-    }
-
-    String validateEmail(String email) {
-      _authHelper.validateEmail(email);
+      if (_formKey.currentState.validate()) {
+        _service.persist(this.widget.serviceProvider);
+        Navigator.pop(context);
+        Toasts.showToast(content: 'Serviço adicionado com sucesso');
+      }
     }
 
     void cancel() {
@@ -56,6 +54,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
         child: TextFormField(
           controller: controller,
           onChanged: (value) => this.widget.serviceProvider.name = value,
+          validator: (value) => _validationHelper.validateName(value),
           decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: 'Nome',
@@ -83,7 +82,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
       return Container(
         child: TextFormField(
           onChanged: (value) => this.widget.serviceProvider.email = value,
-          validator: (value) => validateEmail(value),
+          validator: (value) => _validationHelper.validateEmail(value),
           decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: 'Email',
@@ -112,6 +111,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
         child: TextFormField(
           onChanged: (value) => this.widget.serviceProvider.phone = value,
           controller: controller,
+          validator: (value) => _validationHelper.validatePhoneNumber(value),
           decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: 'Telefone',
@@ -140,6 +140,8 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
         child: TextFormField(
           onChanged: (value) => this.widget.serviceProvider.category = value,
           controller: controller,
+          validator: (value) =>
+              value.isEmpty ? 'Por favor, preencha o campo categoria' : null,
           decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: 'Categoria',
@@ -167,22 +169,25 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
       ),
       body: Container(
         padding: EdgeInsets.all(PageHelper.bodyPadding),
-        child: Column(
-          children: [
-            serviceProviderNameField(),
-            SizedBox(
-              height: PageHelper.bodyPadding,
-            ),
-            serviceProviderEmailField(),
-            SizedBox(
-              height: PageHelper.bodyPadding,
-            ),
-            serviceProviderPhoneField(),
-            SizedBox(
-              height: PageHelper.bodyPadding,
-            ),
-            serviceProviderCategoryField(),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              serviceProviderNameField(),
+              SizedBox(
+                height: PageHelper.bodyPadding,
+              ),
+              serviceProviderEmailField(),
+              SizedBox(
+                height: PageHelper.bodyPadding,
+              ),
+              serviceProviderPhoneField(),
+              SizedBox(
+                height: PageHelper.bodyPadding,
+              ),
+              serviceProviderCategoryField(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(

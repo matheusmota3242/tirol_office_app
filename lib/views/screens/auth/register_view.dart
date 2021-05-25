@@ -4,12 +4,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/helpers/auth_helper.dart';
+import 'package:tirol_office_app/helpers/validation_helper.dart';
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class RegisterView extends StatelessWidget {
-  AuthHelper _authHelper = AuthHelper();
+  ValidationHelper _validationHelper = ValidationHelper();
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
   String _email, _password, _passwordConfirm, _name;
@@ -244,11 +244,11 @@ class RegisterView extends StatelessWidget {
   }
 
   String validateEmail(String email) {
-    return _authHelper.validateEmail(email);
+    return _validationHelper.validateEmail(email);
   }
 
   String validatePassword(String password) {
-    return _authHelper.validatePassword(password);
+    return _validationHelper.validatePassword(password);
   }
 
   dynamic signup(BuildContext context, AuthService authService) async {
