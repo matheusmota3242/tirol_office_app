@@ -73,6 +73,29 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
+              onPressed: () => currentPage != PageHelper.observations
+                  ? pushToObservationListView(context)
+                  : null,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.assignment,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    PageHelper.observations,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
               onPressed: () => currentPage != PageHelper.departaments
                   ? pushToDepartmentListView(context)
                   : null,
@@ -182,6 +205,11 @@ class MenuDrawer extends StatelessWidget {
   void pushToProcessListView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         RouteHelper.processes, (Route<dynamic> route) => false);
+  }
+
+  void pushToObservationListView(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteHelper.observations, (Route<dynamic> route) => false);
   }
 
   // Lista de prestadores de serviço

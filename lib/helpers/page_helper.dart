@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class PageHelper {
   static const processes = 'Processos';
   static const departaments = 'Departamentos';
+  static const observations = 'Observações';
   static const services = 'Serviços';
   static const servicesForm = 'Novo serviço';
   static const users = 'Usuários';

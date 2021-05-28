@@ -37,7 +37,10 @@ class ServiceProviderListView extends StatelessWidget {
           )
         ],
       ),
-      drawer: MenuDrawer(user: user),
+      drawer: MenuDrawer(
+        user: user,
+        currentPage: PageHelper.observations,
+      ),
       body: StreamBuilder(
           stream: FirestoreDB().db_service_providers.snapshots(),
           builder:

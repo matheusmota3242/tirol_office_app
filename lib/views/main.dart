@@ -11,6 +11,7 @@ import 'package:tirol_office_app/service/user_service.dart';
 
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
+import 'package:tirol_office_app/views/screens/observations/observations_list_view.dart';
 import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
 import 'package:tirol_office_app/views/screens/processes/process_details_view.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_form_view.dart';
@@ -109,6 +110,7 @@ class MyApp extends StatelessWidget {
           'login': (_) => LoginView(),
           'processes': (_) => ProcessListView(),
           'processDetails': (_) => ProcessDetailsView(),
+          'observations': (_) => ObservationListView(),
           'departments': (_) => DepartmentListView(),
           'users': (_) => UserListView(),
           'serviceProviders': (_) => ServiceProviderListView(),
