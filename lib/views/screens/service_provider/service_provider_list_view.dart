@@ -5,6 +5,7 @@ import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/service_provider_model.dart';
+import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/service_provider_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
@@ -13,22 +14,22 @@ import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_form_view.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_view.dart';
 import 'package:tirol_office_app/views/widgets/appbar.dart';
+import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ServiceProviderListView extends StatelessWidget {
   ServiceProviderService _service = ServiceProviderService();
+
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserService>(context).getUser;
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(PageHelper.services),
         actions: [
           Visibility(
-            visible: Provider.of<UserService>(context).getUser.role ==
-                    'Administrador'
-                ? true
-                : false,
+            visible: user.role == 'Administrador' ? true : false,
             child: IconButton(
               icon: Icon(Icons.add),
               onPressed: () => pushToServiceProvidersFormView(context),
@@ -36,6 +37,7 @@ class ServiceProviderListView extends StatelessWidget {
           )
         ],
       ),
+      drawer: MenuDrawer(user: user),
       body: StreamBuilder(
           stream: FirestoreDB().db_service_providers.snapshots(),
           builder:
@@ -53,10 +55,6 @@ class ServiceProviderListView extends StatelessWidget {
                 return ListView.builder(
                     itemCount: snapshot.data.docs.length,
                     itemBuilder: (context, index) {
-                      // String name = snapshot.data.docs[index]['name'];
-                      // String email = snapshot.data.docs[index]['email'];
-                      // String phone = snapshot.data.docs[index]['phone'];
-                      // String category = snapshot.data.docs[index]['category'];
                       ServiceProvider serviceProvider =
                           ServiceProvider.fromJson(
                               snapshot.data.docs[index].data());

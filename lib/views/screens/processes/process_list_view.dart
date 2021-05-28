@@ -115,6 +115,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                                 ),
                               ],
                             ),
+                            resizeToAvoidBottomInset: false,
                             drawer: MenuDrawer(
                               user: user,
                               currentPage: title,
