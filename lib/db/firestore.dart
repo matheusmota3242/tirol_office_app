@@ -9,6 +9,8 @@ class FirestoreDB {
       FirebaseFirestore.instance.collection("processes");
   CollectionReference db_service_providers =
       FirebaseFirestore.instance.collection("service_providers");
+  CollectionReference db_observations =
+      FirebaseFirestore.instance.collection("observations");
 
   findById(String uid) async {
     var json = await db_users.doc(uid).get();

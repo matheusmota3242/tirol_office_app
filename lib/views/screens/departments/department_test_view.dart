@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
+import 'package:tirol_office_app/utils/PageUtils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
@@ -11,7 +12,8 @@ class DepartmentTestView extends StatefulWidget {
   final Department currentDepartment;
   final bool edit;
 
-  const DepartmentTestView({Key key, this.currentDepartment, this.edit})
+  const DepartmentTestView(
+      {Key key, this.currentDepartment, @required this.edit})
       : super(key: key);
   @override
   _DepartmentTestViewState createState() => _DepartmentTestViewState();
@@ -20,8 +22,7 @@ class DepartmentTestView extends StatefulWidget {
 class _DepartmentTestViewState extends State<DepartmentTestView>
     with TickerProviderStateMixin {
   var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
-  static const List<IconData> fabIcons = const [Icons.done, Icons.close];
-  static const List<Color> fabIconsColors = const [Colors.green, Colors.red];
+
   AnimationController _animationController;
   DepartmentService _service = DepartmentService();
   @override
@@ -30,7 +31,6 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    print(widget.currentDepartment.equipments.length);
     super.initState();
   }
 
@@ -96,7 +96,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
-        children: List.generate(fabIcons.length, (int index) {
+        children: List.generate(PageUtils.fabIcons.length, (int index) {
           Widget child = Container(
             height: 70.0,
             width: 56.0,
@@ -104,14 +104,15 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
             child: ScaleTransition(
               scale: CurvedAnimation(
                 parent: _animationController,
-                curve: Interval(0.0, 1.0 - index / fabIcons.length / 2.0,
+                curve: Interval(
+                    0.0, 1.0 - index / PageUtils.fabIcons.length / 2.0,
                     curve: Curves.easeOut),
               ),
               child: FloatingActionButton(
                 heroTag: null,
-                backgroundColor: fabIconsColors[index],
+                backgroundColor: PageUtils.fabIconsColors[index],
                 mini: true,
-                child: Icon(fabIcons[index], color: Colors.white),
+                child: Icon(PageUtils.fabIcons[index], color: Colors.white),
                 // !!!build
                 onPressed: () => index == 0 ? submit() : Navigator.pop(context),
               ),
@@ -145,7 +146,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
           ),
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(PageUtils.bodyPadding),
         child: ListView(
           children: [
             departmentNameField(),

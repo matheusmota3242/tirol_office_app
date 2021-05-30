@@ -1,18 +1,33 @@
 class Observation {
-  String id;
-  String content;
-  String author;
-  DateTime dateTime;
+  String _id;
+  String _title;
+  String _content;
+  String _author;
+  DateTime _dateTime;
 
-  String get getId => this.id;
-  set setId(String id) => this.id = id;
+  Observation();
 
-  get getContent => this.content;
-  set setContent(content) => this.content = content;
+  Map<String, dynamic> toJson() => {
+        'title': _title,
+        'content': _content,
+        'author': _author,
+        'dateTime': _dateTime,
+      };
 
-  get getAuthor => this.author;
-  set setAuthor(author) => this.author = author;
+  Observation.fromJson(Map<String, dynamic> json)
+      : _title = json['title'],
+        _content = json['content'],
+        _author = json['author'],
+        _dateTime = DateTime.parse(json['dateTime'].toDate().toString());
 
-  get getDateTime => this.dateTime;
-  set setDateTime(dateTime) => this.dateTime = dateTime;
+  get id => this._id;
+  set id(String id) => this._id = id;
+  get title => this._title;
+  set title(String title) => this._title = title;
+  get content => this._content;
+  set content(content) => this._content = content;
+  get author => this._author;
+  set author(author) => this._author = author;
+  get dateTime => this._dateTime;
+  set dateTime(dateTime) => this._dateTime = dateTime;
 }
