@@ -76,13 +76,6 @@ class ProcessCardItem extends StatelessWidget {
                       ? Text(
                           '${_dateTimeHelper.formatTime(process.getStart)} | ${_dateTimeHelper.formatTime(process.getEnd)}',
                           style: theme.textTheme.subtitle1,
-                          // process.start.hour.toString() +
-                          //     ':' +
-                          //     process.start.minute.toString() +
-                          //     " | " +
-                          //     process.end?.hour.toString() +
-                          //     ":" +
-                          //     process.end?.minute.toString(),
                         )
                       : Text(
                           '${_dateTimeHelper.formatTime(process.getStart)} | --:--',

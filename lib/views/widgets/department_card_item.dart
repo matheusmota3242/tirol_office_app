@@ -70,21 +70,6 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                 ],
               ),
             ),
-            // SizedBox(
-            //   height: 12.0,
-            // ),
-            // Text(
-            //   'Equipamentos',
-            //   style: TextStyle(
-            //       fontSize: 15.0,
-            //       fontWeight: FontWeight.w400,
-            //       color: Colors.grey[700]),
-            // ),
-            // Container(
-            //   width: double.infinity,
-            //   height: 1.0,
-            //   color: Colors.grey[500],
-            // ),
             equipments.isNotEmpty
                 ? Column(
                     children: equipments
@@ -102,7 +87,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                                   width: 8.0,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
+                                  padding: EdgeInsets.only(right: 13.0),
                                   child: e.getStatus == "Funcionando"
                                       ? Icon(
                                           Icons.done,
@@ -149,7 +134,6 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
   }
 
   void handleChoice(String choice) {
-    print('choice: $choice');
     Provider.of<DepartmentService>(context, listen: false).editedDepartment =
         widget.department;
 

@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 import 'package:tirol_office_app/db/firestore.dart';
-import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/widgets/appbar.dart';
@@ -97,22 +97,13 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
       );
     }
 
-    // if (arguments['process'] == null) {
-    //   process = arguments['process'];
-    // } else {
-    //   process = _processService.currentProcess;
-    // }
-
-    // print(_userService.getUser.name);
-    // if (arguments != null) print(arguments['process']);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageHelper.processDetails),
+        title: Text(PageUtils.processDetails),
         shadowColor: Colors.transparent,
         actions: [
           IconButton(
-            icon: PageHelper.qrCodeIcon,
+            icon: PageUtils.qrCodeIcon,
             onPressed: () {
               scanQRCode();
             },
@@ -121,7 +112,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
       ),
       // floatingActionButton: Column(
       //   mainAxisSize: MainAxisSize.min,
-      //   children: List.generate(PageHelper.fabIcons.length, (int index) {
+      //   children: List.generate(PageUtils.fabIcons.length, (int index) {
       //     Widget child = Container(
       //       height: 70.0,
       //       width: 56.0,
@@ -134,7 +125,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
       //         ),
       //         child: FloatingActionButton(
       //           heroTag: null,
-      //           backgroundColor: PageHelper.fabIconsColors[index],
+      //           backgroundColor: PageUtils.fabIconsColors[index],
       //           mini: true,
       //           child: Icon(fabIcons[index], color: Colors.white),
       //           // !!!build

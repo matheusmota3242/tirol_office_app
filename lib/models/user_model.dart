@@ -11,6 +11,7 @@ class User {
   Map<String, dynamic> toJson() => {
         'name': name,
         'role': role,
+        'email': email,
       };
 
   User.fromJson(Map<String, dynamic> json)

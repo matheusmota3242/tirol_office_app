@@ -1,10 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:tirol_office_app/helpers/page_helper.dart';
-import 'package:tirol_office_app/helpers/route_helper.dart';
 
+import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/user_model.dart';
-import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/users/user_list_view.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 
@@ -50,7 +49,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0, top: 8.0),
             child: TextButton(
-              onPressed: () => currentPage != PageHelper.processes
+              onPressed: () => currentPage != PageUtils.processes
                   ? pushToProcessListView(context)
                   : null,
               child: Row(
@@ -63,7 +62,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageHelper.processes,
+                    PageUtils.processes,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -73,7 +72,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => currentPage != PageHelper.observations
+              onPressed: () => currentPage != PageUtils.observations
                   ? pushToObservationListView(context)
                   : null,
               child: Row(
@@ -86,7 +85,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageHelper.observations,
+                    PageUtils.observations,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -96,7 +95,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => currentPage != PageHelper.departaments
+              onPressed: () => currentPage != PageUtils.departaments
                   ? pushToDepartmentListView(context)
                   : null,
               child: Row(
@@ -109,7 +108,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageHelper.departaments,
+                    PageUtils.departaments,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -119,7 +118,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-                onPressed: () => currentPage != PageHelper.users
+                onPressed: () => currentPage != PageUtils.users
                     ? pushToUserListView(context)
                     : null,
                 child: Row(
@@ -132,7 +131,7 @@ class MenuDrawer extends StatelessWidget {
                       width: 5.0,
                     ),
                     Text(
-                      PageHelper.users,
+                      PageUtils.users,
                       style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                     ),
                   ],
@@ -152,7 +151,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageHelper.services,
+                    PageUtils.services,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],

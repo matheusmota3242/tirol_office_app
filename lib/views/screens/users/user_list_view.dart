@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:tirol_office_app/db/firestore.dart';
-import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
-import 'package:tirol_office_app/views/widgets/appbar.dart';
-import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
@@ -27,9 +26,9 @@ class _UserListViewState extends State<UserListView> {
   @override
   Widget build(BuildContext context) {
     currentUser = Provider.of<UserService>(context).getUser;
-    final title = PageHelper.users;
+    final title = PageUtils.users;
     return StreamBuilder(
-      stream: _users.snapshots(),
+      stream: _users.orderBy('name').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -69,8 +68,8 @@ class _UserListViewState extends State<UserListView> {
             user.id = snapshot.data.docs[index].id;
             return ListTile(
               title: Text(user.name),
-              leading: Icon(Icons.person_outline),
-              subtitle: Text(user.role.toString()),
+              leading: Icon(Icons.person_outline, color: handleIcon(user.role)),
+              subtitle: Text(user.role),
               trailing: Visibility(
                 visible: currentUser.role == 'Administrador' ? true : false,
                 child: PopupMenuButton<String>(
@@ -99,7 +98,8 @@ class _UserListViewState extends State<UserListView> {
   changeFirestoreUserRole(String role, String docId) {
     String successMsg = 'Papel alterado com sucesso';
     String errorMsg = 'Ocorreu um erro. Tente novamente mais tarde';
-    _users
+    FirestoreDB()
+        .db_users
         .doc(docId)
         .update({'role': role})
         .then(
@@ -170,6 +170,21 @@ class _UserListViewState extends State<UserListView> {
                 ));
               });
             });
+        break;
+      default:
+    }
+  }
+
+  Color handleIcon(String role) {
+    switch (role) {
+      case 'Administrador':
+        return Colors.green[200];
+        break;
+      case 'Comum':
+        return Colors.yellow[200];
+        break;
+      case 'Aguardando aprovação':
+        return Colors.red[200];
         break;
       default:
     }

@@ -5,7 +5,7 @@ import 'dart:math' as math;
 import 'package:tirol_office_app/models/observation_model.dart';
 import 'package:tirol_office_app/service/observation_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
-import 'package:tirol_office_app/utils/PageUtils.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ObservationFormView extends StatefulWidget {
@@ -175,7 +175,7 @@ class _ObservationFormViewState extends State<ObservationFormView>
         onChanged: (value) => setContent(value),
         validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
         controller: controller,
-        maxLines: 15,
+        maxLines: 8,
         decoration: InputDecoration(
           alignLabelWithHint: true,
           labelText: 'Conteúdo',

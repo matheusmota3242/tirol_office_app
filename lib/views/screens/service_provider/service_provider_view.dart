@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tirol_office_app/helpers/page_helper.dart';
+
 import 'package:tirol_office_app/models/service_provider_model.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 
 class ServiceProviderView extends StatelessWidget {
   final ServiceProvider serviceProvider;
@@ -11,10 +12,10 @@ class ServiceProviderView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageHelper.serviceProvider),
+        title: Text(PageUtils.serviceProvider),
       ),
       body: Container(
-        padding: EdgeInsets.all(PageHelper.bodyPadding),
+        padding: EdgeInsets.all(PageUtils.bodyPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

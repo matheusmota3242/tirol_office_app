@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tirol_office_app/db/firestore.dart';
-import 'package:tirol_office_app/helpers/page_helper.dart';
-import 'package:tirol_office_app/models/department_model.dart';
-import 'package:tirol_office_app/models/equipment_model.dart';
-import 'package:tirol_office_app/service/user_service.dart';
 
+import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/models/department_model.dart';
+import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
@@ -23,7 +22,7 @@ class DepartmentListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = PageHelper.departaments;
+    String title = PageUtils.departaments;
     return Scaffold(
       appBar: AppBar(
         title: Text(title),

@@ -4,7 +4,7 @@ import 'dart:math' as math;
 
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
-import 'package:tirol_office_app/utils/PageUtils.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 

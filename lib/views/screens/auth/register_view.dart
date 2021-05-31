@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/helpers/validation_helper.dart';
+import 'package:tirol_office_app/utils/validation_utils.dart';
 import 'package:tirol_office_app/views/screens/auth/login_view.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 

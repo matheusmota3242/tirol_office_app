@@ -1,25 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
-import 'package:tirol_office_app/helpers/page_helper.dart';
 import 'package:tirol_office_app/mobx/picked_date_mobx.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/users/waiting_for_approval_view.dart';
-import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/process_card_item.dart';
@@ -53,7 +51,7 @@ class _ProcessListViewState extends State<ProcessListView> {
 
   @override
   Widget build(BuildContext context) {
-    String title = PageHelper.processes;
+    String title = PageUtils.processes;
     final _authService = Provider.of<AuthService>(context);
     Provider.of<UserService>(context).setUser(user);
     final _processService = ProcessService();
@@ -122,7 +120,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                             ),
                             body: Padding(
                               padding:
-                                  const EdgeInsets.all(PageHelper.bodyPadding),
+                                  const EdgeInsets.all(PageUtils.bodyPadding),
                               child: Column(
                                   // color: Theme.of(context).buttonColor,
                                   // padding: EdgeInsets.all(16.0),
@@ -170,7 +168,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                                                 },
                                               ),
                                             ),
-                                          ),
+                                          )
                                   ]),
                             ),
                           );
@@ -178,7 +176,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                           return ErrorView();
                         }
                       } else {
-                        return ErrorView();
+                        return EmptyView();
                       }
                     }
                     return LoadingView();

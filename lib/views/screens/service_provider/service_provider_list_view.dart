@@ -2,18 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/db/firestore.dart';
-import 'package:tirol_office_app/helpers/page_helper.dart';
-import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/models/service_provider_model.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/service_provider_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_form_view.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_view.dart';
-import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
@@ -26,7 +24,7 @@ class ServiceProviderListView extends StatelessWidget {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageHelper.services),
+        title: Text(PageUtils.services),
         actions: [
           Visibility(
             visible: user.role == 'Administrador' ? true : false,
@@ -39,7 +37,7 @@ class ServiceProviderListView extends StatelessWidget {
       ),
       drawer: MenuDrawer(
         user: user,
-        currentPage: PageHelper.observations,
+        currentPage: PageUtils.observations,
       ),
       body: StreamBuilder(
           stream: FirestoreDB().db_service_providers.snapshots(),

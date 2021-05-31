@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tirol_office_app/helpers/validation_helper.dart';
 import 'dart:math' as math;
 
-import 'package:tirol_office_app/helpers/page_helper.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/utils/validation_utils.dart';
 import 'package:tirol_office_app/models/service_provider_model.dart';
 import 'package:tirol_office_app/service/service_provider_service.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
@@ -165,25 +165,25 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageHelper.servicesForm),
+        title: Text(PageUtils.servicesForm),
       ),
       body: Container(
-        padding: EdgeInsets.all(PageHelper.bodyPadding),
+        padding: EdgeInsets.all(PageUtils.bodyPadding),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               serviceProviderNameField(),
               SizedBox(
-                height: PageHelper.bodyPadding,
+                height: PageUtils.bodyPadding,
               ),
               serviceProviderEmailField(),
               SizedBox(
-                height: PageHelper.bodyPadding,
+                height: PageUtils.bodyPadding,
               ),
               serviceProviderPhoneField(),
               SizedBox(
-                height: PageHelper.bodyPadding,
+                height: PageUtils.bodyPadding,
               ),
               serviceProviderCategoryField(),
             ],
@@ -192,7 +192,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
-        children: List.generate(PageHelper.fabIcons.length, (int index) {
+        children: List.generate(PageUtils.fabIcons.length, (int index) {
           Widget child = Container(
             height: 70.0,
             width: 56.0,
@@ -201,14 +201,14 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
               scale: CurvedAnimation(
                 parent: _animationController,
                 curve: Interval(
-                    0.0, 1.0 - index / PageHelper.fabIcons.length / 2.0,
+                    0.0, 1.0 - index / PageUtils.fabIcons.length / 2.0,
                     curve: Curves.easeOut),
               ),
               child: FloatingActionButton(
                 heroTag: null,
-                backgroundColor: PageHelper.fabIconsColors[index],
+                backgroundColor: PageUtils.fabIconsColors[index],
                 mini: true,
-                child: Icon(PageHelper.fabIcons[index], color: Colors.white),
+                child: Icon(PageUtils.fabIcons[index], color: Colors.white),
                 onPressed: () => index == 0 ? persist() : cancel(),
               ),
             ),
