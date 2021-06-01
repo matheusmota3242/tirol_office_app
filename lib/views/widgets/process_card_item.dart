@@ -13,7 +13,6 @@ class ProcessCardItem extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final DateTimeHelper _dateTimeHelper = DateTimeHelper();
     final theme = Theme.of(context);
 
     return Card(
@@ -74,11 +73,11 @@ class ProcessCardItem extends StatelessWidget {
                   ),
                   process.getEnd != null
                       ? Text(
-                          '${_dateTimeHelper.formatTime(process.getStart)} | ${_dateTimeHelper.formatTime(process.getEnd)}',
+                          '${DateTimeHelper.formatTime(process.getStart)} | ${DateTimeHelper.formatTime(process.getEnd)}',
                           style: theme.textTheme.subtitle1,
                         )
                       : Text(
-                          '${_dateTimeHelper.formatTime(process.getStart)} | --:--',
+                          '${DateTimeHelper.formatTime(process.getStart)} | --:--',
                           style: theme.textTheme.bodyText1),
                 ],
               ),

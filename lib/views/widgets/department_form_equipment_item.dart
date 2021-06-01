@@ -172,6 +172,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
               Container(
                 padding: EdgeInsets.only(right: 14.0, bottom: 8.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     cancelButton(context),
                     ElevatedButton(

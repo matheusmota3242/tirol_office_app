@@ -121,31 +121,46 @@ class _ProcessListViewState extends State<ProcessListView> {
                             body: Padding(
                               padding:
                                   const EdgeInsets.all(PageUtils.bodyPadding),
-                              child: Column(
-                                  // color: Theme.of(context).buttonColor,
-                                  // padding: EdgeInsets.all(16.0),
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper().convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ),
-                                    _docs.isEmpty
-                                        ? Padding(
-                                            padding: EdgeInsets.only(
-                                                top: MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    4),
-                                            child: EmptyView(),
-                                          )
-                                        : Expanded(
+                              child: _docs.isEmpty
+                                  ? Stack(
+                                      children: [
+                                        Positioned(
+                                          top: 6.0,
+                                          child: Text(
+                                            '${DateTimeHelper.convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper.convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'Não há itens cadastrados.',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              '${DateTimeHelper.convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper.convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                          Expanded(
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                   top: 16.0),
@@ -169,7 +184,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                                               ),
                                             ),
                                           )
-                                  ]),
+                                        ]),
                             ),
                           );
                         } else {

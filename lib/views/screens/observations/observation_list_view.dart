@@ -13,6 +13,7 @@ import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
+import 'package:tirol_office_app/views/screens/observations/observation_details_view.dart';
 import 'package:tirol_office_app/views/screens/observations/observation_form_view.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
@@ -78,18 +79,46 @@ class _ObservationListViewState extends State<ObservationListView> {
                 case ConnectionState.done:
                   var docs = snapshot.data.docs;
                   if (!snapshot.hasData || docs.length == 0)
-                    return Column(
+                    return Stack(
                       children: [
-                        Text(
-                          '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper().convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
+                        Positioned(
+                          top: 6.0,
+                          left: 14.0,
+                          child: Text(
+                            '${DateTimeHelper.convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper.convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700),
+                          ),
                         ),
-                        EmptyView(),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Não há itens cadastrados.',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        )
                       ],
                     );
+                  // return Column(
+                  //   children: [
+                  //     Text(
+                  //       '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper().convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
+                  //       style: TextStyle(
+                  //           color: Colors.white,
+                  //           fontSize: 20,
+                  //           fontWeight: FontWeight.w700),
+                  //     ),
+                  //     Container(
+                  //       alignment: Alignment.center,
+                  //       child: Text('testando'),
+                  //     ),
+                  //   ],
+                  // );
 
                   if (snapshot.hasError) return ErrorView();
 
@@ -99,7 +128,7 @@ class _ObservationListViewState extends State<ObservationListView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper().convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
+                          '${DateTimeHelper.convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper.convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -118,7 +147,7 @@ class _ObservationListViewState extends State<ObservationListView> {
                                 return Card(
                                   margin: EdgeInsets.all(0),
                                   child: Container(
-                                      height: 203,
+                                      height: 133,
                                       padding: EdgeInsets.only(
                                           left: PageUtils.bodyPadding,
                                           bottom: PageUtils.bodyPadding),
@@ -130,10 +159,20 @@ class _ObservationListViewState extends State<ObservationListView> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                observation.title,
-                                                style: themeData
-                                                    .textTheme.headline5,
+                                              GestureDetector(
+                                                onTap: () => Navigator.push(
+                                                    _,
+                                                    MaterialPageRoute(
+                                                        builder: (_) =>
+                                                            ObservationDetailsView(
+                                                              observation:
+                                                                  observation,
+                                                            ))),
+                                                child: Text(
+                                                  observation.title,
+                                                  style: themeData
+                                                      .textTheme.headline5,
+                                                ),
                                               ),
                                               PopupMenuButton(
                                                   onSelected: (value) =>
@@ -172,10 +211,10 @@ class _ObservationListViewState extends State<ObservationListView> {
                                                       Flexible(
                                                         child: Container(
                                                           child: Text(
-                                                            'dskdsldsdddddddddddd ddddd dddddddsss sssss sss ssss sssssssss ssdskdsl dsddddddddddddddddddddddddssssssssssssssssssssssssssdskdsldsddddddddddddddddddddddddssssssssssssssssssssssssssdskdsldsddddddddddddddddddddddddssssssssssssssssssssssssssdskdsldsddddddddddddddddddddddddssssssssssssssssssssssssssdskdsldsddddddddddddddddddddddddssssssssssssssssssssssssssdskdsldsddddddddddddddddddddddddssssssssssssssssssssssssssdskdsldsddddddddddddddddddddddddssssssssssssssssssssssssss',
+                                                            observation.content,
                                                             style: TextStyle(
                                                                 fontSize: 15),
-                                                            maxLines: 6,
+                                                            maxLines: 2,
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,

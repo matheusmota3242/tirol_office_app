@@ -82,6 +82,7 @@ class AuthService {
     _userService = Provider.of<UserService>(context, listen: false);
     _userService.cleanUser();
     cleanUserInfo();
-    Navigator.pushNamed(context, RouteHelper.login);
+    Navigator.pushNamedAndRemoveUntil(
+        context, RouteHelper.login, (Route<dynamic> route) => false);
   }
 }

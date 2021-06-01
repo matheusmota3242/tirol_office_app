@@ -1,26 +1,26 @@
 import 'package:intl/intl.dart';
 
 class DateTimeHelper {
-  String formatTime(DateTime dateTime) {
+  static String formatTime(DateTime dateTime) {
     DateFormat formatter = DateFormat("Hm");
     return formatter.format(dateTime);
   }
 
-  String generateProcessDateForId(DateTime dateTime) {
+  static String generateProcessDateForId(DateTime dateTime) {
     return dateTime.day.toString() +
         dateTime.month.toString() +
         dateTime.year.toString();
   }
 
-  DateTime convertToInitialDate(DateTime start) {
+  static DateTime convertToInitialDate(DateTime start) {
     return DateTime(start.year, start.month, start.day, 0, 00);
   }
 
-  DateTime convertToEndDate(DateTime end) {
+  static DateTime convertToEndDate(DateTime end) {
     return DateTime(end.year, end.month, end.day, 23, 59);
   }
 
-  String convertIntToStringWeekday(int weekday) {
+  static String convertIntToStringWeekday(int weekday) {
     print('weekday: $weekday');
     switch (weekday) {
       case 1:
@@ -48,7 +48,7 @@ class DateTimeHelper {
     }
   }
 
-  String convertIntToStringMonth(int month) {
+  static String convertIntToStringMonth(int month) {
     switch (month) {
       case 0:
         return 'janeiro';

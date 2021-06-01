@@ -8,6 +8,7 @@ import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class Dialogs {
@@ -109,26 +110,51 @@ class Dialogs {
     });
   }
 
-  showLogoutDialog(BuildContext context) {
+  showLogoutDialog(BuildContext globalContext) {
     showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Logout'),
-        content: Text('Tem certeza que deseja sair?'),
-        actions: [
-          RaisedButton(
-            onPressed: () => Navigator.pop(context),
-            color: Colors.red,
-            child: Text('Cancelar'),
-          ),
-          RaisedButton(
-            onPressed: () {
-              Provider.of<AuthService>(context, listen: false).logout(context);
-            },
-            child: Text('Sim'),
-          )
-        ],
-      ),
-    );
+        context: globalContext,
+        builder: (_) =>
+            StatefulBuilder(builder: (BuildContext context, setState) {
+              return AlertDialog(
+                title: Text('Logout'),
+                content: Text('Tem certeza que deseja sair?'),
+                actions: [
+                  Container(
+                    padding: EdgeInsets.only(
+                        right: PageUtils.alertDialogPaddingRB[0],
+                        bottom: PageUtils.alertDialogPaddingRB[1]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white)),
+                          child: Text(
+                            'Cancelar',
+                            style:
+                                TextStyle(color: Theme.of(context).buttonColor),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Provider.of<AuthService>(globalContext,
+                                    listen: false)
+                                .logout(globalContext);
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) =>
+                                      Theme.of(context).buttonColor)),
+                          child: Text('Sim'),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              );
+            }));
   }
 }

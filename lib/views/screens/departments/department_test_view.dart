@@ -243,12 +243,8 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                           child: DropdownButton<String>(
                             underline: SizedBox(),
                             isExpanded: true,
-                            // !!!
                             value: equipment.getStatus,
-
                             onChanged: (value) {
-                              // !!!
-                              //selectStatusEquipment(value);
                               setState(() {
                                 equipment.setStatus = value;
                               });
@@ -264,17 +260,6 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                             }).toList(),
                           ),
                         ),
-                        // SizedBox(height: 30.0),
-                        // Container(
-                        //   alignment: Alignment.center,
-                        //   child: Row(
-                        //     mainAxisAlignment:
-                        //         MainAxisAlignment.spaceEvenly,
-                        //     children: [
-
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -283,20 +268,12 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                   Container(
                       padding: EdgeInsets.only(right: 14.0, bottom: 8.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           cancelButton(context),
                           ElevatedButton(
                             onPressed: () {
                               if (formKey.currentState.validate()) {
-                                // setState(() {
-                                //   widget.currentDepartment.equipments
-                                //       .add(equipment);
-                                //   // Checando edição da página
-                                //   checkEdition()
-                                //       ? _service
-                                //           .update(widget.currentDepartment)
-                                //       : _service.save(widget.currentDepartment);
-                                // });
                                 Navigator.of(context).pop(true);
                               }
                             },

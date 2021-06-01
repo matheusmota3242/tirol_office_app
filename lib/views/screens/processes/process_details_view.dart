@@ -22,7 +22,7 @@ class ProcessDetailsView extends StatefulWidget {
 }
 
 class _ProcessDetailsViewState extends State<ProcessDetailsView> {
-  bool isEquipmentDamagaed(String status) =>
+  bool isEquipmentDamaged(String status) =>
       status == 'Funcionando' ? true : false;
 
   @override
@@ -226,55 +226,62 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                             : Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
-                                                children:
-                                                    _currentDepartment
-                                                        .equipments
-                                                        .map(
-                                                          (e) => _processService
-                                                                  .hasOwnership(
-                                                                      process
-                                                                          .getUserId,
-                                                                      _userService
-                                                                          .getUser
-                                                                          .id)
-                                                              ? CheckboxListTile(
-                                                                  contentPadding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              0),
-                                                                  title: Text(e
+                                                children: _currentDepartment
+                                                    .equipments
+                                                    .map(
+                                                      (e) => _processService
+                                                              .hasOwnership(
+                                                                  process
+                                                                      .getUserId,
+                                                                  _userService
+                                                                      .getUser
+                                                                      .id)
+                                                          ? CheckboxListTile(
+                                                              contentPadding:
+                                                                  EdgeInsets
+                                                                      .all(0),
+                                                              title: Text(e
+                                                                  .getDescription),
+                                                              value: isEquipmentDamaged(
+                                                                  e.getStatus),
+                                                              onChanged:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  e.setStatus =
+                                                                      changeStatus(
+                                                                          e.getStatus);
+                                                                });
+                                                              })
+                                                          : Container(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 8.0),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(e
                                                                       .getDescription),
-                                                                  value: isEquipmentDamagaed(e
-                                                                      .getStatus),
-                                                                  onChanged:
-                                                                      null)
-                                                              : Container(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .only(
-                                                                              top: 8.0),
-                                                                  child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(e
-                                                                          .getDescription),
-                                                                      Icon(
-                                                                        e.getStatus ==
-                                                                                'Funcionando'
-                                                                            ? Icons.done
-                                                                            : Icons.warning_amber_rounded,
-                                                                        color: e.getStatus ==
-                                                                                'Funcionando'
-                                                                            ? Colors.green[400]
-                                                                            : Colors.red[400],
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                        )
-                                                        .toList(),
+                                                                  Icon(
+                                                                    e.getStatus ==
+                                                                            'Funcionando'
+                                                                        ? Icons
+                                                                            .done
+                                                                        : Icons
+                                                                            .warning_amber_rounded,
+                                                                    color: e.getStatus ==
+                                                                            'Funcionando'
+                                                                        ? Colors.green[
+                                                                            400]
+                                                                        : Colors
+                                                                            .red[400],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                    )
+                                                    .toList(),
                                               )
                                       ],
                                     ),
@@ -295,6 +302,17 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
         },
       ),
     );
+  }
+
+  changeStatus(String status) {
+    switch (status) {
+      case 'Funcionando':
+        return 'Danificado';
+        break;
+      case 'Danificado':
+        return 'Funcionando';
+      default:
+    }
   }
 
   x(Process process) {

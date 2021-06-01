@@ -57,13 +57,13 @@ class ProcessService {
           .where(
             'start',
             isGreaterThanOrEqualTo: Timestamp.fromDate(
-              DateTimeHelper().convertToInitialDate(now),
+              DateTimeHelper.convertToInitialDate(now),
             ),
           )
           .where(
             'start',
             isLessThanOrEqualTo: Timestamp.fromDate(
-              DateTimeHelper().convertToEndDate(now),
+              DateTimeHelper.convertToEndDate(now),
             ),
           )
           .where('departmentId', isEqualTo: response)
