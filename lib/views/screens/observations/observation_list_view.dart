@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
-import 'package:tirol_office_app/db/firestore.dart';
-import 'package:tirol_office_app/mobx/picked_date_mobx.dart';
+import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
 import 'package:tirol_office_app/models/observation_model.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/observation_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/observations/observation_details_view.dart';

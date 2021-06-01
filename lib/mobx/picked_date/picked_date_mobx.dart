@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 
 part 'picked_date_mobx.g.dart';
