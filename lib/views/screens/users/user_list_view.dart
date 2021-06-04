@@ -18,7 +18,7 @@ class UserListView extends StatefulWidget {
 
 class _UserListViewState extends State<UserListView> {
   User currentUser;
-  var _users = FirestoreDB().db_users;
+  var _users = FirestoreDB.db_users;
 
   var choices = <String>['Alterar papel do usuário'];
   String selectedRole = '';
@@ -98,8 +98,7 @@ class _UserListViewState extends State<UserListView> {
   changeFirestoreUserRole(String role, String docId) {
     String successMsg = 'Papel alterado com sucesso';
     String errorMsg = 'Ocorreu um erro. Tente novamente mais tarde';
-    FirestoreDB()
-        .db_users
+    FirestoreDB.db_users
         .doc(docId)
         .update({'role': role})
         .then(

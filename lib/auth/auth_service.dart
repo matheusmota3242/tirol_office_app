@@ -8,14 +8,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tirol_office_app/db/firestore.dart';
-import 'package:tirol_office_app/helpers/route_helper.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 
 class AuthService {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
-  CollectionReference usersCollection = FirestoreDB().db_users;
+  CollectionReference usersCollection = FirestoreDB.db_users;
   UserService _userService = UserService();
   auth.User user;
 
@@ -30,11 +30,11 @@ class AuthService {
 
       try {
         var userResponse =
-            await FirestoreDB().db_users.doc(result.user.uid).get();
+            await FirestoreDB.db_users.doc(result.user.uid).get();
         _userService = Provider.of<UserService>(context, listen: false);
         _userService.setUserByUid(userResponse, result.user.uid);
         var user = User.fromJson(userResponse.data());
-        await saveUserInMemory(user.name, user.role);
+        await saveUserInMemory(user.name, user.role, userResponse.id);
       } catch (e) {
         print(e);
       }
@@ -45,16 +45,15 @@ class AuthService {
     return null;
   }
 
-  saveUserInMemory(String username, String role) async {
+  saveUserInMemory(String username, String role, String id) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
     prefs.setString('role', role);
-    print('saveUserIdInMemory');
+    prefs.setString('id', id);
   }
 
   void cleanUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-    print('cleanUserInfo');
     prefs.clear();
   }
 
@@ -70,7 +69,8 @@ class AuthService {
         result = value;
         usersCollection.doc(value.user.uid).set({
           'name': name,
-          'role': Role().getRoleByEnum(UserRole.WAITING_FOR_APPROVAL)
+          'role': Role().getRoleByEnum(UserRole.WAITING_FOR_APPROVAL),
+          'email': email
         });
       });
     } catch (e) {}
@@ -83,6 +83,6 @@ class AuthService {
     _userService.cleanUser();
     cleanUserInfo();
     Navigator.pushNamedAndRemoveUntil(
-        context, RouteHelper.login, (Route<dynamic> route) => false);
+        context, RouteUtils.login, (Route<dynamic> route) => false);
   }
 }

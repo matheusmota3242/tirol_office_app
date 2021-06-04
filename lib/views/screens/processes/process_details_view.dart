@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 import 'package:tirol_office_app/db/firestore.dart';
-import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'package:tirol_office_app/mobx/equipment/equipment_mobx.dart';
 import 'package:tirol_office_app/mobx/equipment_list.dart/equipment_list_mobx.dart';
 import 'package:tirol_office_app/models/department_model.dart';
@@ -17,7 +15,6 @@ import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
-import 'package:tirol_office_app/views/widgets/appbar.dart';
 import 'package:tirol_office_app/views/widgets/process_card_item.dart';
 
 class ProcessDetailsView extends StatefulWidget {

@@ -1,4 +1,4 @@
-class RouteHelper {
+class RouteUtils {
   static const String processes = 'processes';
   static const String observations = 'observations';
   static const String login = 'login';
@@ -8,4 +8,5 @@ class RouteHelper {
   static const String processDetails = 'processDetails';
   static const String serviceProviders = 'serviceProviders';
   static const String serviceProvidersForm = 'serviceProvidersForm';
+  static const String personalInfo = 'personalInfo';
 }

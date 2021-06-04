@@ -9,6 +9,7 @@ class UserService {
     _user.id = uid;
     _user.name = snapshot.data()['name'];
     _user.role = snapshot.data()['role'];
+    _user.email = snapshot.data()['email'];
   }
 
   void setUser(User user) {
@@ -22,7 +23,7 @@ class UserService {
 
   void findById(String uid) async {
     var data;
-    FirestoreDB().db_users.doc(uid).get().then((value) {
+    FirestoreDB.db_users.doc(uid).get().then((value) {
       data = value.data();
       _user = User.fromJson(data);
     });

@@ -102,21 +102,6 @@ class _ObservationListViewState extends State<ObservationListView> {
                         )
                       ],
                     );
-                  // return Column(
-                  //   children: [
-                  //     Text(
-                  //       '${DateTimeHelper().convertIntToStringWeekday(pickedDateMobx.getPicked.weekday)}, ${pickedDateMobx.getPicked.day} de ${DateTimeHelper().convertIntToStringMonth(pickedDateMobx.getPicked.month)} de ${pickedDateMobx.getPicked.year}',
-                  //       style: TextStyle(
-                  //           color: Colors.white,
-                  //           fontSize: 20,
-                  //           fontWeight: FontWeight.w700),
-                  //     ),
-                  //     Container(
-                  //       alignment: Alignment.center,
-                  //       child: Text('testando'),
-                  //     ),
-                  //   ],
-                  // );
 
                   if (snapshot.hasError) return ErrorView();
 

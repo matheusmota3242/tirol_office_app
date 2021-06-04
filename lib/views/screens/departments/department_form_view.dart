@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:tirol_office_app/helpers/equipment_helper.dart';
-import 'package:tirol_office_app/helpers/route_helper.dart';
 import 'dart:math' as math;
 
-import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';

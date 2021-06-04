@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import 'package:tirol_office_app/helpers/route_helper.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/users/user_list_view.dart';
@@ -161,6 +161,27 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
+              onPressed: () => pushToPersonalInfoView(context),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.miscellaneous_services,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    PageUtils.personalInfo,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
               onPressed: () => logout(context),
               child: Row(
                 children: [
@@ -197,25 +218,29 @@ class MenuDrawer extends StatelessWidget {
   // Lista de departamentos
   void pushToDepartmentListView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteHelper.departments, (Route<dynamic> route) => false);
+        RouteUtils.departments, (Route<dynamic> route) => false);
   }
 
   // Lista de processos
   void pushToProcessListView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteHelper.processes, (Route<dynamic> route) => false);
+        RouteUtils.processes, (Route<dynamic> route) => false);
   }
 
   void pushToObservationListView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteHelper.observations, (Route<dynamic> route) => false);
+        RouteUtils.observations, (Route<dynamic> route) => false);
   }
 
   // Lista de prestadores de serviço
   pushToServiceProvidersView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteHelper.serviceProviders, (Route<dynamic> route) => false);
+        RouteUtils.serviceProviders, (Route<dynamic> route) => false);
   }
+
+  pushToPersonalInfoView(BuildContext context) =>
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          RouteUtils.personalInfo, (Route<dynamic> route) => false);
 
   // Logout
   void logout(BuildContext context) {

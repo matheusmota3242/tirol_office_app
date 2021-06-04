@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/helpers/route_helper.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/department_model.dart';
-import 'package:tirol_office_app/models/enums/user_role_enum.dart';
-import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class Dialogs {
   // Filtra processos por data
@@ -105,7 +103,7 @@ class Dialogs {
             Provider.of<UserService>(context, listen: false).getUser,
             observations);
 
-        Navigator.popAndPushNamed(context, RouteHelper.processes);
+        Navigator.popAndPushNamed(context, RouteUtils.processes);
       }
     });
   }

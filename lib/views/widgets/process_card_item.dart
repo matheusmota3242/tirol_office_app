@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
-import 'package:tirol_office_app/helpers/route_helper.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 
 class ProcessCardItem extends StatelessWidget {
@@ -31,7 +31,7 @@ class ProcessCardItem extends StatelessWidget {
                       )
                     : GestureDetector(
                         onTap: () => Navigator.pushNamed(
-                            context, RouteHelper.processDetails,
+                            context, RouteUtils.processDetails,
                             arguments: {
                               'process': process,
                               'isProcessDetailsView':

@@ -9,15 +9,14 @@ class User {
   String _password;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'role': role,
-        'email': email,
+        'name': _name,
+        'role': _role,
+        'email': _email,
       };
 
   User.fromJson(Map<String, dynamic> json)
       : _name = json['name'],
         _role = json['role'],
-        _status = json['status'],
         _email = json['email'];
 
   User();
@@ -31,9 +30,9 @@ class User {
   String get role => _role;
   set role(String role) => this._role = role;
 
-  String get email => email;
+  String get email => _email;
   set email(String email) => this._email = email;
 
-  String get password => password;
+  String get password => _password;
   set password(String password) => this._password = password;
 }

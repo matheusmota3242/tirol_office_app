@@ -4,8 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
@@ -32,7 +30,6 @@ class _ProcessListViewState extends State<ProcessListView> {
   bool loadingUser = false;
   @override
   void initState() {
-    // TODO: implement initState
     _getUser();
     super.initState();
   }
@@ -44,6 +41,8 @@ class _ProcessListViewState extends State<ProcessListView> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     user.name = prefs.getString('username');
     user.role = prefs.getString('role');
+    user.email = prefs.getString('email');
+    user.id = prefs.getString('id');
     setState(() {
       loadingUser = false;
     });
@@ -52,11 +51,9 @@ class _ProcessListViewState extends State<ProcessListView> {
   @override
   Widget build(BuildContext context) {
     String title = PageUtils.processes;
-    final _authService = Provider.of<AuthService>(context);
     Provider.of<UserService>(context).setUser(user);
     final _processService = ProcessService();
     PickedDateMobx pickedDateMobx = PickedDateMobx();
-    final _processes = FirestoreDB().db_processes;
 
     showFilterDialog(BuildContext context) async {
       var pickedTimestamp = await Dialogs().showProcessFilterDialog(context);

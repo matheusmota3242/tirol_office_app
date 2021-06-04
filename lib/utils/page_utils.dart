@@ -7,6 +7,7 @@ class PageUtils {
   static const observationDetails = 'Detalhes da observação';
   static const services = 'Serviços';
   static const servicesForm = 'Novo serviço';
+  static const personalInfo = 'Informações pessoais';
   static const users = 'Usuários';
   static const processDetails = 'Detalhes do processo';
   static const serviceProvider = 'Detalhes do serviço';

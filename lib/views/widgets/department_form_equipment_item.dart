@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
+
 import 'package:tirol_office_app/helpers/equipment_helper.dart';
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
-import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/equipment_sevice.dart';
 
 class DepartmentFormEquipmentItem extends StatefulWidget {
@@ -23,8 +21,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
   @override
   Widget build(BuildContext context) {
     final EquipmentService _service = EquipmentService();
-    print(widget.equipment);
-    //var _departmentService =
 
     // Service recebe equipamento do componente
     _service.currentEquipment = widget.equipment;
@@ -35,7 +31,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     // Variáveis que guardam valores temporários
     String descriptionTemp = widget.equipment.getDescription;
     String statusTemp = widget.equipment.getStatus;
-    //print("statusTemp: " + statusTemp);
 
     // Atribui nova descrição ao equipamento do service
     void setEquipmentDescription(String value) {
@@ -98,10 +93,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
       setState(() {
         setEquipmentDescription(descriptionTemp);
         setEquipmentStatus(statusTemp);
-        // if (widget.editing) {
-        //   Provider.of<DepartmentService>(context, listen: false)
-        //       .modifyEquipment(widget.equipment);
-        // }
       });
     }
 
@@ -253,10 +244,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                     )
                     .toList(),
               ),
-              // child: IconButton(
-              //   onPressed: () {edit(equipment)},
-              //   icon: Icon(Icons.more_vert),
-              // ),
             ),
           ],
         ),
