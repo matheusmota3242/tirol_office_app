@@ -146,7 +146,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
           ),
       ),
       body: Container(
-        padding: EdgeInsets.all(PageUtils.bodyPadding),
+        padding: PageUtils.bodyPadding,
         child: ListView(
           children: [
             departmentNameField(),

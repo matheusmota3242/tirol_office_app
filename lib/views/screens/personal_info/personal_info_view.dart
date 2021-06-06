@@ -6,8 +6,10 @@ import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
+import 'package:tirol_office_app/views/screens/personal_info/personal_info_form_view.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class PersonalInfoView extends StatelessWidget {
@@ -25,7 +27,7 @@ class PersonalInfoView extends StatelessWidget {
         user: user,
       ),
       body: Container(
-        padding: EdgeInsets.all(PageUtils.bodyPadding),
+        padding: PageUtils.bodyPadding,
         child: FutureBuilder(
           future: FirestoreDB.db_users.doc(user.id).get(),
           builder:
@@ -44,8 +46,25 @@ class PersonalInfoView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     personalInfoAttribute(NAME_FIELD, loadedUser.name),
-                    separator,
-                    personalInfoAttribute(EMAIL_FIELD, loadedUser.email)
+                    sizedBox,
+                    personalInfoAttribute(EMAIL_FIELD, loadedUser.email),
+                    PageUtils().separator,
+                    InkWell(
+                      onTap: () =>
+                          pushToPersonalInfoFormView(context, loadedUser),
+                      child: Text(
+                        'Editar informações pessoais',
+                        style: PageUtils.textButtonStyle,
+                      ),
+                    ),
+                    sizedBox,
+                    InkWell(
+                      onTap: () {},
+                      child: Text(
+                        'Alterar senha',
+                        style: PageUtils.textButtonStyle,
+                      ),
+                    ),
                   ],
                 );
                 break;
@@ -57,20 +76,17 @@ class PersonalInfoView extends StatelessWidget {
     );
   }
 
-  Widget separator = Column(
-    children: [
-      SizedBox(
-        height: 12.0,
-      ),
-      Container(
-        width: double.maxFinite,
-        height: 0.5,
-        color: Colors.grey[400],
-      ),
-      SizedBox(
-        height: 12.0,
-      ),
-    ],
+  void pushToPersonalInfoFormView(BuildContext context, User user) =>
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => PersonalInfoFormView(
+                    name: user.name,
+                    email: user.email,
+                  )));
+
+  Widget sizedBox = SizedBox(
+    height: 12,
   );
 
   Widget personalInfoAttribute(String label, String value) {

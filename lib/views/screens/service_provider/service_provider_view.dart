@@ -15,7 +15,7 @@ class ServiceProviderView extends StatelessWidget {
         title: Text(PageUtils.serviceProvider),
       ),
       body: Container(
-        padding: EdgeInsets.all(PageUtils.bodyPadding),
+        padding: PageUtils.bodyPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

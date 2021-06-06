@@ -114,7 +114,7 @@ class _ObservationFormViewState extends State<ObservationFormView>
           ),
       ),
       body: Container(
-        padding: EdgeInsets.all(PageUtils.bodyPadding),
+        padding: PageUtils.bodyPadding,
         child: Form(
           key: _key,
           child: ListView(

@@ -9,4 +9,5 @@ class RouteUtils {
   static const String serviceProviders = 'serviceProviders';
   static const String serviceProvidersForm = 'serviceProvidersForm';
   static const String personalInfo = 'personalInfo';
+  static const String personalInfoForm = 'personalInfoForm';
 }

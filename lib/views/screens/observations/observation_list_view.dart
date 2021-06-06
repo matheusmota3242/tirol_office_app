@@ -106,7 +106,7 @@ class _ObservationListViewState extends State<ObservationListView> {
                   if (snapshot.hasError) return ErrorView();
 
                   return Container(
-                    padding: const EdgeInsets.all(PageUtils.bodyPadding),
+                    padding: PageUtils.bodyPadding,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -132,8 +132,8 @@ class _ObservationListViewState extends State<ObservationListView> {
                                   child: Container(
                                       height: 133,
                                       padding: EdgeInsets.only(
-                                          left: PageUtils.bodyPadding,
-                                          bottom: PageUtils.bodyPadding),
+                                          left: PageUtils.bodyPaddingValue,
+                                          bottom: PageUtils.bodyPaddingValue),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,

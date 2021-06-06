@@ -116,8 +116,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                               currentPage: title,
                             ),
                             body: Padding(
-                              padding:
-                                  const EdgeInsets.all(PageUtils.bodyPadding),
+                              padding: PageUtils.bodyPadding,
                               child: _docs.isEmpty
                                   ? Stack(
                                       children: [

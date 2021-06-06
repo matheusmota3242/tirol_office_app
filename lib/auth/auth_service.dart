@@ -85,4 +85,15 @@ class AuthService {
     Navigator.pushNamedAndRemoveUntil(
         context, RouteUtils.login, (Route<dynamic> route) => false);
   }
+
+  updateEmail(String newEmail, BuildContext context) async {
+    _auth.currentUser.updateEmail(newEmail);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', newEmail);
+    Provider.of<UserService>(context).getUser.email = newEmail;
+  }
+
+  updatePassword(String newPassword) {
+    _auth.currentUser.updatePassword(newPassword);
+  }
 }
