@@ -16,7 +16,6 @@ class MenuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(user.name);
     return Drawer(
       child: Column(
         children: [
@@ -165,7 +164,7 @@ class MenuDrawer extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.miscellaneous_services,
+                    Icons.person,
                     color: Colors.grey[700],
                   ),
                   SizedBox(

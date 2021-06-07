@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tirol_office_app/auth/auth_service.dart';
+
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/personal_info/personal_info_form_view.dart';
@@ -42,6 +41,7 @@ class PersonalInfoView extends StatelessWidget {
               case ConnectionState.done:
                 var json = snapshot.data.data();
                 User loadedUser = User.fromJson(json);
+                loadedUser.id = snapshot.data.id;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -69,6 +69,7 @@ class PersonalInfoView extends StatelessWidget {
                 );
                 break;
               default:
+                return Container();
             }
           },
         ),
@@ -81,8 +82,7 @@ class PersonalInfoView extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (_) => PersonalInfoFormView(
-                    name: user.name,
-                    email: user.email,
+                    user: user,
                   )));
 
   Widget sizedBox = SizedBox(

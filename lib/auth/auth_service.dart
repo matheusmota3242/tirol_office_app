@@ -86,14 +86,24 @@ class AuthService {
         context, RouteUtils.login, (Route<dynamic> route) => false);
   }
 
-  updateEmail(String newEmail, BuildContext context) async {
-    _auth.currentUser.updateEmail(newEmail);
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('username', newEmail);
-    Provider.of<UserService>(context).getUser.email = newEmail;
+  void update(User user, BuildContext context) async {
+    updateEmail(user.email, context);
+    await FirestoreDB.db_users.doc(user.id).update({'email': user.email});
   }
 
-  updatePassword(String newPassword) {
+  void updateEmail(String newEmail, BuildContext context) async {
+    try {
+      await _auth.currentUser.updateEmail(newEmail);
+    } catch (e) {
+      logout(context);
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', newEmail);
+    Provider.of<UserService>(context, listen: false).getUser.email = newEmail;
+  }
+
+  void updatePassword(String newPassword) {
     _auth.currentUser.updatePassword(newPassword);
   }
 }
