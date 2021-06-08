@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tirol_office_app/db/firestore.dart';
 
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
@@ -39,10 +40,14 @@ class _ProcessListViewState extends State<ProcessListView> {
       loadingUser = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    user.name = prefs.getString('username');
-    user.role = prefs.getString('role');
-    user.email = prefs.getString('email');
-    user.id = prefs.getString('id');
+    // user.name = prefs.getString('username');
+    // user.role = prefs.getString('role');
+    // user.email = prefs.getString('email');
+    var uid = prefs.getString('uid');
+    FirestoreDB.db_users
+        .doc(uid)
+        .get()
+        .then((json) => user = User.fromJson(json.data()));
     setState(() {
       loadingUser = false;
     });
@@ -93,9 +98,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                           return Scaffold(
                             backgroundColor: Theme.of(context).buttonColor,
                             appBar: AppBar(
-                              //automaticallyImplyLeading: false,>
                               title: Text(title),
-                              //backgroundColor: Theme.of(context).buttonColor,
                               backgroundColor: Theme.of(context).buttonColor,
                               shadowColor: Colors.transparent,
                               actions: [

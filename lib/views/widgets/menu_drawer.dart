@@ -237,9 +237,10 @@ class MenuDrawer extends StatelessWidget {
         RouteUtils.serviceProviders, (Route<dynamic> route) => false);
   }
 
-  pushToPersonalInfoView(BuildContext context) =>
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          RouteUtils.personalInfo, (Route<dynamic> route) => false);
+  pushToPersonalInfoView(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteUtils.personalInfo, (Route<dynamic> route) => false);
+  }
 
   // Logout
   void logout(BuildContext context) {

@@ -35,15 +35,15 @@ void main() async {
         GlobalWidgetsLocalizations.delegate
       ],
       supportedLocales: [const Locale('pt', 'BR')],
-      home: MyApp(username: prefs.getString('username')),
+      home: MyApp(uid: prefs.getString('uid')),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final String username;
+  final String uid;
 
-  const MyApp({Key key, this.username}) : super(key: key);
+  const MyApp({Key key, this.uid}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -121,7 +121,7 @@ class MyApp extends StatelessWidget {
           'personalInfo': (_) => PersonalInfoView(),
           'personalInfoForm': (_) => PersonalInfoFormView()
         },
-        home: username == null ? LoginView() : ProcessListView(),
+        home: uid == null ? LoginView() : ProcessListView(),
       ),
     );
   }

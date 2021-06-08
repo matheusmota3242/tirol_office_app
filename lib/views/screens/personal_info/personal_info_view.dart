@@ -9,6 +9,7 @@ import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/personal_info/personal_info_form_view.dart';
+import 'package:tirol_office_app/views/screens/personal_info/personal_info_password_form.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class PersonalInfoView extends StatelessWidget {
@@ -59,7 +60,7 @@ class PersonalInfoView extends StatelessWidget {
                     ),
                     sizedBox,
                     InkWell(
-                      onTap: () {},
+                      onTap: () => pushToPersonalInfoPasswordFormView(context),
                       child: Text(
                         'Alterar senha',
                         style: PageUtils.textButtonStyle,
@@ -84,6 +85,10 @@ class PersonalInfoView extends StatelessWidget {
               builder: (_) => PersonalInfoFormView(
                     user: user,
                   )));
+
+  void pushToPersonalInfoPasswordFormView(BuildContext context) =>
+      Navigator.push(context,
+          MaterialPageRoute(builder: (_) => PersonalInfoPasswordFormView()));
 
   Widget sizedBox = SizedBox(
     height: 12,

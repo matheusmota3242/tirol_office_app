@@ -31,14 +31,12 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
     var themeData = Theme.of(context);
     var auth = Provider.of<AuthService>(context, listen: false);
     void update() async {
-      print('update');
       await auth.update(widget.user, context);
       Toasts.showToast(content: 'Informações atualizadas com sucesso');
       Navigator.pushNamed(context, RouteUtils.personalInfo);
     }
 
     void cancel() {
-      print('cancel');
       Navigator.pushNamed(context, RouteUtils.personalInfo);
     }
 

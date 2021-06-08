@@ -9,7 +9,7 @@ import 'package:tirol_office_app/views/screens/auth/register_view.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class LoginView extends StatelessWidget {
-  static ValidationHelper _validationHelper = ValidationHelper();
+  static ValidationUtils _validationHelper = ValidationUtils();
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
   String _email, _password;

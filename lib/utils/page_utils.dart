@@ -8,12 +8,17 @@ class PageUtils {
   static const services = 'Serviços';
   static const servicesForm = 'Novo serviço';
   static const personalInfo = 'Informações pessoais';
+  static const personalInfoPassword = 'Alterar senha';
   static const users = 'Usuários';
   static const processDetails = 'Detalhes do processo';
   static const serviceProvider = 'Detalhes do serviço';
 
   static const String NAME_FIELD = 'Nome';
   static const String EMAIL_FIELD = 'Email';
+  static const String PASSWORD_FIELD = 'Senha';
+  static const String ACTUAL_PASSWORD_FIELD = 'Senha atual';
+  static const String NEW_PASSWORD_FIELD = 'Nova senha';
+  static const String CONFIRM_NEW_PASSWORD_FIELD = 'Confirmar nova senha';
 
   static const primaryColor = Color(0xFF166D97);
   static const EdgeInsets bodyPadding = EdgeInsets.all(bodyPaddingValue);

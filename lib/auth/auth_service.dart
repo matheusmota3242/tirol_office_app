@@ -47,9 +47,7 @@ class AuthService {
 
   saveUserInMemory(String username, String role, String id) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('username', username);
-    prefs.setString('role', role);
-    prefs.setString('id', id);
+    prefs.setString('uid', id);
   }
 
   void cleanUserInfo() async {
@@ -105,5 +103,9 @@ class AuthService {
 
   void updatePassword(String newPassword) {
     _auth.currentUser.updatePassword(newPassword);
+  }
+
+  void showCurrentUser() {
+    print(_auth.currentUser.displayName);
   }
 }
