@@ -18,6 +18,7 @@ class PersonalInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserService>(context).getUser;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(PageUtils.personalInfo),

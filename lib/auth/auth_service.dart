@@ -105,7 +105,18 @@ class AuthService {
     _auth.currentUser.updatePassword(newPassword);
   }
 
-  void showCurrentUser() {
-    print(_auth.currentUser.displayName);
+  validateUserPassword(String password, String email) async {
+    if (password.isEmpty) return 'Por favor, confirme sua senha atual';
+    if (password.length < 6) return 'Campo inválido';
+
+    var credential =
+        auth.EmailAuthProvider.credential(email: email, password: password);
+    var response = null;
+    try {
+      await _auth.currentUser.reauthenticateWithCredential(credential);
+    } on Exception catch (e) {
+      response = 'Senha inválida';
+    }
+    return response;
   }
 }

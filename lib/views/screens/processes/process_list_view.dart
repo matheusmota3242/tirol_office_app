@@ -40,14 +40,10 @@ class _ProcessListViewState extends State<ProcessListView> {
       loadingUser = true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // user.name = prefs.getString('username');
-    // user.role = prefs.getString('role');
-    // user.email = prefs.getString('email');
     var uid = prefs.getString('uid');
-    FirestoreDB.db_users
-        .doc(uid)
-        .get()
-        .then((json) => user = User.fromJson(json.data()));
+    var json = await FirestoreDB.db_users.doc(uid).get();
+    user = User.fromJson(json.data());
+    user.id = uid;
     setState(() {
       loadingUser = false;
     });
