@@ -12,6 +12,7 @@ import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/enums/user_role_enum.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class AuthService {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
@@ -85,38 +86,47 @@ class AuthService {
   }
 
   void update(User user, BuildContext context) async {
-    updateEmail(user.email, context);
-    await FirestoreDB.db_users.doc(user.id).update({'email': user.email});
+    bool result = updateEmail(user.email, context);
+    result
+        ? await FirestoreDB.db_users.doc(user.id).update({'email': user.email})
+        : null;
   }
 
-  void updateEmail(String newEmail, BuildContext context) async {
+  updateEmail(String newEmail, BuildContext context) async {
+    bool result = false;
     try {
       await _auth.currentUser.updateEmail(newEmail);
+      result = true;
     } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
       logout(context);
     }
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('username', newEmail);
     Provider.of<UserService>(context, listen: false).getUser.email = newEmail;
+    return result;
   }
 
-  void updatePassword(String newPassword) {
-    _auth.currentUser.updatePassword(newPassword);
+  Future<bool> updatePassword(String newPassword) async {
+    bool result = false;
+    try {
+      await _auth.currentUser.updatePassword(newPassword);
+      result = true;
+    } on Exception catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+    }
+    return result;
   }
 
-  validateUserPassword(String password, String email) async {
-    if (password.isEmpty) return 'Por favor, confirme sua senha atual';
-    if (password.length < 6) return 'Campo inválido';
-
-    var credential =
-        auth.EmailAuthProvider.credential(email: email, password: password);
-    var response = null;
+  Future<bool> validateUserPassword(String password) async {
+    var credential = auth.EmailAuthProvider.credential(
+        email: _auth.currentUser.email, password: password);
+    bool result = false;
     try {
       await _auth.currentUser.reauthenticateWithCredential(credential);
-    } on Exception catch (e) {
-      response = 'Senha inválida';
-    }
-    return response;
+      result = true;
+    } on Exception catch (e) {}
+    return result;
   }
 }

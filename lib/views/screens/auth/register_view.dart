@@ -248,7 +248,7 @@ class RegisterView extends StatelessWidget {
   }
 
   String validatePassword(String password) {
-    return _validationHelper.validatePassword(password);
+    return _validationHelper.validatePasswordFields(password, 'senha');
   }
 
   dynamic signup(BuildContext context, AuthService authService) async {

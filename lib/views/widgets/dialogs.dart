@@ -108,6 +108,40 @@ class Dialogs {
     });
   }
 
+  static showErrorActualPassword(BuildContext context, String content) {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (BuildContext localContext, setState) => AlertDialog(
+          title: Text('Ocorreu um erro'),
+          content: Text(content),
+          actions: [
+            Container(
+              padding: EdgeInsets.only(
+                  right: PageUtils.alertDialogPaddingRB[0],
+                  bottom: PageUtils.alertDialogPaddingRB[1]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(localContext),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white)),
+                    child: Text(
+                      'Ok',
+                      style: TextStyle(color: Theme.of(context).buttonColor),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   showLogoutDialog(BuildContext globalContext) {
     showDialog(
         context: globalContext,

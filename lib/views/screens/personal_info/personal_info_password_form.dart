@@ -7,6 +7,8 @@ import 'dart:math' as math;
 
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/validation_utils.dart';
+import 'package:tirol_office_app/views/widgets/dialogs.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class PersonalInfoPasswordFormView extends StatefulWidget {
   @override
@@ -18,7 +20,7 @@ class _PersonalInfoPasswordFormViewState
     extends State<PersonalInfoPasswordFormView> with TickerProviderStateMixin {
   AnimationController _animationController;
   ValidationUtils _validationUtils = ValidationUtils();
-  GlobalKey<FormState> _key = GlobalKey();
+  final _key = GlobalKey<FormState>();
   String _actualPassword, _newPassword, _confirmNewPassword;
 
   @override
@@ -52,25 +54,24 @@ class _PersonalInfoPasswordFormViewState
     }
 
     validationHandler(String field, String value) {
-      print('validando');
-      String response;
       switch (field) {
         case PageUtils.ACTUAL_PASSWORD_FIELD:
-          response = _auth.validateUserPassword(value, _user.email);
-
-          return response;
+          return _validationUtils.validatePasswordFields(
+              value, ValidationUtils.ACTUAL_PASSWORD_FIELD);
 
           break;
         case PageUtils.NEW_PASSWORD_FIELD:
-          return _validationUtils.validatePassword(value);
+          return _validationUtils.validatePasswordFields(
+              value, ValidationUtils.NEW_PASSWORD_FIELD);
           break;
         case PageUtils.CONFIRM_NEW_PASSWORD_FIELD:
-          if (value.isEmpty) return 'Por favor, confirme sua senha';
-          if (!isAlphanumeric(value))
-            return 'Sua senha deve conter apenas letras e/ou números';
-          if (value.length < 6)
-            return 'Sua senha deve conter no mínimo 6 caracteres';
-          break;
+          if (value.isEmpty)
+            return 'Por favor, preenhca o campo confirmação de nova senha';
+          if (value != _newPassword)
+            return 'Valor não confere com nova senha inserida';
+
+          return _validationUtils.validatePasswordFields(
+              value, ValidationUtils.CONFIRM_NEW_PASSWORD_FIELD);
         default:
       }
     }
@@ -80,6 +81,7 @@ class _PersonalInfoPasswordFormViewState
           child: TextFormField(
         onChanged: (value) => onChangedHandler(label, value),
         validator: (value) => validationHandler(label, value),
+        obscureText: true,
         style: TextStyle(
             fontSize: 16.0,
             color: Colors.grey[800],
@@ -104,8 +106,29 @@ class _PersonalInfoPasswordFormViewState
       ));
     }
 
-    submit() {
-      if (_key.currentState.validate()) print('validado');
+    Future<Null> submit() async {
+      bool result;
+      var errorMsg;
+      if (_key.currentState.validate()) {
+        result = await _auth.validateUserPassword(_actualPassword);
+        if (result) {
+          result = await _auth.updatePassword(_newPassword);
+          if (result) {
+            Toasts.showToast(content: 'Senha alterada com sucesso');
+            Navigator.pop(context);
+          } else {
+            errorMsg = 'Desculpe, ocorreu um erro. Tente novamente mais tarde';
+            Dialogs.showErrorActualPassword(context, errorMsg);
+          }
+        } else {
+          errorMsg = 'Valor inserido no campo difere da sua senha atual';
+          Dialogs.showErrorActualPassword(context, errorMsg);
+        }
+      }
+    }
+
+    void cancel() {
+      Navigator.pop(context);
     }
 
     return Scaffold(
@@ -131,7 +154,7 @@ class _PersonalInfoPasswordFormViewState
                 backgroundColor: PageUtils.fabIconsColors[index],
                 mini: true,
                 child: Icon(PageUtils.fabIcons[index], color: Colors.white),
-                onPressed: () => index == 0 ? submit() : null,
+                onPressed: () => index == 0 ? submit() : cancel(),
               ),
             ),
           );

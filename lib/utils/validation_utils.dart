@@ -2,6 +2,11 @@ import 'package:email_validator/email_validator.dart';
 import 'package:string_validator/string_validator.dart';
 
 class ValidationUtils {
+  static const String PASSWORD_FIELD = 'senha';
+  static const String ACTUAL_PASSWORD_FIELD = 'senha atual';
+  static const String NEW_PASSWORD_FIELD = 'nova senha';
+  static const String CONFIRM_NEW_PASSWORD_FIELD = 'confirmação de nova senha';
+
   isEmptyMessage(String field) => 'Por favor, preencha o campo $field';
 
   bool checkEmail(String email) {
@@ -33,13 +38,13 @@ class ValidationUtils {
     }
   }
 
-  String validatePassword(String password) {
+  String validatePasswordFields(String password, String field) {
     if (password.isEmpty)
-      return isEmptyMessage('senha');
+      return isEmptyMessage(field);
     else if (!isAlphanumeric(password))
-      return 'Sua senha deve conter apenas letras e/ou números';
+      return 'Sua $field deve conter apenas letras e/ou números';
     else if (password.length < 6)
-      return 'Sua senha deve conter no mínimo 6 caracteres';
+      return 'Sua $field deve conter no mínimo 6 caracteres';
   }
 
   String validateActualPassword(String oldPassword, String value) {

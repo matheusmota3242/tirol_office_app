@@ -40,6 +40,89 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
       Navigator.pushNamed(context, RouteUtils.personalInfo);
     }
 
+    Widget personalInfoNameField(String label, String value) {
+      TextEditingController controller = TextEditingController(text: value);
+      return Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              onChanged: (newName) {
+                controller.text = newName;
+                controller.selection = TextSelection.fromPosition(
+                    TextPosition(offset: controller.text.length));
+
+                widget.user.name = newName;
+              },
+              controller: controller,
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.w600),
+              decoration: InputDecoration(
+                alignLabelWithHint: true,
+                labelText: label,
+                labelStyle: TextStyle(
+                    color: Colors.grey[700],
+                    height: 0.9,
+                    fontWeight: FontWeight.w600),
+                filled: true,
+                counterStyle: TextStyle(color: Colors.red),
+                hintText: label,
+                contentPadding: EdgeInsets.only(
+                  left: 10.0,
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget personalInfoEmailField(String label, String value) {
+      TextEditingController controller = TextEditingController(text: value);
+      return Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              onChanged: (newEmail) {
+                widget.user.email = newEmail;
+                controller.text = newEmail;
+                controller.selection = TextSelection.fromPosition(
+                    TextPosition(offset: controller.text.length));
+              },
+              controller: controller,
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.w600),
+              decoration: InputDecoration(
+                alignLabelWithHint: true,
+                labelText: label,
+                labelStyle: TextStyle(
+                    color: Colors.grey[700],
+                    height: 0.9,
+                    fontWeight: FontWeight.w600),
+                filled: true,
+                counterStyle: TextStyle(color: Colors.red),
+                hintText: label,
+                contentPadding: EdgeInsets.only(
+                  left: 10.0,
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Editar informações pessoais'),
@@ -115,83 +198,5 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
         break;
       default:
     }
-  }
-
-  Widget personalInfoNameField(String label, String value) {
-    TextEditingController controller = TextEditingController(text: value);
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            onChanged: (newName) {
-              controller.text = newName;
-              widget.user.name = newName;
-            },
-            controller: controller,
-            style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.grey[800],
-                fontWeight: FontWeight.w600),
-            decoration: InputDecoration(
-              alignLabelWithHint: true,
-              labelText: label,
-              labelStyle: TextStyle(
-                  color: Colors.grey[700],
-                  height: 0.9,
-                  fontWeight: FontWeight.w600),
-              filled: true,
-              counterStyle: TextStyle(color: Colors.red),
-              hintText: label,
-              contentPadding: EdgeInsets.only(
-                left: 10.0,
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget personalInfoEmailField(String label, String value) {
-    TextEditingController controller = TextEditingController(text: value);
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            onChanged: (newEmail) {
-              widget.user.email = newEmail;
-              controller.text = newEmail;
-            },
-            controller: controller,
-            style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.grey[800],
-                fontWeight: FontWeight.w600),
-            decoration: InputDecoration(
-              alignLabelWithHint: true,
-              labelText: label,
-              labelStyle: TextStyle(
-                  color: Colors.grey[700],
-                  height: 0.9,
-                  fontWeight: FontWeight.w600),
-              filled: true,
-              counterStyle: TextStyle(color: Colors.red),
-              hintText: label,
-              contentPadding: EdgeInsets.only(
-                left: 10.0,
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
