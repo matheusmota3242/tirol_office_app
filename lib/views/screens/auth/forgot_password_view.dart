@@ -1,43 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 
 class ForgotPasswordView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   static const double _horizontalPadding = 50.0;
   @override
   Widget build(BuildContext context) {
+    String _email;
     var screenHeight = MediaQuery.of(context).size.height;
+    Widget sizedBox = SizedBox(
+      height: 40,
+    );
     return Scaffold(
       body: Container(
+        width: double.maxFinite,
+        padding: PageUtils.bodyPadding,
         child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              _forgotPasswordImage(screenHeight),
-              _titlePage(screenHeight),
-              _usernameField(screenHeight),
-              _cpfField(screenHeight),
-              _passwordField(screenHeight),
-              _confirmPasswordField(screenHeight),
-              _submitButton(context, screenHeight)
-            ],
-          ),
-        ),
+            key: _formKey,
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              _forgotPasswordImage(),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                'Esqueceu a senha',
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black54),
+              ),
+              sizedBox,
+              Container(
+                width: 300,
+                child: TextFormField(
+                  onChanged: (value) => _email = value,
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.w600),
+                  decoration: InputDecoration(
+                    alignLabelWithHint: true,
+                    prefixIcon: Icon(Icons.email),
+                    labelText: 'E-mail cadastrado',
+                    labelStyle: TextStyle(
+                        color: Colors.grey[700],
+                        height: 0.9,
+                        fontWeight: FontWeight.w600),
+                    filled: true,
+                    counterStyle: TextStyle(color: Colors.red),
+                    hintText: 'E-mail cadastrado',
+                    contentPadding: EdgeInsets.only(
+                      left: 10.0,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              sizedBox,
+              SizedBox(
+                height: 44,
+                width: 300,
+                child: ElevatedButton(
+                    onPressed: () =>
+                        AuthService().validateUserEmail(_email, context),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).buttonColor),
+                    ),
+                    child: Text('Enviar')),
+              )
+            ])),
       ),
     );
   }
 
-  Widget _forgotPasswordImage(double screenHeight) {
-    var heightImage = 150.0;
-    var paddingTop = (screenHeight / 12);
-    var paddingBottom = (screenHeight / 30);
+  Widget _forgotPasswordImage() {
     return SizedBox(
-      child: Padding(
-        padding: EdgeInsets.only(top: paddingTop, bottom: paddingBottom),
-        child: SvgPicture.asset(
-          'assets/images/forgot_password.svg',
-          height: heightImage,
-        ),
+      child: SvgPicture.asset(
+        'assets/images/forgot_password.svg',
+        height: 150,
       ),
     );
   }

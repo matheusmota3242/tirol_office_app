@@ -129,4 +129,21 @@ class AuthService {
     } on Exception catch (e) {}
     return result;
   }
+
+  Future<bool> validateUserEmail(String email, BuildContext context) async {
+    bool result = false;
+    try {
+      var response = await _auth.fetchSignInMethodsForEmail(email);
+      if (response.isEmpty) {
+        Toasts.showToast(content: 'E-mail não cadastrado');
+      } else {
+        result = true;
+        Toasts.showToast(content: 'E-mail enviado com sucesso');
+        Navigator.pop(context);
+      }
+    } on auth.FirebaseAuthException catch (e) {
+      Toasts.showToast(content: 'E-mail inválido');
+    }
+    return result;
+  }
 }
