@@ -44,6 +44,7 @@ class Process {
 
   Map<String, dynamic> toJson() => {
         'departmentId': departmentId,
+        'userId': userId,
         'start': start,
         'end': end,
         'responsible': responsible

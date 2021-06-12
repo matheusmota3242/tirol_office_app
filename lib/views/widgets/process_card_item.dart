@@ -78,7 +78,7 @@ class ProcessCardItem extends StatelessWidget {
                         )
                       : Text(
                           '${DateTimeHelper.formatTime(process.getStart)} | --:--',
-                          style: theme.textTheme.bodyText1),
+                          style: theme.textTheme.subtitle1),
                 ],
               ),
               top: 40.0,

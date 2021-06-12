@@ -69,7 +69,7 @@ class _UserListViewState extends State<UserListView> {
             return ListTile(
               title: Text(user.name),
               leading: Icon(Icons.person_outline, color: handleIcon(user.role)),
-              subtitle: Text(user.role),
+              subtitle: Text(user.email != null ? user.email : ''),
               trailing: Visibility(
                 visible: currentUser.role == 'Administrador' ? true : false,
                 child: PopupMenuButton<String>(
@@ -153,8 +153,17 @@ class _UserListViewState extends State<UserListView> {
                           children: [
                             TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: Text('Cancelar')),
+                                child: Text(
+                                  'Cancelar',
+                                  style:
+                                      TextStyle(color: PageUtils.primaryColor),
+                                )),
                             ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Theme.of(context).buttonColor),
+                                ),
                                 onPressed: () {
                                   changeFirestoreUserRole(
                                       selectedRole, user.id);

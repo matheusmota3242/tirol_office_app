@@ -75,13 +75,6 @@ class Dialogs {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop(true);
-                            // if (processService.currentProcess != null &&
-                            //     department == null) {
-                            //   Navigator.popAndPushNamed(
-                            //       context, RouteHelper.processDetails);
-                            // } else {
-                            //   Navigator.pop(context);
-                            // }
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(

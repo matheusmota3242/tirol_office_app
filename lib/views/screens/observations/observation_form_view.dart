@@ -6,6 +6,7 @@ import 'package:tirol_office_app/models/observation_model.dart';
 import 'package:tirol_office_app/service/observation_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ObservationFormView extends StatefulWidget {
@@ -46,12 +47,13 @@ class _ObservationFormViewState extends State<ObservationFormView>
       if (_key.currentState.validate()) {
         if (isEditing()) {
           _service.update(widget.observation);
-          msg = 'Departamendo editado com sucesso';
+          msg = 'Observção editada com sucesso';
         } else {
           _service.save(widget.observation);
-          msg = 'Departamendo salvo com sucesso';
+          msg = 'Observação salva com sucesso';
         }
-        Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(
+            context, RouteUtils.observations, (Route<dynamic> route) => false);
         Toasts.showToast(content: msg);
       }
     }

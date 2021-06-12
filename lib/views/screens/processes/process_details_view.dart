@@ -88,7 +88,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                 onChanged: (value) => process.setObservations = value,
                 controller: controller,
                 readOnly: _processService.hasOwnership(
-                            process.userId, _userService.getUser.id) ||
+                            process.userId, _userService.getUser.id) &&
                         process.end != null
                     ? true
                     : false,
@@ -129,62 +129,14 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
           )
         ],
       ),
-      // floatingActionButton: Column(
-      //   mainAxisSize: MainAxisSize.min,
-      //   children: List.generate(PageUtils.fabIcons.length, (int index) {
-      //     Widget child = Container(
-      //       height: 70.0,
-      //       width: 56.0,
-      //       alignment: FractionalOffset.topCenter,
-      //       child: ScaleTransition(
-      //         scale: CurvedAnimation(
-      //           parent: _animationController,
-      //           curve: Interval(0.0, 1.0 - index / fabIcons.length / 2.0,
-      //               curve: Curves.easeOut),
-      //         ),
-      //         child: FloatingActionButton(
-      //           heroTag: null,
-      //           backgroundColor: PageUtils.fabIconsColors[index],
-      //           mini: true,
-      //           child: Icon(fabIcons[index], color: Colors.white),
-      //           // !!!build
-      //           onPressed: () => index == 0 ? null : Navigator.pop(context),
-      //         ),
-      //       ),
-      //     );
-      //     return child;
-      //   }).toList()
-      //     ..add(
-      //       FloatingActionButton(
-      //         backgroundColor: Colors.grey,
-      //         heroTag: null,
-      //         child: AnimatedBuilder(
-      //           animation: _animationController,
-      //           builder: (context, child) => Transform(
-      //             transform: new Matrix4.rotationZ(
-      //                 _animationController.value * 0.5 * math.pi),
-      //             alignment: FractionalOffset.center,
-      //             child: Icon(_animationController.isDismissed
-      //                 ? Icons.share
-      //                 : Icons.close),
-      //           ),
-      //         ),
-      //         onPressed: () {
-      //           if (_animationController.isDismissed) {
-      //             _animationController.forward();
-      //           } else {
-      //             _animationController.reverse();
-      //           }
-      //         },
-      //       ),
-      //     ),
-      // ),
       backgroundColor: Colors.grey[200],
       body: FutureBuilder(
         future: FirestoreDB().db_departments.doc(process.departmentId).get(),
         builder: (_, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return LoadingView();
+            return LoadingView(
+              background: PageUtils.primaryColor,
+            );
 
           if (snapshot.hasError) return ErrorView();
 
@@ -204,7 +156,8 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                       builder: (_, AsyncSnapshot<dynamic> snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
-                            return LoadingView();
+                            return LoadingView(
+                                background: PageUtils.primaryColor);
                           case ConnectionState.none:
                             return ErrorView();
                             break;
@@ -246,11 +199,13 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                                           .equipmentList
                                                           .map(
                                                             (e) => _processService.hasOwnership(
-                                                                    process
-                                                                        .getUserId,
-                                                                    _userService
-                                                                        .getUser
-                                                                        .id)
+                                                                        process
+                                                                            .getUserId,
+                                                                        _userService
+                                                                            .getUser
+                                                                            .id) &&
+                                                                    process.end ==
+                                                                        null
                                                                 ? CheckboxListTile(
                                                                     contentPadding:
                                                                         EdgeInsets

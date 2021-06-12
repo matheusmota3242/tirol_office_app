@@ -127,94 +127,100 @@ class _ObservationListViewState extends State<ObservationListView> {
                                 Observation observation =
                                     Observation.fromJson(docs[index].data());
                                 observation.id = docs[index].id;
-                                return Card(
-                                  margin: EdgeInsets.all(0),
-                                  child: Container(
-                                      height: 133,
-                                      padding: EdgeInsets.only(
-                                          left: PageUtils.bodyPaddingValue,
-                                          bottom: PageUtils.bodyPaddingValue),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () => Navigator.push(
-                                                    _,
-                                                    MaterialPageRoute(
-                                                        builder: (_) =>
-                                                            ObservationDetailsView(
-                                                              observation:
-                                                                  observation,
-                                                            ))),
-                                                child: Text(
-                                                  observation.title,
-                                                  style: themeData
-                                                      .textTheme.headline5,
-                                                ),
-                                              ),
-                                              PopupMenuButton(
-                                                  onSelected: (value) =>
-                                                      handleChoice(context,
-                                                          value, observation),
-                                                  itemBuilder: (_) => [
-                                                        'Editar',
-                                                        'Remover'
-                                                      ]
-                                                          .map((choice) =>
-                                                              PopupMenuItem(
-                                                                child: Text(
-                                                                    choice),
-                                                                value: choice,
-                                                              ))
-                                                          .toList())
-                                            ],
-                                          ),
-                                          Text(
-                                            observation.author,
-                                            style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: 14),
-                                          ),
-                                          SizedBox(height: 14),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Flexible(
-                                                child: Container(
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Flexible(
-                                                        child: Container(
-                                                          child: Text(
-                                                            observation.content,
-                                                            style: TextStyle(
-                                                                fontSize: 15),
-                                                            maxLines: 2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: PageUtils.bodyPaddingValue),
+                                  child: Card(
+                                    margin: EdgeInsets.all(0),
+                                    child: Container(
+                                        height: 133,
+                                        padding: EdgeInsets.only(
+                                            left: PageUtils.bodyPaddingValue,
+                                            bottom: PageUtils.bodyPaddingValue),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () => Navigator.push(
+                                                      _,
+                                                      MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              ObservationDetailsView(
+                                                                observation:
+                                                                    observation,
+                                                              ))),
+                                                  child: Text(
+                                                    observation.title,
+                                                    style: themeData
+                                                        .textTheme.headline5,
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 12.0,
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      )),
+                                                PopupMenuButton(
+                                                    onSelected: (value) =>
+                                                        handleChoice(context,
+                                                            value, observation),
+                                                    itemBuilder: (_) => [
+                                                          'Editar',
+                                                          'Remover'
+                                                        ]
+                                                            .map((choice) =>
+                                                                PopupMenuItem(
+                                                                  child: Text(
+                                                                      choice),
+                                                                  value: choice,
+                                                                ))
+                                                            .toList())
+                                              ],
+                                            ),
+                                            Text(
+                                              observation.author,
+                                              style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14),
+                                            ),
+                                            SizedBox(height: 14),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Flexible(
+                                                  child: Container(
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Container(
+                                                            child: Text(
+                                                              observation
+                                                                  .content,
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 12.0,
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                  ),
                                 );
                               }),
                         ),
