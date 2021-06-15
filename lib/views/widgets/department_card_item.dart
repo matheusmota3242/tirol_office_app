@@ -30,8 +30,8 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
     return Card(
       margin: EdgeInsets.only(bottom: widget.lastItem ? 0 : 16),
       child: Container(
-        padding: EdgeInsets.fromLTRB(20, 12, 12, 12),
-        height: 112.0 + (heightFactor * 30),
+        padding: EdgeInsets.only(left: 12),
+        height: 95.0 + (heightFactor * 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

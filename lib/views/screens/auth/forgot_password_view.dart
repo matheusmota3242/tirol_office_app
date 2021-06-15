@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 
@@ -10,7 +9,8 @@ class ForgotPasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String _email;
-    var screenHeight = MediaQuery.of(context).size.height;
+    var WIDGETS_WIDTH = MediaQuery.of(context).size.width * 0.75;
+    var SIZE_SCREEN = MediaQuery.of(context).size;
     Widget sizedBox = SizedBox(
       height: 40,
     );
@@ -20,8 +20,10 @@ class ForgotPasswordView extends StatelessWidget {
         padding: PageUtils.bodyPadding,
         child: Form(
             key: _formKey,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            child: Column(children: [
+              SizedBox(
+                height: SIZE_SCREEN.height * 0.1,
+              ),
               _forgotPasswordImage(),
               SizedBox(
                 height: 30,
@@ -35,7 +37,7 @@ class ForgotPasswordView extends StatelessWidget {
               ),
               sizedBox,
               Container(
-                width: 300,
+                width: WIDGETS_WIDTH,
                 child: TextFormField(
                   onChanged: (value) => _email = value,
                   style: TextStyle(
@@ -65,7 +67,7 @@ class ForgotPasswordView extends StatelessWidget {
               sizedBox,
               SizedBox(
                 height: 44,
-                width: 300,
+                width: WIDGETS_WIDTH,
                 child: ElevatedButton(
                     onPressed: () =>
                         AuthService().validateUserEmail(_email, context),
@@ -74,7 +76,11 @@ class ForgotPasswordView extends StatelessWidget {
                           Theme.of(context).buttonColor),
                     ),
                     child: Text('Enviar')),
-              )
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              _popButton(context, WIDGETS_WIDTH)
             ])),
       ),
     );
@@ -245,6 +251,25 @@ class ForgotPasswordView extends StatelessWidget {
         ),
         color: Theme.of(context).buttonColor,
         padding: EdgeInsets.only(top: buttonPadding, bottom: buttonPadding),
+      ),
+    );
+  }
+
+  Widget _popButton(BuildContext context, double sizeWidth) {
+    return SizedBox(
+      width: sizeWidth,
+      height: 44,
+      child: ElevatedButton(
+        onPressed: () => Navigator.pop(context),
+        child: Text(
+          'Login',
+          style: TextStyle(
+            color: PageUtils.primaryColor,
+          ),
+        ),
+        style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.grey[200])),
       ),
     );
   }
