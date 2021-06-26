@@ -13,6 +13,9 @@ class PageUtils {
   static const processDetails = 'Detalhes do processo';
   static const serviceProvider = 'Detalhes do serviço';
 
+  static const STATUS_WORKING = 'Funcionando';
+  static const STATUS_DAMAGED = 'Danificado';
+
   static const String NAME_FIELD = 'Nome';
   static const String EMAIL_FIELD = 'Email';
   static const String PASSWORD_FIELD = 'Senha';
