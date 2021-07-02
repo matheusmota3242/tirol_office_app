@@ -16,7 +16,6 @@ class Equipment {
   String get getStatus => status;
   set setStatus(String status) => this.status = status;
 
-  //Equipment(this.description, this.status)
   Equipment() {
     this.status = EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE);
   }

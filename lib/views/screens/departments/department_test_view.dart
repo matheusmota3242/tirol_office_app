@@ -22,7 +22,9 @@ class DepartmentTestView extends StatefulWidget {
 class _DepartmentTestViewState extends State<DepartmentTestView>
     with TickerProviderStateMixin {
   var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
-
+  static const String MSG_REQUIRED_FIELD = 'Campo obrigatório';
+  static const String MSG_EQUIPMENT_DESCRIPTION_ALREADY_EXISTS =
+      'Nome de equipamento já usado';
   AnimationController _animationController;
   DepartmentService _service = DepartmentService();
   @override
@@ -170,7 +172,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
               ],
             ),
             Container(
-              child: widget.currentDepartment.equipments.isEmpty
+              child: departmentEquipmentsIsEmpty(widget.currentDepartment)
                   ? Row(
                       children: [
                         Text(
@@ -200,7 +202,11 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
     );
   }
 
+  bool departmentEquipmentsIsEmpty(Department department) =>
+      department.equipments.isEmpty ? true : false;
+
   showAddEquipmentDialog(GlobalKey<FormState> formKey, Equipment equipment) {
+    GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: context,
         builder: (_) =>
@@ -217,7 +223,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        equipmentNameField(equipment),
+                        equipmentNameField(equipment, _formKey),
                         SizedBox(
                           height: 30.0,
                         ),
@@ -273,7 +279,8 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                           cancelButton(context),
                           ElevatedButton(
                             onPressed: () {
-                              if (formKey.currentState.validate()) {
+                              if (formKey.currentState.validate() &&
+                                  _formKey.currentState.validate()) {
                                 Navigator.of(context).pop(true);
                               }
                             },
@@ -294,30 +301,31 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       if (result) {
         setState(() {
           widget.currentDepartment.equipments.add(equipment);
-          // Checando edição da página
         });
-        // !!!
-        // Equipment equipment = new Equipment(
-        //   _departmentService.equipmentName,
-        //   EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
-        //);
-        //setState(() {
-        //  _departmentService.equipments.add(equipment);
-        //});
       }
     });
   }
 
+  String validateNewEquipment(String description) {
+    String msg;
+    if (description.isEmpty)
+      msg = MSG_REQUIRED_FIELD;
+    else if (widget.currentDepartment.equipments
+        .any((element) => element.description == description))
+      msg = MSG_EQUIPMENT_DESCRIPTION_ALREADY_EXISTS;
+    return msg;
+  }
+
   // Campo nome do equipamento a ser adicionado ao deprtamento
-  Widget equipmentNameField(Equipment equipment) {
+  Widget equipmentNameField(
+      Equipment equipment, GlobalKey<FormState> equipmentFormKey) {
     TextEditingController controller =
         TextEditingController(text: equipment.getDescription);
     return Form(
+      key: equipmentFormKey,
       child: Container(
         child: TextFormField(
-          validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
-          // !!!
-          //onChanged: (value) => setEquipmentName(value.trim()),
+          validator: (value) => validateNewEquipment(value),
           onChanged: (value) => equipment.setDescription = value,
           keyboardType: TextInputType.name,
           controller: controller,
