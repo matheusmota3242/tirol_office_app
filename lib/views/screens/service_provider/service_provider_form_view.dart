@@ -165,7 +165,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.servicesForm),
+        title: Text(PageUtils.SERVICES_FORM_TITLE),
       ),
       body: Container(
         padding: PageUtils.bodyPadding,

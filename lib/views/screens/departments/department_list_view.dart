@@ -12,7 +12,6 @@ import 'package:tirol_office_app/views/screens/departments/department_test_view.
 import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
-import 'package:tirol_office_app/views/widgets/department_card_item.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class DepartmentListView extends StatelessWidget {
@@ -23,7 +22,7 @@ class DepartmentListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = PageUtils.departaments;
+    String title = PageUtils.DEPARTIMENTS_TITLE;
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -111,7 +110,7 @@ class DepartmentListView extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(e.getDescription,
+                            Text(e.description,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 16,
@@ -120,7 +119,7 @@ class DepartmentListView extends StatelessWidget {
                                 height: 24,
                                 width: 24,
                                 child: Icon(
-                                  isDamaged(e.getStatus)
+                                  isDamaged(e.status)
                                       ? Icons.done
                                       : Icons.warning_amber_rounded,
                                   color: Colors.white,
@@ -128,7 +127,7 @@ class DepartmentListView extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: isDamaged(e.getStatus)
+                                    color: isDamaged(e.status)
                                         ? Colors.green
                                         : Colors.red))
                           ],
@@ -147,7 +146,7 @@ class DepartmentListView extends StatelessWidget {
   bool isDamaged(String status) => status == 'Funcionando' ? true : false;
 
   bool atLeastOneDamaged(List<Equipment> equipments) =>
-      equipments.any((e) => e.getStatus == PageUtils.STATUS_DAMAGED);
+      equipments.any((e) => e.status == PageUtils.STATUS_DAMAGED);
 
   void pushToDepartmentFormView(BuildContext context) {
     Navigator.push(

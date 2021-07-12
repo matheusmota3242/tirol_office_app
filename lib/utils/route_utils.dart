@@ -4,6 +4,7 @@ class RouteUtils {
   static const String login = 'login';
   static const String departments = 'departments';
   static const String departmentsEditForm = 'departmentsEditForm';
+  static const String EQUIPMENTS = 'equipments';
   static const String users = 'users';
   static const String processDetails = 'processDetails';
   static const String serviceProviders = 'serviceProviders';

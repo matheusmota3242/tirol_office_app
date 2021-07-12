@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class PageUtils {
-  static const processes = 'Processos';
-  static const departaments = 'Departamentos';
-  static const observations = 'Observações';
-  static const observationDetails = 'Detalhes da observação';
-  static const services = 'Serviços';
-  static const servicesForm = 'Novo serviço';
-  static const personalInfo = 'Informações pessoais';
-  static const personalInfoPassword = 'Alterar senha';
-  static const users = 'Usuários';
-  static const processDetails = 'Detalhes do processo';
-  static const serviceProvider = 'Detalhes do serviço';
+  static const PROCESSES_TITLE = 'Processos';
+  static const DEPARTIMENTS_TITLE = 'Departamentos';
+  static const OBSERVATIONS_TITLE = 'Observações';
+  static const EQUIPMENTS_TITLE = 'Equipamentos';
+  static const OBSERVATIONS_DETAILS_TITLE = 'Detalhes da observação';
+  static const SERVICES_TITLE = 'Serviços';
+  static const SERVICES_FORM_TITLE = 'Novo serviço';
+  static const PERSONAL_INFO_TITLE = 'Informações pessoais';
+  static const PERSONAL_INFO_PASSWORD = 'Alterar senha';
+  static const USERS_TITLE = 'Usuários';
+  static const PROCESS_DETIALS_TITLE = 'Detalhes do processo';
+  static const SERVICE_PROVIDER_TITLE = 'Detalhes do serviço';
 
   static const STATUS_WORKING = 'Funcionando';
   static const STATUS_DAMAGED = 'Danificado';

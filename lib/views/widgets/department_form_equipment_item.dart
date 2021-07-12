@@ -29,18 +29,18 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
 
     // Variáveis que guardam valores temporários
-    String descriptionTemp = widget.equipment.getDescription;
-    String statusTemp = widget.equipment.getStatus;
+    String descriptionTemp = widget.equipment.description;
+    String statusTemp = widget.equipment.status;
 
     // Atribui nova descrição ao equipamento do service
     void setEquipmentDescription(String value) {
-      widget.equipment.setDescription = value;
+      widget.equipment.description = value;
       //_service.currentEquipment.setDescription(value);
     }
 
     // Atribui novo status ao equipamento do service
     void setEquipmentStatus(String value) {
-      widget.equipment.setStatus = value;
+      widget.equipment.status = value;
     }
 
     // Botão de cancelar modal
@@ -113,7 +113,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    equipmentDescriptionField(equipment.getDescription),
+                    equipmentDescriptionField(equipment.description),
                     SizedBox(
                       height: 30.0,
                     ),
@@ -143,7 +143,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                         onChanged: (value) {
                           setState(() {
                             print('novo valor: ' + value);
-                            widget.equipment.setStatus = value;
+                            widget.equipment.status = value;
                             statusTemp = value;
                           });
                         },
@@ -203,7 +203,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
         child: Stack(
           children: [
             Positioned(
-              child: Text(widget.equipment.getDescription,
+              child: Text(widget.equipment.description,
                   style: Theme.of(context).textTheme.headline6),
             ),
             Positioned(
@@ -219,7 +219,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                     width: 6.0,
                   ),
                   Text(
-                    widget.equipment.getStatus ==
+                    widget.equipment.status ==
                             EquipmentHelper()
                                 .getRoleByEnum(EquipmentStatus.ABLE)
                         ? 'Funcionando'

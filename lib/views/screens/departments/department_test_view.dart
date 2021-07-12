@@ -249,10 +249,10 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                           child: DropdownButton<String>(
                             underline: SizedBox(),
                             isExpanded: true,
-                            value: equipment.getStatus,
+                            value: equipment.status,
                             onChanged: (value) {
                               setState(() {
-                                equipment.setStatus = value;
+                                equipment.status = value;
                               });
                             },
                             items: equipmentStatusOptions.map((value) {
@@ -320,13 +320,13 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
   Widget equipmentNameField(
       Equipment equipment, GlobalKey<FormState> equipmentFormKey) {
     TextEditingController controller =
-        TextEditingController(text: equipment.getDescription);
+        TextEditingController(text: equipment.description);
     return Form(
       key: equipmentFormKey,
       child: Container(
         child: TextFormField(
           validator: (value) => validateNewEquipment(value),
-          onChanged: (value) => equipment.setDescription = value,
+          onChanged: (value) => equipment.description = value,
           keyboardType: TextInputType.name,
           controller: controller,
           decoration: InputDecoration(

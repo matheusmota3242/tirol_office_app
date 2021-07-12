@@ -66,7 +66,7 @@ abstract class DepartmentServiceBase with Store {
 
   void modifyEquipment(Equipment editedEquipment) {
     _editedDepartment.equipments.forEach((element) {
-      if (element.getId == editedEquipment.getId && editedDepartment != null) {
+      if (element.getId == editedEquipment.id && editedDepartment != null) {
         element = editedEquipment;
       }
     });

@@ -48,7 +48,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0, top: 8.0),
             child: TextButton(
-              onPressed: () => currentPage != PageUtils.processes
+              onPressed: () => currentPage != PageUtils.PROCESSES_TITLE
                   ? pushToProcessListView(context)
                   : null,
               child: Row(
@@ -61,7 +61,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageUtils.processes,
+                    PageUtils.PROCESSES_TITLE,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -71,7 +71,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => currentPage != PageUtils.observations
+              onPressed: () => currentPage != PageUtils.OBSERVATIONS_TITLE
                   ? pushToObservationListView(context)
                   : null,
               child: Row(
@@ -84,7 +84,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageUtils.observations,
+                    PageUtils.OBSERVATIONS_TITLE,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -94,7 +94,7 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => currentPage != PageUtils.departaments
+              onPressed: () => currentPage != PageUtils.DEPARTIMENTS_TITLE
                   ? pushToDepartmentListView(context)
                   : null,
               child: Row(
@@ -107,7 +107,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageUtils.departaments,
+                    PageUtils.DEPARTIMENTS_TITLE,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -117,7 +117,30 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-                onPressed: () => currentPage != PageUtils.users
+              onPressed: () => currentPage != PageUtils.EQUIPMENTS_TITLE
+                  ? pushToEquipmentsView(context)
+                  : null,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.devices,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    PageUtils.EQUIPMENTS_TITLE,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: TextButton(
+                onPressed: () => currentPage != PageUtils.USERS_TITLE
                     ? pushToUserListView(context)
                     : null,
                 child: Row(
@@ -130,7 +153,7 @@ class MenuDrawer extends StatelessWidget {
                       width: 5.0,
                     ),
                     Text(
-                      PageUtils.users,
+                      PageUtils.USERS_TITLE,
                       style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                     ),
                   ],
@@ -150,7 +173,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageUtils.services,
+                    PageUtils.SERVICES_TITLE,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -171,7 +194,7 @@ class MenuDrawer extends StatelessWidget {
                     width: 5.0,
                   ),
                   Text(
-                    PageUtils.personalInfo,
+                    PageUtils.PERSONAL_INFO_TITLE,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -214,13 +237,19 @@ class MenuDrawer extends StatelessWidget {
     );
   }
 
-  // Lista de departamentos
+  /* Lista de departamentos */
   void pushToDepartmentListView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         RouteUtils.departments, (Route<dynamic> route) => false);
   }
 
-  // Lista de processos
+  /* Lista de equipamentos */
+  void pushToEquipmentsView(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteUtils.EQUIPMENTS, (Route<dynamic> route) => false);
+  }
+
+  /* Lista de processos */
   void pushToProcessListView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         RouteUtils.processes, (Route<dynamic> route) => false);
@@ -231,7 +260,7 @@ class MenuDrawer extends StatelessWidget {
         RouteUtils.observations, (Route<dynamic> route) => false);
   }
 
-  // Lista de prestadores de serviço
+  /* Lista de prestadores de serviço */
   pushToServiceProvidersView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         RouteUtils.serviceProviders, (Route<dynamic> route) => false);
@@ -242,7 +271,7 @@ class MenuDrawer extends StatelessWidget {
         RouteUtils.personalInfo, (Route<dynamic> route) => false);
   }
 
-  // Logout
+  /* Logout */
   void logout(BuildContext context) {
     Dialogs().showLogoutDialog(context);
   }

@@ -154,17 +154,6 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                                     ),
                                   ),
                                 ),
-                                // SizedBox(height: 30.0),
-                                // Container(
-                                //   alignment: Alignment.center,
-                                //   child: Row(
-                                //     mainAxisAlignment:
-                                //         MainAxisAlignment.spaceEvenly,
-                                //     children: [
-
-                                //     ],
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
@@ -187,13 +176,8 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                     ).then((result) {
                       if (result) {
                         Equipment equipment = new Equipment();
-                        equipment.setDescription =
+                        equipment.description =
                             _departmentService.equipmentName;
-
-                        // Equipment equipment = new Equipment(
-                        //   _departmentService.equipmentName,
-                        //   EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE),
-                        // );
                         setState(() {
                           _departmentService.equipments.add(equipment);
                         });
@@ -303,7 +287,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
       onPressed: () {
         if (formKey.currentState.validate()) {
           Equipment equipment = new Equipment();
-          equipment.setDescription = _departmentService.equipmentName;
+          equipment.description = _departmentService.equipmentName;
 
           _departmentService.setCurrentEquipment(equipment);
           Navigator.of(context, rootNavigator: true).pop();

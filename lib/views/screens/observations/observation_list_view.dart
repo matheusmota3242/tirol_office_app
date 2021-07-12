@@ -38,7 +38,7 @@ class _ObservationListViewState extends State<ObservationListView> {
     return Scaffold(
         backgroundColor: themeData.backgroundColor,
         appBar: AppBar(
-          title: Text(PageUtils.observations),
+          title: Text(PageUtils.OBSERVATIONS_TITLE),
           shadowColor: Colors.transparent,
           actions: [
             IconButton(
@@ -56,7 +56,7 @@ class _ObservationListViewState extends State<ObservationListView> {
         ),
         drawer: MenuDrawer(
           user: user,
-          currentPage: PageUtils.observations,
+          currentPage: PageUtils.OBSERVATIONS_TITLE,
         ),
         body: Observer(
           builder: (_) => FutureBuilder(

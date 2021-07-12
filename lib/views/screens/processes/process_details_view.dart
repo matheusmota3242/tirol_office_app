@@ -50,8 +50,8 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
           var matched = equipmentListMobx.equipmentList.firstWhere(
               (equipmentMobx) =>
                   equipment.getDescription == equipmentMobx.description);
-          updatedEquipment.setDescription = matched.description;
-          updatedEquipment.setStatus = matched.getStatus;
+          updatedEquipment.description = matched.description;
+          updatedEquipment.status = matched.status;
           updatedEquipments.add(updatedEquipment);
         });
         _currentDepartment.equipments.clear();
@@ -118,7 +118,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.processDetails),
+        title: Text(PageUtils.PROCESS_DETIALS_TITLE),
         shadowColor: Colors.transparent,
         actions: [
           IconButton(
@@ -315,9 +315,9 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
     var index = 0;
     equipments.forEach((equipment) {
       EquipmentMobx equipmentMobx = EquipmentMobx();
-      equipmentMobx.setStatus(equipment.getStatus);
+      equipmentMobx.setStatus(equipment.status);
       equipmentMobx.id = index;
-      equipmentMobx.description = equipment.getDescription;
+      equipmentMobx.description = equipment.description;
       equipmentListMobx.addEquipment(equipmentMobx);
       index++;
     });

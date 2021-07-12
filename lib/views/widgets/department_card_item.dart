@@ -87,7 +87,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 13.0),
-                                  child: e.getStatus == "Funcionando"
+                                  child: e.status == "Funcionando"
                                       ? Icon(
                                           Icons.done,
                                           color: Colors.green[400],

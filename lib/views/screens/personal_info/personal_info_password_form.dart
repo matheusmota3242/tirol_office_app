@@ -133,7 +133,7 @@ class _PersonalInfoPasswordFormViewState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.personalInfoPassword),
+        title: Text(PageUtils.PERSONAL_INFO_PASSWORD),
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,

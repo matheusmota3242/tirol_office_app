@@ -24,7 +24,7 @@ class ServiceProviderListView extends StatelessWidget {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.services),
+        title: Text(PageUtils.SERVICES_TITLE),
         actions: [
           Visibility(
             visible: user.role == 'Administrador' ? true : false,
@@ -37,7 +37,7 @@ class ServiceProviderListView extends StatelessWidget {
       ),
       drawer: MenuDrawer(
         user: user,
-        currentPage: PageUtils.observations,
+        currentPage: PageUtils.OBSERVATIONS_TITLE,
       ),
       body: StreamBuilder(
           stream: FirestoreDB().db_service_providers.snapshots(),

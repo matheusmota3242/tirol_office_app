@@ -18,7 +18,7 @@ class ObservationDetailsView extends StatelessWidget {
     DateTime dateTime = observation.dateTime;
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.observations),
+        title: Text(PageUtils.OBSERVATIONS_TITLE),
         shadowColor: Colors.transparent,
       ),
       body: Padding(

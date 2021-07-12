@@ -26,7 +26,7 @@ class _UserListViewState extends State<UserListView> {
   @override
   Widget build(BuildContext context) {
     currentUser = Provider.of<UserService>(context).getUser;
-    final title = PageUtils.users;
+    final title = PageUtils.USERS_TITLE;
     return StreamBuilder(
       stream: _users.orderBy('name').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -12,7 +12,7 @@ class ServiceProviderView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.serviceProvider),
+        title: Text(PageUtils.SERVICE_PROVIDER_TITLE),
       ),
       body: Container(
         padding: PageUtils.bodyPadding,

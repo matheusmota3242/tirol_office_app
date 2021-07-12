@@ -21,10 +21,10 @@ class PersonalInfoView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.personalInfo),
+        title: Text(PageUtils.PERSONAL_INFO_TITLE),
       ),
       drawer: MenuDrawer(
-        currentPage: PageUtils.personalInfo,
+        currentPage: PageUtils.PERSONAL_INFO_TITLE,
         user: user,
       ),
       body: Container(

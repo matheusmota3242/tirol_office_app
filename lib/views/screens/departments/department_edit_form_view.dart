@@ -114,7 +114,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
         onPressed: () {
           if (formKey.currentState.validate()) {
             Equipment equipment = new Equipment();
-            equipment.setDescription = _departmentService.equipmentName;
+            equipment.description = _departmentService.equipmentName;
 
             _departmentService.setCurrentEquipment(equipment);
             Navigator.of(context, rootNavigator: true).pop();
@@ -311,7 +311,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
                     ).then((result) {
                       if (result) {
                         Equipment equipment = new Equipment();
-                        equipment.setDescription =
+                        equipment.description =
                             _departmentService.equipmentName;
 
                         setState(() {
