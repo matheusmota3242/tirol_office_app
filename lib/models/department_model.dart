@@ -18,7 +18,7 @@ class Department {
   set id(String value) => this._id = value;
 
   String get name => _name;
-  setName(String name) => this._name = name;
+  set name(String name) => this._name = name;
 
   List get equipments => _equipments;
   set equipments(List equipments) => this._equipments = equipments;

@@ -22,7 +22,7 @@ class ObservationDetailsView extends StatelessWidget {
         shadowColor: Colors.transparent,
       ),
       body: Padding(
-        padding: PageUtils.bodyPadding,
+        padding: PageUtils.BODY_PADDING,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

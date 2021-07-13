@@ -51,7 +51,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
         child: Form(
           key: _key,
           child: TextFormField(
-            onChanged: (value) => widget.currentDepartment.setName(value),
+            onChanged: (value) => widget.currentDepartment.name = value,
             validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
             controller: controller,
             decoration: InputDecoration(
@@ -148,7 +148,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
           ),
       ),
       body: Container(
-        padding: PageUtils.bodyPadding,
+        padding: PageUtils.BODY_PADDING,
         child: ListView(
           children: [
             departmentNameField(),

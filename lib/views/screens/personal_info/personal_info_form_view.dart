@@ -178,7 +178,7 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
           ),
       ),
       body: Padding(
-        padding: PageUtils.bodyPadding,
+        padding: PageUtils.BODY_PADDING,
         child: Column(
           children: [
             personalInfoNameField(PageUtils.NAME_FIELD, widget.user.name),

@@ -10,14 +10,13 @@ import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
+import 'package:tirol_office_app/views/screens/equipments/equipment_details_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
+import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class DepartmentListView extends StatelessWidget {
-  //final Object title;
-  //final User currentUser;
-
   const DepartmentListView({Key key}) : super(key: key);
 
   @override
@@ -107,30 +106,20 @@ class DepartmentListView extends StatelessWidget {
                 children: department.equipments
                     .map((e) => Container(
                         padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(e.description,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.grey[700])),
-                            Container(
-                                height: 24,
-                                width: 24,
-                                child: Icon(
-                                  isDamaged(e.status)
-                                      ? Icons.done
-                                      : Icons.warning_amber_rounded,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: isDamaged(e.status)
-                                        ? Colors.green
-                                        : Colors.red))
-                          ],
+                        child: InkWell(
+                          onTap: () => pushToEquipmentDetailsView(
+                              context, e, department.name),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(e.description,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      color: Colors.grey[700])),
+                              EquipmentStatusWidget(status: e.status)
+                            ],
+                          ),
                         )))
                     .toList(),
               ),
@@ -143,7 +132,7 @@ class DepartmentListView extends StatelessWidget {
     );
   }
 
-  bool isDamaged(String status) => status == 'Funcionando' ? true : false;
+  bool isDamaged(String status) => status == 'Funcionando';
 
   bool atLeastOneDamaged(List<Equipment> equipments) =>
       equipments.any((e) => e.status == PageUtils.STATUS_DAMAGED);
@@ -155,5 +144,17 @@ class DepartmentListView extends StatelessWidget {
         builder: (_) => DepartmentFormView(),
       ),
     );
+  }
+
+  void pushToEquipmentDetailsView(
+      BuildContext context, Equipment equipment, String departmentDescription) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => EquipmentDetailsView(
+            equipment: equipment,
+            departmentDescription: departmentDescription,
+          ),
+        ));
   }
 }

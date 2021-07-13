@@ -9,4 +9,6 @@ class EquipmentHelper {
   String getRoleByEnum(EquipmentStatus status) {
     return map[status];
   }
+
+  static bool isDamaged(String status) => status == 'Funcionando';
 }

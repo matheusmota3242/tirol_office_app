@@ -106,7 +106,7 @@ class _ObservationListViewState extends State<ObservationListView> {
                   if (snapshot.hasError) return ErrorView();
 
                   return Container(
-                    padding: PageUtils.bodyPadding,
+                    padding: PageUtils.BODY_PADDING,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -129,14 +129,15 @@ class _ObservationListViewState extends State<ObservationListView> {
                                 observation.id = docs[index].id;
                                 return Padding(
                                   padding: const EdgeInsets.only(
-                                      bottom: PageUtils.bodyPaddingValue),
+                                      bottom: PageUtils.BODY_PADDING_VALUE),
                                   child: Card(
                                     margin: EdgeInsets.all(0),
                                     child: Container(
                                         height: 133,
                                         padding: EdgeInsets.only(
-                                            left: PageUtils.bodyPaddingValue,
-                                            bottom: PageUtils.bodyPaddingValue),
+                                            left: PageUtils.BODY_PADDING_VALUE,
+                                            bottom:
+                                                PageUtils.BODY_PADDING_VALUE),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,

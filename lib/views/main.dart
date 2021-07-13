@@ -80,6 +80,10 @@ class MyApp extends StatelessWidget {
           buttonColor: Color(0xFF166D97),
           backgroundColor: Color(0xFF166D97),
           textTheme: TextTheme(
+            headline4: TextStyle(
+                fontSize: 20.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w600),
             headline5: TextStyle(
                 fontSize: 18.0,
                 color: Colors.grey[800],

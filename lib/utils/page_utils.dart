@@ -5,6 +5,7 @@ class PageUtils {
   static const DEPARTIMENTS_TITLE = 'Departamentos';
   static const OBSERVATIONS_TITLE = 'Observações';
   static const EQUIPMENTS_TITLE = 'Equipamentos';
+  static const EQUIPMENT_DETAILS_TITLE = 'Detalhes do equipamento';
   static const OBSERVATIONS_DETAILS_TITLE = 'Detalhes da observação';
   static const SERVICES_TITLE = 'Serviços';
   static const SERVICES_FORM_TITLE = 'Novo serviço';
@@ -25,9 +26,9 @@ class PageUtils {
   static const String CONFIRM_NEW_PASSWORD_FIELD = 'Confirmar nova senha';
 
   static const primaryColor = Color(0xFF166D97);
-  static const EdgeInsets bodyPadding = EdgeInsets.all(bodyPaddingValue);
+  static const EdgeInsets BODY_PADDING = EdgeInsets.all(BODY_PADDING_VALUE);
   static const double cardPadding = 20.0;
-  static const double bodyPaddingValue = 16.0;
+  static const double BODY_PADDING_VALUE = 16.0;
   static const List<double> alertDialogPaddingRB = [14.0, 8.0];
   static const double cardBorderRadius = 8.0;
   static const Icon qrCodeIcon = Icon(Icons.qr_code);

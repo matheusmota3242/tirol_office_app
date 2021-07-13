@@ -139,9 +139,7 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
     }
 
     void update() {
-      _departmentService.editedDepartment.setName(tempName);
-      // !!!
-      //_departmentService.update();
+      _departmentService.editedDepartment.name = tempName;
       Toasts.showToast(content: 'Departamento atualizado com sucesso!');
       Navigator.pop(context);
     }
@@ -278,17 +276,6 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
                                     ),
                                   ),
                                 ),
-                                // SizedBox(height: 30.0),
-                                // Container(
-                                //   alignment: Alignment.center,
-                                //   child: Row(
-                                //     mainAxisAlignment:
-                                //         MainAxisAlignment.spaceEvenly,
-                                //     children: [
-
-                                //     ],
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),

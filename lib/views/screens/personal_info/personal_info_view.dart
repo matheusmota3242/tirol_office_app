@@ -28,7 +28,7 @@ class PersonalInfoView extends StatelessWidget {
         user: user,
       ),
       body: Container(
-        padding: PageUtils.bodyPadding,
+        padding: PageUtils.BODY_PADDING,
         child: FutureBuilder(
           future: FirestoreDB.db_users.doc(user.id).get(),
           builder:

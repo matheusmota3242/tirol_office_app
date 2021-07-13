@@ -168,22 +168,22 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
         title: Text(PageUtils.SERVICES_FORM_TITLE),
       ),
       body: Container(
-        padding: PageUtils.bodyPadding,
+        padding: PageUtils.BODY_PADDING,
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               serviceProviderNameField(),
               SizedBox(
-                height: PageUtils.bodyPaddingValue,
+                height: PageUtils.BODY_PADDING_VALUE,
               ),
               serviceProviderEmailField(),
               SizedBox(
-                height: PageUtils.bodyPaddingValue,
+                height: PageUtils.BODY_PADDING_VALUE,
               ),
               serviceProviderPhoneField(),
               SizedBox(
-                height: PageUtils.bodyPaddingValue,
+                height: PageUtils.BODY_PADDING_VALUE,
               ),
               serviceProviderCategoryField(),
             ],

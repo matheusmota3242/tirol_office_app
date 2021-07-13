@@ -17,7 +17,7 @@ class ForgotPasswordView extends StatelessWidget {
     return Scaffold(
       body: Container(
         width: double.maxFinite,
-        padding: PageUtils.bodyPadding,
+        padding: PageUtils.BODY_PADDING,
         child: Form(
             key: _formKey,
             child: Column(children: [

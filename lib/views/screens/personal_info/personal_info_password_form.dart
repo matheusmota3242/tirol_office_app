@@ -186,7 +186,7 @@ class _PersonalInfoPasswordFormViewState
           ),
       ),
       body: Padding(
-        padding: PageUtils.bodyPadding,
+        padding: PageUtils.BODY_PADDING,
         child: Form(
           key: _key,
           child: Column(
@@ -204,6 +204,6 @@ class _PersonalInfoPasswordFormViewState
   }
 
   Widget sizedBox = SizedBox(
-    height: PageUtils.bodyPaddingValue,
+    height: PageUtils.BODY_PADDING_VALUE,
   );
 }
