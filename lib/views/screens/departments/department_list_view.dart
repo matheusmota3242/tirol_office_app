@@ -124,10 +124,6 @@ class DepartmentListView extends StatelessWidget {
                     .toList(),
               ),
             );
-            // return DepartmentCardItem(
-            //   department: department,
-            //   lastItem: index == (docs.length - 1) ? true : false,
-            // );
           }),
     );
   }

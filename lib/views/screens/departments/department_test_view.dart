@@ -3,6 +3,7 @@ import 'package:tirol_office_app/models/department_model.dart';
 import 'dart:math' as math;
 
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/models/special_equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
@@ -27,6 +28,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       'Nome de equipamento já usado';
   AnimationController _animationController;
   DepartmentService _service = DepartmentService();
+
   @override
   void initState() {
     _animationController = AnimationController(
@@ -115,7 +117,6 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                 backgroundColor: PageUtils.fabIconsColors[index],
                 mini: true,
                 child: Icon(PageUtils.fabIcons[index], color: Colors.white),
-                // !!!build
                 onPressed: () => index == 0 ? submit() : Navigator.pop(context),
               ),
             ),
@@ -164,7 +165,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                 IconButton(
                   onPressed: () {
                     final _formKey = GlobalKey<FormState>();
-                    showAddEquipmentDialog(_formKey, new Equipment());
+                    showAddEquipmentDialog(_formKey, false);
                   },
                   color: Theme.of(context).buttonColor,
                   icon: Icon(Icons.add_circle),
@@ -205,8 +206,9 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
   bool departmentEquipmentsIsEmpty(Department department) =>
       department.equipments.isEmpty ? true : false;
 
-  showAddEquipmentDialog(GlobalKey<FormState> formKey, Equipment equipment) {
+  showAddEquipmentDialog(GlobalKey<FormState> formKey, bool isSpecial) {
     GlobalKey<FormState> _formKey = GlobalKey();
+    SpecialEquipment specialEquipment = new SpecialEquipment();
     showDialog(
         context: context,
         builder: (_) =>
@@ -219,11 +221,13 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                 content: Form(
                   key: formKey,
                   child: Container(
-                    height: 190.0,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    //height: isSpecial ? 384 : 256,
+                    width: double.maxFinite,
+                    child: ListView(
+                      shrinkWrap: true,
+                      //mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        equipmentNameField(equipment, _formKey),
+                        equipmentNameField(specialEquipment, _formKey),
                         SizedBox(
                           height: 30.0,
                         ),
@@ -249,10 +253,10 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                           child: DropdownButton<String>(
                             underline: SizedBox(),
                             isExpanded: true,
-                            value: equipment.status,
+                            value: specialEquipment.status,
                             onChanged: (value) {
                               setState(() {
-                                equipment.status = value;
+                                specialEquipment.status = value;
                               });
                             },
                             items: equipmentStatusOptions.map((value) {
@@ -264,6 +268,75 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                                 ),
                               );
                             }).toList(),
+                          ),
+                        ),
+                        SizedBox(height: 30.0),
+                        ToggleButtons(
+                          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Comum'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Especial'),
+                            )
+                          ],
+                          isSelected: [!isSpecial, isSpecial],
+                          fillColor: Colors.white,
+                          color: Colors.red,
+                          onPressed: (int index) {
+                            if (index == 0) {
+                              setState(() {
+                                isSpecial = false;
+                              });
+                            } else if (index == 1) {
+                              setState(() {
+                                isSpecial = true;
+                              });
+                            }
+                          },
+                        ),
+                        Visibility(
+                            visible: isSpecial, child: SizedBox(height: 30.0)),
+                        Visibility(
+                          visible: isSpecial,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Intervalo em dias entre manutenções preventivas',
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                            visible: isSpecial, child: SizedBox(height: 16.0)),
+                        Visibility(
+                          visible: isSpecial,
+                          child: Container(
+                            child: TextField(
+                              onChanged: (value) =>
+                                  specialEquipment.interval = int.parse(value),
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                alignLabelWithHint: false,
+                                labelText: 'Intervalo',
+                                labelStyle: TextStyle(
+                                    color: Colors.grey[800],
+                                    height: 0.9,
+                                    fontWeight: FontWeight.w600),
+                                filled: true,
+                                counterStyle: TextStyle(color: Colors.red),
+                                hintText: 'Exemplo: 30',
+                                contentPadding: EdgeInsets.only(
+                                  left: 10.0,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -300,7 +373,14 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
             })).then((result) {
       if (result) {
         setState(() {
-          widget.currentDepartment.equipments.add(equipment);
+          /* Verifica caso o equipamento em questão seja especial */
+          if (isSpecial == false) {
+            Equipment defaultEquipment = new Equipment.fromSpecial(
+                specialEquipment.description, specialEquipment.status);
+            widget.currentDepartment.equipments.add(defaultEquipment);
+          } else if (isSpecial == true) {
+            widget.currentDepartment.equipments.add(specialEquipment);
+          }
         });
       }
     });

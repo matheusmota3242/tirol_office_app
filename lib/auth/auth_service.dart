@@ -87,9 +87,8 @@ class AuthService {
 
   void update(User user, BuildContext context) async {
     bool result = updateEmail(user.email, context);
-    result
-        ? await FirestoreDB.db_users.doc(user.id).update({'email': user.email})
-        : null;
+    if (result)
+      await FirestoreDB.db_users.doc(user.id).update({'email': user.email});
   }
 
   updateEmail(String newEmail, BuildContext context) async {

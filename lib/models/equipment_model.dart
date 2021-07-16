@@ -8,7 +8,6 @@ class Equipment {
   String _description;
   String _status;
   List<Maintenance> _correctiveMaintenances;
-  List<Maintenance> _preventiveMaintenances;
 
   int get id => this._id;
   set id(int id) => this._id = id;
@@ -23,24 +22,23 @@ class Equipment {
   set correctiveMaintenances(List<Maintenance> correctiveMaintenances) =>
       this._correctiveMaintenances = correctiveMaintenances;
 
-  List<Maintenance> get preventiveMaintenances => this._preventiveMaintenances;
-  set preventiveMaintenances(List<Maintenance> preventiveMaintenances) =>
-      this._preventiveMaintenances = preventiveMaintenances;
-
   Equipment() {
     this._status = EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE);
+  }
+
+  Equipment.fromSpecial(String description, String status) {
+    _description = description;
+    _status = status;
   }
 
   Equipment.fromJson(Map<String, dynamic> json)
       : _description = json['description'],
         _status = json['status'],
-        _correctiveMaintenances = json['correctiveMaintenances'],
-        _preventiveMaintenances = json['preventiveMaintenances'];
+        _correctiveMaintenances = json['correctiveMaintenances'];
 
   Map<String, dynamic> toJson() => {
         'description': _description,
         'status': _status,
         'correctiveMaintenances': _correctiveMaintenances,
-        'preventiveMaintenances': _preventiveMaintenances
       };
 }
