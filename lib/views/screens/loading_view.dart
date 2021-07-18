@@ -11,9 +11,9 @@ class LoadingView extends StatelessWidget {
       color: this.background,
       child: Center(
           child: CircularProgressIndicator(
-        color: this.background == PageUtils.primaryColor
+        color: this.background == PageUtils.PRIMARY_COLOR
             ? Colors.white
-            : PageUtils.primaryColor,
+            : PageUtils.PRIMARY_COLOR,
         backgroundColor: Colors.transparent,
       )),
     );

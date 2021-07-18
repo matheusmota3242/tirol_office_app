@@ -135,7 +135,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
         builder: (_, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return LoadingView(
-              background: PageUtils.primaryColor,
+              background: PageUtils.PRIMARY_COLOR,
             );
 
           if (snapshot.hasError) return ErrorView();
@@ -157,7 +157,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
                             return LoadingView(
-                                background: PageUtils.primaryColor);
+                                background: PageUtils.PRIMARY_COLOR);
                           case ConnectionState.none:
                             return ErrorView();
                             break;

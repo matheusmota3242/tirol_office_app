@@ -315,7 +315,10 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                         Visibility(
                           visible: isSpecial,
                           child: Container(
-                            child: TextField(
+                            child: TextFormField(
+                              key: formKey,
+                              validator: (value) =>
+                                  value.isEmpty ? 'Campo obrigatório' : null,
                               onChanged: (value) =>
                                   specialEquipment.interval = int.parse(value),
                               keyboardType: TextInputType.number,

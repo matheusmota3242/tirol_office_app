@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'equipment_model.dart';
+import 'special_equipment_model.dart';
 
 class Department {
   String _id;
@@ -29,8 +30,10 @@ class Department {
 
   Department.fromJson(Map<String, dynamic> data)
       : _name = data['name'],
-        _equipments = List<Equipment>.from(data['equipments']
-            .map((equipment) => Equipment.fromJson(equipment))),
+        _equipments = List<Equipment>.from(data['equipments'].map((equipment) =>
+            equipment['interval'] != null
+                ? SpecialEquipment.fromJson(equipment)
+                : Equipment.fromJson(equipment))),
         _needsAttention = data['needsAttention'];
 
   Map<String, dynamic> toJson() => {

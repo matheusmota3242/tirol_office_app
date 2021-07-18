@@ -1,5 +1,5 @@
 import 'package:tirol_office_app/helpers/equipment_helper.dart';
-import 'package:tirol_office_app/models/maintenance_mode.dart';
+import 'package:tirol_office_app/models/maintenance_model.dart';
 
 import 'enums/equipment_status_enum.dart';
 

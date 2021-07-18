@@ -182,7 +182,7 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
         child: Column(
           children: [
             personalInfoNameField(PageUtils.NAME_FIELD, widget.user.name),
-            PageUtils().separator,
+            PageUtils.HORIZONTAL_SEPARATOR_GREY,
             personalInfoEmailField(PageUtils.EMAIL_FIELD, widget.user.email)
           ],
         ),

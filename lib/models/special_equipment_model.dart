@@ -1,5 +1,5 @@
 import 'package:tirol_office_app/models/equipment_model.dart';
-import 'package:tirol_office_app/models/maintenance_mode.dart';
+import 'package:tirol_office_app/models/maintenance_model.dart';
 
 class SpecialEquipment extends Equipment {
   int _interval;

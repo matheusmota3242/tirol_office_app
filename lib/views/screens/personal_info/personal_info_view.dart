@@ -13,8 +13,8 @@ import 'package:tirol_office_app/views/screens/personal_info/personal_info_passw
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class PersonalInfoView extends StatelessWidget {
-  String NAME_FIELD = 'Nome';
-  String EMAIL_FIELD = 'E-mail';
+  static const String NAME_FIELD = 'Nome';
+  static const String EMAIL_FIELD = 'E-mail';
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserService>(context).getUser;
@@ -50,7 +50,7 @@ class PersonalInfoView extends StatelessWidget {
                     personalInfoAttribute(NAME_FIELD, loadedUser.name),
                     sizedBox,
                     personalInfoAttribute(EMAIL_FIELD, loadedUser.email),
-                    PageUtils().separator,
+                    PageUtils.HORIZONTAL_SEPARATOR_GREY,
                     InkWell(
                       onTap: () =>
                           pushToPersonalInfoFormView(context, loadedUser),

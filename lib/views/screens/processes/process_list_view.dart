@@ -73,7 +73,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                     return Text('Ocorreu um erro');
                   case ConnectionState.waiting:
                     return LoadingView(
-                      background: PageUtils.primaryColor,
+                      background: PageUtils.PRIMARY_COLOR,
                     );
 
                     break;
@@ -191,12 +191,12 @@ class _ProcessListViewState extends State<ProcessListView> {
                         return EmptyView();
                       }
                     }
-                    return LoadingView(background: PageUtils.primaryColor);
+                    return LoadingView(background: PageUtils.PRIMARY_COLOR);
                 }
               }),
         );
       } else {
-        return LoadingView(background: PageUtils.primaryColor);
+        return LoadingView(background: PageUtils.PRIMARY_COLOR);
       }
     });
   }

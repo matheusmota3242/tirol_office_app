@@ -20,33 +20,17 @@ class ServiceProviderView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             serviceProviderAttribute('Nome', this.serviceProvider.name),
-            separator,
+            PageUtils.HORIZONTAL_SEPARATOR_GREY,
             serviceProviderAttribute('Categoria', serviceProvider.category),
-            separator,
+            PageUtils.HORIZONTAL_SEPARATOR_GREY,
             serviceProviderAttribute('Email', serviceProvider.email),
-            separator,
+            PageUtils.HORIZONTAL_SEPARATOR_GREY,
             serviceProviderAttribute('Telefone', serviceProvider.phone),
           ],
         ),
       ),
     );
   }
-
-  Widget separator = Column(
-    children: [
-      SizedBox(
-        height: 12.0,
-      ),
-      Container(
-        width: double.maxFinite,
-        height: 0.5,
-        color: Colors.grey[400],
-      ),
-      SizedBox(
-        height: 12.0,
-      ),
-    ],
-  );
 
   Widget serviceProviderAttribute(String label, String value) {
     return Container(

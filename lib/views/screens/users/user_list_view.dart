@@ -156,7 +156,7 @@ class _UserListViewState extends State<UserListView> {
                                 child: Text(
                                   'Cancelar',
                                   style:
-                                      TextStyle(color: PageUtils.primaryColor),
+                                      TextStyle(color: PageUtils.PRIMARY_COLOR),
                                 )),
                             ElevatedButton(
                                 style: ButtonStyle(

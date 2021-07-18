@@ -264,7 +264,7 @@ class ForgotPasswordView extends StatelessWidget {
         child: Text(
           'Login',
           style: TextStyle(
-            color: PageUtils.primaryColor,
+            color: PageUtils.PRIMARY_COLOR,
           ),
         ),
         style: ButtonStyle(
