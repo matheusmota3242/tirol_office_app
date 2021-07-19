@@ -6,6 +6,10 @@ class PageUtils {
   static const OBSERVATIONS_TITLE = 'Observações';
   static const EQUIPMENTS_TITLE = 'Equipamentos';
   static const EQUIPMENT_DETAILS_TITLE = 'Detalhes do equipamento';
+  static const EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE =
+      'Nova manutenção corretiva';
+  static const EQUIPMENT_PREVENTIVE_MAINTENANCE_FORM_TITLE =
+      'Nova manutenção preventiva';
   static const OBSERVATIONS_DETAILS_TITLE = 'Detalhes da observação';
   static const SERVICES_TITLE = 'Serviços';
   static const SERVICES_FORM_TITLE = 'Novo serviço';
@@ -69,4 +73,26 @@ class PageUtils {
       ),
     ],
   );
+
+  Widget getTextFormField(String label) {
+    return TextFormField(
+      onChanged: (value) => {},
+      validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
+      decoration: InputDecoration(
+        alignLabelWithHint: true,
+        labelText: label,
+        labelStyle: TextStyle(
+            color: Colors.grey[700], height: 0.9, fontWeight: FontWeight.w600),
+        filled: true,
+        counterStyle: TextStyle(color: Colors.red),
+        hintText: label,
+        contentPadding: EdgeInsets.only(
+          left: 10.0,
+        ),
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
 }

@@ -56,7 +56,7 @@ class _ProcessListViewState extends State<ProcessListView> {
     final _processService = ProcessService();
     PickedDateMobx pickedDateMobx = PickedDateMobx();
 
-    showFilterDialog(BuildContext context) async {
+    showFilterDialog() async {
       var pickedTimestamp = await Dialogs().showProcessFilterDialog(context);
       if (pickedTimestamp != null) pickedDateMobx.setPicked(pickedTimestamp);
     }
@@ -102,7 +102,7 @@ class _ProcessListViewState extends State<ProcessListView> {
                               actions: [
                                 IconButton(
                                   icon: Icon(Icons.date_range),
-                                  onPressed: () => showFilterDialog(context),
+                                  onPressed: () => showFilterDialog(),
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.qr_code),

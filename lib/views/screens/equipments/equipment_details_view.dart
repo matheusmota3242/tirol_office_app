@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/special_equipment_model.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/views/screens/equipments/equipment_corrective_maintenances_view.dart';
+import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
 import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
+
+import 'preventive/equipment_preventive_maintenances_view.dart';
 
 class EquipmentDetailsView extends StatelessWidget {
   final Equipment equipment;
@@ -48,19 +50,23 @@ class EquipmentDetailsView extends StatelessWidget {
                   ),
                 )),
             PageUtils.HORIZONTAL_SEPARATOR_GREY,
-            Visibility(
-              visible: equipment is SpecialEquipment,
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: () => {},
-                    child: Text(
-                      'Manutenções preventivas',
-                      style: PageUtils.textButtonStyle,
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Visibility(
+                visible: equipment is SpecialEquipment,
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () =>
+                          pushToEquipmentPreventiveMaintenancesView(context),
+                      child: Text(
+                        'Manutenções preventivas',
+                        style: PageUtils.textButtonStyle,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: PageUtils.BODY_PADDING_VALUE),
-                ],
+                    SizedBox(height: PageUtils.BODY_PADDING_VALUE),
+                  ],
+                ),
               ),
             ),
             InkWell(
@@ -81,6 +87,16 @@ class EquipmentDetailsView extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (_) => EquipmentCorrectiveMaintenancesView(
+                  equipment: equipment,
+                  departmentDescription: departmentDescription,
+                )));
+  }
+
+  void pushToEquipmentPreventiveMaintenancesView(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => EquipmentPreventiveMaintenancesView(
                   equipment: equipment,
                   departmentDescription: departmentDescription,
                 )));
