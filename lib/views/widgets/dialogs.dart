@@ -28,7 +28,26 @@ class Dialogs {
               ),
               child: child);
         });
-    print(picked);
+    return picked;
+  }
+
+  showPickDateDialog(BuildContext context) async {
+    DateTime now = DateTime.now();
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: DateTime(now.year),
+        lastDate: DateTime(now.year + 5),
+        builder: (context, child) {
+          return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: Colors.red,
+                accentColor: Colors.red,
+                colorScheme:
+                    ColorScheme.light(primary: const Color(0xFF166D97)),
+              ),
+              child: child);
+        });
     return picked;
   }
 

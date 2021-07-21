@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintanance_form_view.dart';
-import 'package:tirol_office_app/views/screens/equipments/preventive/equipment_preventive_form_view.dart';
+import 'package:tirol_office_app/views/screens/equipments/preventive/equipment_preventive_maintenance_form_view.dart';
 
 class RouteUtils {
   static const String processes = 'processes';
