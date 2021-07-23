@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'dart:math' as math;
 
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
@@ -23,10 +23,6 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
 
   AnimationController _animationController;
   var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
-
-  // Configurações do FabIcon animado
-  static const List<IconData> fabIcons = const [Icons.done, Icons.close];
-  static const List<Color> fabIconsColors = const [Colors.green, Colors.red];
 
   @override
   void initState() {
@@ -156,55 +152,8 @@ class _DepartmentEditFormViewState extends State<DepartmentEditFormView>
       appBar: AppBar(
         title: Text('Editar departamento'),
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(fabIcons.length, (int index) {
-          Widget child = Container(
-            height: 70.0,
-            width: 56.0,
-            alignment: FractionalOffset.topCenter,
-            child: ScaleTransition(
-              scale: CurvedAnimation(
-                parent: _animationController,
-                curve: Interval(0.0, 1.0 - index / fabIcons.length / 2.0,
-                    curve: Curves.easeOut),
-              ),
-              child: FloatingActionButton(
-                heroTag: null,
-                backgroundColor: fabIconsColors[index],
-                mini: true,
-                child: Icon(fabIcons[index], color: Colors.white),
-                onPressed: () => index == 0 ? update() : cancel(),
-              ),
-            ),
-          );
-          return child;
-        }).toList()
-          ..add(
-            FloatingActionButton(
-              backgroundColor: themeData.buttonColor,
-              heroTag: null,
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) => Transform(
-                  transform: new Matrix4.rotationZ(
-                      _animationController.value * 0.5 * math.pi),
-                  alignment: FractionalOffset.center,
-                  child: Icon(_animationController.isDismissed
-                      ? Icons.share
-                      : Icons.close),
-                ),
-              ),
-              onPressed: () {
-                if (_animationController.isDismissed) {
-                  _animationController.forward();
-                } else {
-                  _animationController.reverse();
-                }
-              },
-            ),
-          ),
-      ),
+      floatingActionButton:
+          PageUtils.getFloatActionButton(_animationController, update, cancel),
       body: Container(
         padding: EdgeInsets.all(20.0),
         child: ListView(

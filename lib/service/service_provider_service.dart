@@ -11,12 +11,11 @@ class ServiceProviderService {
   }
 
   void save(ServiceProvider serviceProvider) {
-    FirestoreDB().db_service_providers.add(serviceProvider.toJson());
+    FirestoreDB.db_service_providers.add(serviceProvider.toJson());
   }
 
   void update(ServiceProvider serviceProvider) {
-    FirestoreDB()
-        .db_service_providers
+    FirestoreDB.db_service_providers
         .doc(serviceProvider.id)
         .update(serviceProvider.toJson());
   }
@@ -30,6 +29,6 @@ class ServiceProviderService {
   }
 
   void remove(String id) async {
-    await FirestoreDB().db_service_providers.doc(id).delete();
+    await FirestoreDB.db_service_providers.doc(id).delete();
   }
 }

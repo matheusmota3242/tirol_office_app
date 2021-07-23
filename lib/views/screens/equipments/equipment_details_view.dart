@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/special_equipment_model.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
-
-import 'preventive/equipment_preventive_maintenances_view.dart';
 
 class EquipmentDetailsView extends StatelessWidget {
   final Equipment equipment;
-  final String departmentDescription;
+  final DepartmentDTO departmentDTO;
 
   const EquipmentDetailsView(
-      {Key key, @required this.equipment, @required this.departmentDescription})
+      {Key key, @required this.equipment, @required this.departmentDTO})
       : super(key: key);
 
   @override
@@ -42,7 +41,7 @@ class EquipmentDetailsView extends StatelessWidget {
                             )
                           ]),
                       SizedBox(height: 12.0),
-                      Text(departmentDescription,
+                      Text(departmentDTO.name,
                           style: TextStyle(
                               color: Colors.grey[700],
                               fontWeight: FontWeight.w600))
@@ -58,7 +57,8 @@ class EquipmentDetailsView extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () =>
-                          pushToEquipmentPreventiveMaintenancesView(context),
+                          RouteUtils.pushToEquipmentPreventiveMaintenancesView(
+                              context, equipment, departmentDTO),
                       child: Text(
                         'Manutenções preventivas',
                         style: PageUtils.textButtonStyle,
@@ -70,7 +70,8 @@ class EquipmentDetailsView extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () => pushToEquipmentCorrectiveMaintenancesView(context),
+              onTap: () => RouteUtils.pushToEquipmentCorrectiveMaintenancesView(
+                  context, equipment, departmentDTO),
               child: Text(
                 'Manutenções corretivas',
                 style: PageUtils.textButtonStyle,
@@ -80,25 +81,5 @@ class EquipmentDetailsView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void pushToEquipmentCorrectiveMaintenancesView(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => EquipmentCorrectiveMaintenancesView(
-                  equipment: equipment,
-                  departmentDescription: departmentDescription,
-                )));
-  }
-
-  void pushToEquipmentPreventiveMaintenancesView(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => EquipmentPreventiveMaintenancesView(
-                  equipment: equipment,
-                  departmentDescription: departmentDescription,
-                )));
   }
 }

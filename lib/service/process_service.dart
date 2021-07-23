@@ -49,8 +49,7 @@ class ProcessService {
     var now = DateTime.now();
     var processes;
     try {
-      processes = await FirestoreDB()
-          .db_processes
+      processes = await FirestoreDB.db_processes
           .where(
             'start',
             isGreaterThanOrEqualTo: Timestamp.fromDate(
@@ -83,8 +82,7 @@ class ProcessService {
       if (process != null) {
         process.setEnd = DateTime.now();
         process.setObservations = observations;
-        FirestoreDB()
-            .db_processes
+        FirestoreDB.db_processes
             .doc(process.getId)
             .update({'end': process.getEnd, 'observations': observations})
             .then((value) =>
@@ -97,7 +95,7 @@ class ProcessService {
       process.setUserId = user.id;
       process.setDepartmentId = response;
       process.setStart = now;
-      FirestoreDB().db_processes.add(process.toJson());
+      FirestoreDB.db_processes.add(process.toJson());
     }
   }
 
@@ -128,8 +126,7 @@ class ProcessService {
     DateTime pickedEnd =
         DateTime(picked.year, picked.month, picked.day, 23, 59);
     print(picked);
-    return await FirestoreDB()
-        .db_processes
+    return await FirestoreDB.db_processes
         .where('start', isGreaterThanOrEqualTo: Timestamp.fromDate(pickedStart))
         .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
         .get();

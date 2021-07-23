@@ -40,7 +40,7 @@ class ServiceProviderListView extends StatelessWidget {
         currentPage: PageUtils.OBSERVATIONS_TITLE,
       ),
       body: StreamBuilder(
-          stream: FirestoreDB().db_service_providers.snapshots(),
+          stream: FirestoreDB.db_service_providers.snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             switch (snapshot.connectionState) {

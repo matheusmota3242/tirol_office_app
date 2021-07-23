@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
@@ -8,10 +9,10 @@ import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
 
 class EquipmentCorrectiveMaintenancesView extends StatelessWidget {
   final Equipment equipment;
-  final String departmentDescription;
+  final DepartmentDTO departmentDTO;
 
   const EquipmentCorrectiveMaintenancesView(
-      {Key key, @required this.equipment, @required this.departmentDescription})
+      {Key key, @required this.equipment, @required this.departmentDTO})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class EquipmentCorrectiveMaintenancesView extends StatelessWidget {
             IconButton(
                 onPressed: () {
                   RouteUtils.pushToEquipmentCorrectiveMaintenancesFormView(
-                      context);
+                      context, equipment, departmentDTO);
                 },
                 icon: Icon(Icons.add))
           ]),
@@ -50,7 +51,7 @@ class EquipmentCorrectiveMaintenancesView extends StatelessWidget {
                             )
                           ]),
                       SizedBox(height: 12.0),
-                      Text(departmentDescription,
+                      Text(departmentDTO.name,
                           style: TextStyle(
                               color: Colors.grey[700],
                               fontWeight: FontWeight.w600))
@@ -71,11 +72,13 @@ class EquipmentCorrectiveMaintenancesView extends StatelessWidget {
                       ),
                     ),
                   )
-                : ListView(
-                    children: correctiveMaintenances
-                        .map((cm) => Text(cm.hasOccurred.toString()))
-                        .toList(),
-                  ),
+                : SingleChildScrollView(
+                    child: Column(
+                      children: correctiveMaintenances
+                          .map((e) => Text(e.serviceProvider.name))
+                          .toList(),
+                    ),
+                  )
           ],
         ),
       ),

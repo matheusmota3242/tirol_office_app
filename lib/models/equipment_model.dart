@@ -7,7 +7,7 @@ class Equipment {
   int _id;
   String _description;
   String _status;
-  List<Maintenance> _correctiveMaintenances;
+  List<Maintenance> _correctiveMaintenances = <Maintenance>[];
 
   int get id => this._id;
   set id(int id) => this._id = id;
@@ -33,12 +33,20 @@ class Equipment {
 
   Equipment.fromJson(Map<String, dynamic> json)
       : _description = json['description'],
-        _status = json['status'],
-        _correctiveMaintenances = json['correctiveMaintenances'];
+        _correctiveMaintenances = json['correctiveMaintenances'] != null
+            ? List<Maintenance>.from(
+                json['correctiveMaintenances'].map(
+                  (maintenance) => Maintenance.fromJson(maintenance),
+                ),
+              )
+            : <Maintenance>[],
+        _status = json['status'];
 
   Map<String, dynamic> toJson() => {
         'description': _description,
         'status': _status,
-        'correctiveMaintenances': _correctiveMaintenances,
+        'correctiveMaintenances': _correctiveMaintenances != null
+            ? _correctiveMaintenances.map((e) => e.toJson()).toList()
+            : [],
       };
 }

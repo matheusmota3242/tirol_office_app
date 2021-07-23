@@ -51,17 +51,17 @@ abstract class DepartmentServiceBase with Store {
   setEquipmentStatus(String value) => equipmentStatus = value;
 
   void save(Department department) {
-    FirestoreDB().db_departments.add(department.toJson());
+    FirestoreDB.db_departments.add(department.toJson());
   }
 
   void update(Department department) {
-    FirestoreDB().db_departments.doc(department.id).update(
+    FirestoreDB.db_departments.doc(department.id).update(
           department.toJson(),
         );
   }
 
   void remove(Department department) {
-    FirestoreDB().db_departments.doc(department.id).delete();
+    FirestoreDB.db_departments.doc(department.id).delete();
   }
 
   void modifyEquipment(Equipment editedEquipment) {
@@ -73,8 +73,7 @@ abstract class DepartmentServiceBase with Store {
   }
 
   queryByProcess(Process process) async {
-    return await FirestoreDB()
-        .db_departments
+    return await FirestoreDB.db_departments
         .where('name', isEqualTo: process.departmentId)
         .get();
   }

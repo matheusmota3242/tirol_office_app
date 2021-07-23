@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tirol_office_app/models/dto/department_dto_model.dart';
+import 'package:tirol_office_app/models/equipment_model.dart';
 
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintanance_form_view.dart';
+import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
 import 'package:tirol_office_app/views/screens/equipments/preventive/equipment_preventive_maintenance_form_view.dart';
+import 'package:tirol_office_app/views/screens/equipments/preventive/equipment_preventive_maintenances_view.dart';
 
 class RouteUtils {
   static const String processes = 'processes';
@@ -28,13 +32,42 @@ class RouteUtils {
     );
   }
 
-  /* Página de formulário de manutenção corretiva */
+  /* Página de formulário de manutenção corretiva.
+   * Recebe a descrição do equipmaneto e o nome do departamento
+   */
   static void pushToEquipmentCorrectiveMaintenancesFormView(
-      BuildContext context) {
+      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => EquipmentCorrectiveMaintenanceFormView(),
+        builder: (_) => EquipmentCorrectiveMaintenanceFormView(
+            equipment: equipment, departmentDTO: departmentDTO),
+      ),
+    );
+  }
+
+  static void pushToEquipmentCorrectiveMaintenancesView(
+      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EquipmentCorrectiveMaintenancesView(
+          equipment: equipment,
+          departmentDTO: departmentDTO,
+        ),
+      ),
+    );
+  }
+
+  static void pushToEquipmentPreventiveMaintenancesView(
+      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EquipmentPreventiveMaintenancesView(
+          equipment: equipment,
+          departmentDTO: departmentDTO,
+        ),
       ),
     );
   }

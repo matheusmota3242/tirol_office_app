@@ -9,18 +9,18 @@ class EquipmentStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 24,
-        width: 24,
-        child: Icon(
-          EquipmentHelper.isDamaged(status)
-              ? Icons.done
-              : Icons.warning_amber_rounded,
-          color: Colors.white,
-          size: 16,
-        ),
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color:
-                EquipmentHelper.isDamaged(status) ? Colors.green : Colors.red));
+      height: 24,
+      width: 24,
+      child: Icon(
+        EquipmentHelper.isDamaged(status)
+            ? Icons.done
+            : Icons.warning_amber_rounded,
+        color: Colors.white,
+        size: 16,
+      ),
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: EquipmentHelper.isDamaged(status) ? Colors.green : Colors.red),
+    );
   }
 }

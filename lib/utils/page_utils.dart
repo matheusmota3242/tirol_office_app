@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'dart:math' as math;
+
 class PageUtils {
   static const PROCESSES_TITLE = 'Processos';
   static const DEPARTIMENTS_TITLE = 'Departamentos';
@@ -73,6 +75,59 @@ class PageUtils {
       ),
     ],
   );
+
+  static Widget getFloatActionButton(AnimationController animationController,
+      Function persist, Function cancel) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(fabIcons.length, (int index) {
+        Widget child = Container(
+          height: 70.0,
+          width: 56.0,
+          alignment: FractionalOffset.topCenter,
+          child: ScaleTransition(
+            scale: CurvedAnimation(
+              parent: animationController,
+              curve: Interval(0.0, 1.0 - index / fabIcons.length / 2.0,
+                  curve: Curves.easeOut),
+            ),
+            child: FloatingActionButton(
+              heroTag: null,
+              backgroundColor: fabIconsColors[index],
+              mini: true,
+              child: Icon(fabIcons[index], color: Colors.white),
+              onPressed: () => index == 0 ? persist() : cancel(),
+            ),
+          ),
+        );
+        return child;
+      }).toList()
+        ..add(
+          FloatingActionButton(
+            backgroundColor: PRIMARY_COLOR,
+            heroTag: null,
+            child: AnimatedBuilder(
+              animation: animationController,
+              builder: (context, child) => Transform(
+                transform: new Matrix4.rotationZ(
+                    animationController.value * 0.5 * math.pi),
+                alignment: FractionalOffset.center,
+                child: Icon(animationController.isDismissed
+                    ? Icons.share
+                    : Icons.close),
+              ),
+            ),
+            onPressed: () {
+              if (animationController.isDismissed) {
+                animationController.forward();
+              } else {
+                animationController.reverse();
+              }
+            },
+          ),
+        ),
+    );
+  }
 
   Widget getTextFormField(String label) {
     return TextFormField(

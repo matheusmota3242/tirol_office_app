@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/department_model.dart';
+import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
@@ -55,7 +56,7 @@ class DepartmentListView extends StatelessWidget {
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: StreamBuilder(
-        stream: FirestoreDB().db_departments.snapshots(),
+        stream: FirestoreDB.db_departments.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -90,6 +91,9 @@ class DepartmentListView extends StatelessWidget {
             var data = docs[index].data();
             Department department = Department.fromJson(data);
             department.id = docs[index].id;
+            for (var i = 0; i < department.equipments.length; i++) {
+              department.equipments[i].id = i;
+            }
             return Theme(
               data:
                   Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -108,7 +112,10 @@ class DepartmentListView extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
                         child: InkWell(
                           onTap: () => pushToEquipmentDetailsView(
-                              context, e, department.name),
+                              context,
+                              e,
+                              new DepartmentDTO(
+                                  department.id, department.name)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -143,13 +150,13 @@ class DepartmentListView extends StatelessWidget {
   }
 
   void pushToEquipmentDetailsView(
-      BuildContext context, Equipment equipment, String departmentDescription) {
+      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_) => EquipmentDetailsView(
             equipment: equipment,
-            departmentDescription: departmentDescription,
+            departmentDTO: departmentDTO,
           ),
         ));
   }
