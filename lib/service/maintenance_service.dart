@@ -5,24 +5,67 @@ import 'package:tirol_office_app/models/maintenance_model.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class MaintenanceService {
-  void saveCorrective(
-      String departmentId, int equipmentId, Maintenance maintenance) async {
+  saveCorrective(String departmentId, String equipmentDescription,
+      Maintenance maintenance) async {
     var doc = await FirestoreDB.db_departments.doc(departmentId).get();
     Department department = Department.fromJson(doc.data());
-    Equipment equipment = department.equipments[equipmentId];
+
+    int equipmentIndex = department.equipments
+        .map((e) => e.description)
+        .toList()
+        .indexOf(equipmentDescription);
+
+    Equipment equipment = department.equipments[equipmentIndex];
+
     if (equipment.correctiveMaintenances == null)
       equipment.correctiveMaintenances = <Maintenance>[];
-    equipment.correctiveMaintenances.add(maintenance);
-    department.equipments[equipmentId] = equipment;
+
+    bool alreadyExists = equipment.correctiveMaintenances.any((el) =>
+        el.serviceProvider.name == maintenance.serviceProvider.name &&
+        el.dateTime == maintenance.dateTime);
+    var result;
+    if (alreadyExists) {
+      Toasts.showToast(content: 'Manutenção já existe');
+    } else {
+      equipment.correctiveMaintenances.add(maintenance);
+      department.equipments[equipmentIndex] = equipment;
+      try {
+        await FirestoreDB.db_departments
+            .doc(departmentId)
+            .update(department.toJson());
+        result = equipment;
+      } catch (e) {
+        Toasts.showToast(content: 'Ocorreu um erro');
+        print(e);
+      }
+      return result;
+    }
+  }
+
+  deleteCorrective(String departmentId, String equipmentDescription,
+      Maintenance maintenance) async {
+    var doc = await FirestoreDB.db_departments.doc(departmentId).get();
+    Department department = Department.fromJson(doc.data());
+    int indexOfEquipment = department.equipments
+        .map((e) => e.description)
+        .toList()
+        .indexOf(equipmentDescription);
+    Equipment equipment = department.equipments
+        .firstWhere((element) => element.description == equipmentDescription);
+    equipment.correctiveMaintenances.removeWhere((el) =>
+        el.serviceProvider.name == maintenance.serviceProvider.name &&
+        el.dateTime == maintenance.dateTime);
+    department.equipments[indexOfEquipment] = equipment;
+    var result;
     try {
-      print(maintenance.toJson());
-      print(department.equipments[equipmentId].toJson());
       await FirestoreDB.db_departments
           .doc(departmentId)
           .update(department.toJson());
+      result = true;
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
-      print(e);
+      result = null;
     }
+    return result;
   }
 }

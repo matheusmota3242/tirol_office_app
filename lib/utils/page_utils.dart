@@ -129,6 +129,29 @@ class PageUtils {
     );
   }
 
+  static Widget getAttributeField(String field, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          field,
+          style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[600]),
+        ),
+        SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget getTextFormField(String label) {
     return TextFormField(
       onChanged: (value) => {},

@@ -1,4 +1,6 @@
 import 'package:mobx/mobx.dart';
+import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 
 class EquipmentService {
@@ -16,4 +18,12 @@ class EquipmentService {
   @action
   void setCurrentEquipmentStatus(String value) =>
       currentEquipmentStatus = value;
+
+  getEquipment(String departmentId, String equipmentDescription) async {
+    var doc = await FirestoreDB.db_departments.doc(departmentId).get();
+    Department department = Department.fromJson(doc.data());
+    List<Equipment> equipments = department.equipments;
+    return equipments
+        .firstWhere((element) => element.description == equipmentDescription);
+  }
 }

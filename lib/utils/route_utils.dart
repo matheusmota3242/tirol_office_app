@@ -36,23 +36,26 @@ class RouteUtils {
    * Recebe a descrição do equipmaneto e o nome do departamento
    */
   static void pushToEquipmentCorrectiveMaintenancesFormView(
-      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
+      BuildContext context,
+      String equipmentDescription,
+      DepartmentDTO departmentDTO) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => EquipmentCorrectiveMaintenanceFormView(
-            equipment: equipment, departmentDTO: departmentDTO),
+            equipmentDescription: equipmentDescription,
+            departmentDTO: departmentDTO),
       ),
     );
   }
 
-  static void pushToEquipmentCorrectiveMaintenancesView(
-      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
+  static void pushToEquipmentCorrectiveMaintenancesView(BuildContext context,
+      String equipmentDescription, DepartmentDTO departmentDTO) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => EquipmentCorrectiveMaintenancesView(
-          equipment: equipment,
+          equipmentDescription: equipmentDescription,
           departmentDTO: departmentDTO,
         ),
       ),

@@ -1,28 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'dart:math' as math;
 
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
-import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
 import 'package:tirol_office_app/models/service_provider_model.dart';
 import 'package:tirol_office_app/service/maintenance_service.dart';
 import 'package:tirol_office_app/utils/datetime_utils.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 
 import '../../loading_view.dart';
-import 'equipment_corrective_maintenances_view.dart';
 
 class EquipmentCorrectiveMaintenanceFormView extends StatefulWidget {
-  final Equipment equipment;
+  final String equipmentDescription;
   final DepartmentDTO departmentDTO;
 
   const EquipmentCorrectiveMaintenanceFormView(
-      {Key key, @required this.equipment, @required this.departmentDTO})
+      {Key key,
+      @required this.equipmentDescription,
+      @required this.departmentDTO})
       : super(key: key);
   _EquipmentCorrectiveMaintenanceFormViewState createState() =>
       _EquipmentCorrectiveMaintenanceFormViewState();
@@ -73,25 +73,50 @@ class _EquipmentCorrectiveMaintenanceFormViewState
       }
     }
 
-    persist() {
+    persist() async {
       if (_formKey.currentState.validate()) {
         ServiceProvider serviceProvider = serviceProviders
             .firstWhere((element) => element.name == serviceProviderValue);
         maintenance.serviceProvider = serviceProvider;
-        if (widget.equipment.correctiveMaintenances == null)
-          widget.equipment.correctiveMaintenances = [];
-        widget.equipment.correctiveMaintenances.add(maintenance);
-        service.saveCorrective(
-            widget.departmentDTO.id, widget.equipment.id, maintenance);
+
+        var result;
+        result = await service.saveCorrective(
+            widget.departmentDTO.id, widget.equipmentDescription, maintenance);
+
+        if (result != null) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => EquipmentCorrectiveMaintenancesView(
+                        equipmentDescription: widget.equipmentDescription,
+                        departmentDTO: widget.departmentDTO,
+                      )));
+        }
       }
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (_) => EquipmentCorrectiveMaintenancesView(
-                    equipment: widget.equipment,
-                    departmentDTO: widget.departmentDTO,
-                  )));
     }
+
+    // persist() async {
+    //   var result;
+    //   if (_formKey.currentState.validate()) {
+    //     ServiceProvider serviceProvider = serviceProviders
+    //         .firstWhere((element) => element.name == serviceProviderValue);
+    //     maintenance.serviceProvider = serviceProvider;
+    //     if (widget.equipment.correctiveMaintenances == null)
+    //       widget.equipment.correctiveMaintenances = [];
+    //     widget.equipment.correctiveMaintenances.add(maintenance);
+    //     result = await service.saveCorrective(
+    //         widget.departmentDTO.id, widget.equipment.id, maintenance);
+    //   }
+
+    //   if (result != null)
+    //     Navigator.push(
+    //         context,
+    //         MaterialPageRoute(
+    //             builder: (_) => EquipmentCorrectiveMaintenancesView(
+    //                   equipmentDescription: widget.equipment.description,
+    //                   departmentDTO: widget.departmentDTO,
+    //                 )));
+    // }
 
     cancel() {
       Navigator.pop(context);
@@ -112,7 +137,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          '${widget.departmentDTO.name} - ${widget.equipment.description}',
+                          '${widget.departmentDTO.name} - ${widget.equipmentDescription}',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w600)),
                       PageUtils.HORIZONTAL_SEPARATOR_GREY,

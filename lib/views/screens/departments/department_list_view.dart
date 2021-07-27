@@ -102,7 +102,7 @@ class DepartmentListView extends StatelessWidget {
                 title: Text(department.name,
                     style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        fontSize: 18,
+                        fontSize: 17,
                         color: atLeastOneDamaged(department.equipments)
                             ? Colors.red
                             : Colors.black)),
@@ -155,7 +155,7 @@ class DepartmentListView extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (_) => EquipmentDetailsView(
-            equipment: equipment,
+            equipmentDescription: equipment.description,
             departmentDTO: departmentDTO,
           ),
         ));

@@ -1,9 +1,13 @@
 import 'package:tirol_office_app/models/service_provider_model.dart';
 
 class Maintenance {
+  int _id;
   DateTime _dateTime;
   bool _hasOccurred;
   ServiceProvider _serviceProvider;
+
+  int get id => this._id;
+  set id(int value) => this._id = value;
 
   get dateTime => this._dateTime;
   set dateTime(value) => this._dateTime = value;
