@@ -22,7 +22,9 @@ class MaintenanceService {
 
     bool alreadyExists = equipment.correctiveMaintenances.any((el) =>
         el.serviceProvider.name == maintenance.serviceProvider.name &&
-        el.dateTime == maintenance.dateTime);
+        el.dateTime.day == maintenance.dateTime.day &&
+        el.dateTime.month == maintenance.dateTime.month &&
+        el.dateTime.year == maintenance.dateTime.year);
     var result;
     if (alreadyExists) {
       Toasts.showToast(content: 'Manutenção já existe');
@@ -54,13 +56,48 @@ class MaintenanceService {
         .firstWhere((element) => element.description == equipmentDescription);
     equipment.correctiveMaintenances.removeWhere((el) =>
         el.serviceProvider.name == maintenance.serviceProvider.name &&
-        el.dateTime == maintenance.dateTime);
+        el.dateTime.day == maintenance.dateTime.day &&
+        el.dateTime.month == maintenance.dateTime.month &&
+        el.dateTime.year == maintenance.dateTime.year);
     department.equipments[indexOfEquipment] = equipment;
     var result;
     try {
       await FirestoreDB.db_departments
           .doc(departmentId)
           .update(department.toJson());
+      result = true;
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+      result = null;
+    }
+    return result;
+  }
+
+  updateHasOccured(String departmentId, String equipmentDescription,
+      Maintenance maintenance) async {
+    var doc = await FirestoreDB.db_departments.doc(departmentId).get();
+    Department department = Department.fromJson(doc.data());
+    int indexOfEquipment = department.equipments
+        .map((e) => e.description)
+        .toList()
+        .indexOf(equipmentDescription);
+    Equipment equipment = department.equipments
+        .firstWhere((element) => element.description == equipmentDescription);
+
+    int indexOfMaintenance = equipment.correctiveMaintenances
+        .map((e) => e.serviceProvider.name)
+        .toList()
+        .indexOf(maintenance.serviceProvider.name);
+    equipment.correctiveMaintenances[indexOfMaintenance].hasOccurred =
+        !equipment.correctiveMaintenances[indexOfMaintenance].hasOccurred;
+
+    department.equipments[indexOfEquipment] = equipment;
+    var result;
+    try {
+      await FirestoreDB.db_departments
+          .doc(departmentId)
+          .update(department.toJson());
+      Toasts.showToast(content: 'Item atualizado com sucesso');
       result = true;
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');

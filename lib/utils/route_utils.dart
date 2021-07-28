@@ -23,11 +23,16 @@ class RouteUtils {
 
   /* Página de formulário de manutenção preventiva */
   static void pushToEquipmentPreventiveMaintenancesFormView(
-      BuildContext context) {
+      BuildContext context,
+      String equipmentDescription,
+      DepartmentDTO departmentDTO) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => EquipmentPreventiveMaintananceFormView(),
+        builder: (_) => EquipmentPreventiveMaintananceFormView(
+          equipmentDescription: equipmentDescription,
+          departmentDTO: departmentDTO,
+        ),
       ),
     );
   }
@@ -62,13 +67,13 @@ class RouteUtils {
     );
   }
 
-  static void pushToEquipmentPreventiveMaintenancesView(
-      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
+  static void pushToEquipmentPreventiveMaintenancesView(BuildContext context,
+      String equipmentDescription, DepartmentDTO departmentDTO) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => EquipmentPreventiveMaintenancesView(
-          equipment: equipment,
+          equipmentDescription: equipmentDescription,
           departmentDTO: departmentDTO,
         ),
       ),

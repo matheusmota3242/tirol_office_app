@@ -30,6 +30,8 @@ class EquipmentCorrectiveMaintenancesView extends StatefulWidget {
 class _EquipmentCorrectiveMaintenancesViewState
     extends State<EquipmentCorrectiveMaintenancesView> {
   Equipment currentEquipment;
+  String dropdownValue = 'Remover';
+
   @override
   Widget build(BuildContext context) {
     deleteMaintenance(Maintenance maintenance, String equipmentDescription,
@@ -44,8 +46,7 @@ class _EquipmentCorrectiveMaintenancesViewState
       }
     }
 
-    showDeleteDialog(BuildContext context, String equipmentDescription,
-        Maintenance maintenance) {
+    showDeleteDialog(Maintenance maintenance) {
       showDialog(
         context: context,
         builder: (_) => StatefulBuilder(
@@ -73,8 +74,8 @@ class _EquipmentCorrectiveMaintenancesViewState
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        deleteMaintenance(
-                            maintenance, equipmentDescription, localContext);
+                        deleteMaintenance(maintenance,
+                            widget.equipmentDescription, localContext);
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
@@ -89,6 +90,16 @@ class _EquipmentCorrectiveMaintenancesViewState
           );
         }),
       );
+    }
+
+    handlingOptionSelected(String value, Maintenance maintenance) async {
+      if (value == 'Remover') {
+        showDeleteDialog(maintenance);
+      } else {
+        await MaintenanceService().updateHasOccured(
+            widget.departmentDTO.id, widget.equipmentDescription, maintenance);
+        setState(() {});
+      }
     }
 
     return FutureBuilder(
@@ -188,28 +199,58 @@ class _EquipmentCorrectiveMaintenancesViewState
                                               DateTimeUtils.toBRFormat(
                                                   maintenance.dateTime)),
                                           SizedBox(
-                                            height: 16,
+                                            height: 24,
                                           ),
                                           PageUtils.getAttributeField(
                                               'Provedor do serviço',
                                               maintenance.serviceProvider.name),
+                                          SizedBox(
+                                            height: 24,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                'Status',
+                                                style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey[600]),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                maintenance.hasOccurred
+                                                    ? "Concluída"
+                                                    : "Aguardando",
+                                                style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: defineColorForStatus(
+                                                        maintenance)),
+                                              ),
+                                            ],
+                                          )
                                         ],
                                       ),
                                       Positioned(
-                                        top: -10,
-                                        right: -10,
-                                        child: IconButton(
-                                          padding: EdgeInsets.all(0),
-                                          icon: Icon(Icons.delete,
-                                              color: Colors.black),
-                                          onPressed: () {
-                                            showDeleteDialog(
-                                                context,
-                                                equipment.description,
-                                                maintenance);
-                                          },
-                                        ),
-                                      )
+                                          top: -10,
+                                          right: -12,
+                                          child: PopupMenuButton<String>(
+                                              onSelected: (value) =>
+                                                  handlingOptionSelected(
+                                                      value, maintenance),
+                                              icon: Icon(Icons.more_vert,
+                                                  color: Colors.black),
+                                              itemBuilder: (context) =>
+                                                  defineOptionsForMaintenance(
+                                                          maintenance)
+                                                      .map((value) =>
+                                                          PopupMenuItem(
+                                                              value: value,
+                                                              child:
+                                                                  Text(value)))
+                                                      .toList()))
                                     ]),
                                   ),
                                 );
@@ -224,5 +265,27 @@ class _EquipmentCorrectiveMaintenancesViewState
         );
       },
     );
+  }
+
+  Color defineColorForStatus(Maintenance maintenance) {
+    Color color;
+    if (DateTime.now().isAfter(maintenance.dateTime)) {
+      if (maintenance.hasOccurred)
+        color = Colors.green[700];
+      else
+        color = color = Colors.yellow[700];
+    }
+    return color;
+  }
+
+  List<String> defineOptionsForMaintenance(Maintenance maintenance) {
+    var list = [dropdownValue];
+    if (DateTime.now().isAfter(maintenance.dateTime)) {
+      if (maintenance.hasOccurred)
+        list.insert(0, "Desconcluir");
+      else
+        list.insert(0, "Concluir");
+    }
+    return list;
   }
 }
