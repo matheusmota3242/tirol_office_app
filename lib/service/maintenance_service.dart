@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/maintenance_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
+import 'package:tirol_office_app/utils/datetime_utils.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class MaintenanceService {
@@ -42,6 +45,18 @@ class MaintenanceService {
     }
 
     return result;
+  }
+
+  delete(String maintenanceId) async {
+    bool result = false;
+    try {
+      await FirestoreDB.db_maintenances.doc(maintenanceId).delete();
+      Toasts.showToast(content: 'Manutenção removida com sucesso');
+      result = true;
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+    }
+    return true;
   }
 
   saveCorrective(String departmentId, String equipmentDescription,
@@ -112,36 +127,57 @@ class MaintenanceService {
     return result;
   }
 
-  updateHasOccured(String departmentId, String equipmentDescription,
-      Maintenance maintenance) async {
-    var doc = await FirestoreDB.db_departments.doc(departmentId).get();
-    Department department = Department.fromJson(doc.data());
-    int indexOfEquipment = department.equipments
-        .map((e) => e.description)
-        .toList()
-        .indexOf(equipmentDescription);
-    Equipment equipment = department.equipments
-        .firstWhere((element) => element.description == equipmentDescription);
-
-    int indexOfMaintenance = equipment.correctiveMaintenances
-        .map((e) => e.serviceProvider.name)
-        .toList()
-        .indexOf(maintenance.serviceProvider.name);
-    equipment.correctiveMaintenances[indexOfMaintenance].hasOccurred =
-        !equipment.correctiveMaintenances[indexOfMaintenance].hasOccurred;
-
-    department.equipments[indexOfEquipment] = equipment;
-    var result;
-    try {
-      await FirestoreDB.db_departments
-          .doc(departmentId)
-          .update(department.toJson());
-      Toasts.showToast(content: 'Item atualizado com sucesso');
-      result = true;
-    } catch (e) {
-      Toasts.showToast(content: 'Ocorreu um erro');
-      result = null;
+  updateHasOccured(Maintenance maintenance) async {
+    bool result = false;
+    if (!maintenance.hasOccurred &&
+        DateTimeUtils.firstHour(maintenance.dateTime)
+            .isAfter(DateTimeUtils.firstHour(DateTime.now()))) {
+      Toasts.showToast(content: 'Impossível atualizar antes da data marcada');
+    } else {
+      try {
+        await FirestoreDB.db_maintenances
+            .doc(maintenance.id)
+            .update({'hasOccurred': !maintenance.hasOccurred});
+        result = true;
+      } catch (e) {
+        Toasts.showToast(content: 'Ocorreu um erro');
+        log(e.toString());
+      }
     }
+
     return result;
   }
+
+  // updateHasOccured(String departmentId, String equipmentDescription,
+  //     Maintenance maintenance) async {
+  //   var doc = await FirestoreDB.db_departments.doc(departmentId).get();
+  //   Department department = Department.fromJson(doc.data());
+  //   int indexOfEquipment = department.equipments
+  //       .map((e) => e.description)
+  //       .toList()
+  //       .indexOf(equipmentDescription);
+  //   Equipment equipment = department.equipments
+  //       .firstWhere((element) => element.description == equipmentDescription);
+
+  //   int indexOfMaintenance = equipment.correctiveMaintenances
+  //       .map((e) => e.serviceProvider.name)
+  //       .toList()
+  //       .indexOf(maintenance.serviceProvider.name);
+  //   equipment.correctiveMaintenances[indexOfMaintenance].hasOccurred =
+  //       !equipment.correctiveMaintenances[indexOfMaintenance].hasOccurred;
+
+  //   department.equipments[indexOfEquipment] = equipment;
+  //   var result;
+  //   try {
+  //     await FirestoreDB.db_departments
+  //         .doc(departmentId)
+  //         .update(department.toJson());
+  //     Toasts.showToast(content: 'Item atualizado com sucesso');
+  //     result = true;
+  //   } catch (e) {
+  //     Toasts.showToast(content: 'Ocorreu um erro');
+  //     result = null;
+  //   }
+  //   return result;
+  // }
 }

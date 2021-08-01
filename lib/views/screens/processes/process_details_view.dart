@@ -49,7 +49,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
           Equipment updatedEquipment = Equipment();
           var matched = equipmentListMobx.equipmentList.firstWhere(
               (equipmentMobx) =>
-                  equipment.getDescription == equipmentMobx.description);
+                  equipment.description == equipmentMobx.description);
           updatedEquipment.description = matched.description;
           updatedEquipment.status = matched.status;
           updatedEquipments.add(updatedEquipment);

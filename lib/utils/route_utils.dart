@@ -11,7 +11,7 @@ class RouteUtils {
   static const String processes = 'processes';
   static const String observations = 'observations';
   static const String login = 'login';
-  static const String departments = 'departments';
+  static const String DEPARTMENTS = 'departments';
   static const String departmentsEditForm = 'departmentsEditForm';
   static const String EQUIPMENTS = 'equipments';
   static const String MAINTENANCES = 'maintenances';

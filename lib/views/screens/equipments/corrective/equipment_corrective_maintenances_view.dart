@@ -97,8 +97,7 @@ class _EquipmentCorrectiveMaintenancesViewState
       if (value == 'Remover') {
         showDeleteDialog(maintenance);
       } else {
-        await _service.updateHasOccured(
-            widget.departmentDTO.id, widget.equipment.description, maintenance);
+        await _service.updateHasOccured(maintenance);
         setState(() {});
       }
     }
@@ -107,7 +106,7 @@ class _EquipmentCorrectiveMaintenancesViewState
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushNamed(context, RouteUtils.departments);
+        Navigator.pushNamed(context, RouteUtils.DEPARTMENTS);
         return true;
       },
       child: Scaffold(
@@ -203,6 +202,7 @@ class _EquipmentCorrectiveMaintenancesViewState
                                   Maintenance maintenance =
                                       Maintenance.fromJson(
                                           snapshot.data.docs[index].data());
+                                  maintenance.id = snapshot.data.docs[index].id;
                                   return Card(
                                     margin: EdgeInsets.only(
                                         bottom: PageUtils.BODY_PADDING_VALUE),
@@ -234,9 +234,9 @@ class _EquipmentCorrectiveMaintenancesViewState
                                                 Text(
                                                   'Status',
                                                   style: TextStyle(
-                                                      fontSize: 17,
+                                                      fontSize: 16,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                          FontWeight.w400,
                                                       color: Colors.grey[600]),
                                                 ),
                                                 SizedBox(height: 8),
@@ -246,8 +246,10 @@ class _EquipmentCorrectiveMaintenancesViewState
                                                       : "Aguardando",
                                                   style: TextStyle(
                                                       fontSize: 17,
+                                                      fontStyle:
+                                                          FontStyle.italic,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                          FontWeight.w400,
                                                       color:
                                                           defineColorForStatus(
                                                               maintenance)),

@@ -133,19 +133,20 @@ class PageUtils {
   static Widget getAttributeField(String field, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           field,
           style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
               color: Colors.grey[600]),
         ),
         SizedBox(height: 8),
         Text(
           value,
           style: TextStyle(
-            fontSize: 17,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),

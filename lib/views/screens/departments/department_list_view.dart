@@ -98,39 +98,46 @@ class DepartmentListView extends StatelessWidget {
             return Theme(
               data:
                   Theme.of(context).copyWith(dividerColor: Colors.transparent),
-              child: ExpansionTile(
-                tilePadding: EdgeInsets.all(0),
-                title: Text(department.name,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 17,
-                        color: atLeastOneDamaged(department.equipments)
-                            ? Colors.red
-                            : Colors.black)),
-                childrenPadding: EdgeInsets.all(0),
-                children: department.equipments
-                    .map((e) => Container(
-                        padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                        child: InkWell(
-                          onTap: () =>
-                              pushToEquipmentCorrectiveMaintenancesView(
-                                  context,
-                                  e,
-                                  new DepartmentDTO(
-                                      department.id, department.name)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(e.description,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      color: Colors.grey[700])),
-                              EquipmentStatusWidget(status: e.status)
-                            ],
-                          ),
-                        )))
-                    .toList(),
+              child: InkWell(
+                onLongPress: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => DepartmentTestView(
+                            currentDepartment: department, edit: true))),
+                child: ExpansionTile(
+                  tilePadding: EdgeInsets.all(0),
+                  title: Text(department.name,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17,
+                          color: atLeastOneDamaged(department.equipments)
+                              ? Colors.red
+                              : Colors.black)),
+                  childrenPadding: EdgeInsets.all(0),
+                  children: department.equipments
+                      .map((e) => Container(
+                          padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                          child: InkWell(
+                            onTap: () =>
+                                pushToEquipmentCorrectiveMaintenancesView(
+                                    context,
+                                    e,
+                                    new DepartmentDTO(
+                                        department.id, department.name)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(e.description,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: Colors.grey[700])),
+                                EquipmentStatusWidget(status: e.status)
+                              ],
+                            ),
+                          )))
+                      .toList(),
+                ),
               ),
             );
           }),

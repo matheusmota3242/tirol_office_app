@@ -240,7 +240,7 @@ class MenuDrawer extends StatelessWidget {
   /* Lista de departamentos */
   void pushToDepartmentListView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteUtils.departments, (Route<dynamic> route) => false);
+        RouteUtils.DEPARTMENTS, (Route<dynamic> route) => false);
   }
 
   /* Lista de equipamentos */

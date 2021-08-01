@@ -6,6 +6,7 @@ import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/special_equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
@@ -88,7 +89,8 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
           _service.save(widget.currentDepartment);
           msg = 'Departamendo salvo com sucesso';
         }
-        Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(
+            context, RouteUtils.DEPARTMENTS, (route) => false);
         Toasts.showToast(content: msg);
       }
     }
