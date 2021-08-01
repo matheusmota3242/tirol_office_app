@@ -14,6 +14,7 @@ class RouteUtils {
   static const String departments = 'departments';
   static const String departmentsEditForm = 'departmentsEditForm';
   static const String EQUIPMENTS = 'equipments';
+  static const String MAINTENANCES = 'maintenances';
   static const String users = 'users';
   static const String processDetails = 'processDetails';
   static const String serviceProviders = 'serviceProviders';
@@ -41,26 +42,23 @@ class RouteUtils {
    * Recebe a descrição do equipmaneto e o nome do departamento
    */
   static void pushToEquipmentCorrectiveMaintenancesFormView(
-      BuildContext context,
-      String equipmentDescription,
-      DepartmentDTO departmentDTO) {
+      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => EquipmentCorrectiveMaintenanceFormView(
-            equipmentDescription: equipmentDescription,
-            departmentDTO: departmentDTO),
+            equipment: equipment, departmentDTO: departmentDTO),
       ),
     );
   }
 
-  static void pushToEquipmentCorrectiveMaintenancesView(BuildContext context,
-      String equipmentDescription, DepartmentDTO departmentDTO) {
+  static void pushToEquipmentCorrectiveMaintenancesView(
+      BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => EquipmentCorrectiveMaintenancesView(
-          equipmentDescription: equipmentDescription,
+          equipment: equipment,
           departmentDTO: departmentDTO,
         ),
       ),

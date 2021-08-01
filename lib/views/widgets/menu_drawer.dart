@@ -117,20 +117,20 @@ class MenuDrawer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
-              onPressed: () => currentPage != PageUtils.EQUIPMENTS_TITLE
-                  ? pushToEquipmentsView(context)
+              onPressed: () => currentPage != PageUtils.MAINTENANCES_TITLE
+                  ? pushToMaintenancesView(context)
                   : null,
               child: Row(
                 children: [
                   Icon(
-                    Icons.devices,
+                    Icons.home_repair_service,
                     color: Colors.grey[700],
                   ),
                   SizedBox(
                     width: 5.0,
                   ),
                   Text(
-                    PageUtils.EQUIPMENTS_TITLE,
+                    PageUtils.MAINTENANCES_TITLE,
                     style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
                   ),
                 ],
@@ -247,6 +247,12 @@ class MenuDrawer extends StatelessWidget {
   void pushToEquipmentsView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         RouteUtils.EQUIPMENTS, (Route<dynamic> route) => false);
+  }
+
+  /* Lista de manutenções */
+  void pushToMaintenancesView(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteUtils.MAINTENANCES, (Route<dynamic> route) => false);
   }
 
   /* Lista de processos */

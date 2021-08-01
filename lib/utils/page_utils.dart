@@ -7,6 +7,7 @@ class PageUtils {
   static const DEPARTIMENTS_TITLE = 'Departamentos';
   static const OBSERVATIONS_TITLE = 'Observações';
   static const EQUIPMENTS_TITLE = 'Equipamentos';
+  static const MAINTENANCES_TITLE = 'Manutenções';
   static const EQUIPMENT_DETAILS_TITLE = 'Detalhes do equipamento';
   static const EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE =
       'Nova manutenção corretiva';

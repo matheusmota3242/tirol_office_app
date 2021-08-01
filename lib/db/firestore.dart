@@ -12,6 +12,8 @@ class FirestoreDB {
       FirebaseFirestore.instance.collection("service_providers");
   static CollectionReference db_observations =
       FirebaseFirestore.instance.collection("observations");
+  static CollectionReference db_maintenances =
+      FirebaseFirestore.instance.collection("maintenances");
 
   findById(String uid) async {
     var json = await db_users.doc(uid).get();

@@ -11,6 +11,7 @@ import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
 import 'package:tirol_office_app/views/screens/empty_view.dart';
+import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
 import 'package:tirol_office_app/views/screens/equipments/equipment_details_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
@@ -111,11 +112,12 @@ class DepartmentListView extends StatelessWidget {
                     .map((e) => Container(
                         padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
                         child: InkWell(
-                          onTap: () => pushToEquipmentDetailsView(
-                              context,
-                              e,
-                              new DepartmentDTO(
-                                  department.id, department.name)),
+                          onTap: () =>
+                              pushToEquipmentCorrectiveMaintenancesView(
+                                  context,
+                                  e,
+                                  new DepartmentDTO(
+                                      department.id, department.name)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -149,15 +151,12 @@ class DepartmentListView extends StatelessWidget {
     );
   }
 
-  void pushToEquipmentDetailsView(
+  void pushToEquipmentCorrectiveMaintenancesView(
       BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => EquipmentDetailsView(
-            equipmentDescription: equipment.description,
-            departmentDTO: departmentDTO,
-          ),
-        ));
+            builder: (_) => EquipmentCorrectiveMaintenancesView(
+                equipment: equipment, departmentDTO: departmentDTO)));
   }
 }

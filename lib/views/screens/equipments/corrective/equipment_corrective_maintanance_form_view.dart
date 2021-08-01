@@ -4,7 +4,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
+import 'package:tirol_office_app/mobx/service_provider_name/service_provider_name_mobx.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
+import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
 import 'package:tirol_office_app/models/service_provider_model.dart';
 import 'package:tirol_office_app/service/maintenance_service.dart';
@@ -16,13 +18,11 @@ import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import '../../loading_view.dart';
 
 class EquipmentCorrectiveMaintenanceFormView extends StatefulWidget {
-  final String equipmentDescription;
+  final Equipment equipment;
   final DepartmentDTO departmentDTO;
 
   const EquipmentCorrectiveMaintenanceFormView(
-      {Key key,
-      @required this.equipmentDescription,
-      @required this.departmentDTO})
+      {Key key, @required this.equipment, @required this.departmentDTO})
       : super(key: key);
   _EquipmentCorrectiveMaintenanceFormViewState createState() =>
       _EquipmentCorrectiveMaintenanceFormViewState();
@@ -34,7 +34,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
   var serviceProviders = <ServiceProvider>[];
   var serviceProviderNames = <String>[];
   QuerySnapshot snapshot;
-  String serviceProviderValue;
+  ServiceProviderNameMobx serviceProviderNameMobx = ServiceProviderNameMobx();
 
   AnimationController _animationController;
 
@@ -69,26 +69,27 @@ class _EquipmentCorrectiveMaintenanceFormViewState
       var pickedTimestamp = await Dialogs().showPickDateDialog(context);
       if (pickedTimestamp != null) {
         pickedDateMobx.setPicked(pickedTimestamp);
-        maintenance.dateTime = pickedTimestamp;
+        maintenance.dateTime = DateTimeUtils.skipTime(pickedTimestamp);
       }
     }
 
     persist() async {
       if (_formKey.currentState.validate()) {
-        ServiceProvider serviceProvider = serviceProviders
-            .firstWhere((element) => element.name == serviceProviderValue);
+        ServiceProvider serviceProvider = serviceProviders.firstWhere(
+            (element) => element.name == serviceProviderNameMobx.name);
         maintenance.serviceProvider = serviceProvider;
+        maintenance.departmentId = widget.departmentDTO.id;
+        maintenance.equipmentDescription = widget.equipment.description;
 
-        var result;
-        result = await service.saveCorrective(
-            widget.departmentDTO.id, widget.equipmentDescription, maintenance);
+        bool result;
+        result = await service.save(maintenance);
 
-        if (result != null) {
+        if (result) {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (_) => EquipmentCorrectiveMaintenancesView(
-                        equipmentDescription: widget.equipmentDescription,
+                        equipment: widget.equipment,
                         departmentDTO: widget.departmentDTO,
                       )));
         }
@@ -137,7 +138,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          '${widget.departmentDTO.name} - ${widget.equipmentDescription}',
+                          '${widget.departmentDTO.name} - ${widget.equipment.description}',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w600)),
                       PageUtils.HORIZONTAL_SEPARATOR_GREY,
@@ -186,36 +187,33 @@ class _EquipmentCorrectiveMaintenanceFormViewState
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w500),
                       ),
-                      DropdownButtonFormField<String>(
-                        validator: (value) =>
-                            value == null ? 'Selecione um fornecedor' : null,
-                        decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.transparent))),
-                        hint: Text('Selecione'),
-                        value: serviceProviderValue,
-                        onChanged: (String newValue) {
-                          setState(() {
-                            serviceProviderValue = newValue;
-                            maintenance.serviceProvider =
-                                serviceProviders.firstWhere((element) =>
-                                    serviceProviderValue == element.name);
-                          });
-                        },
-                        items: serviceProviderNames
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 17),
-                            ),
-                          );
-                        }).toList(),
+                      Observer(
+                        builder: (_) => DropdownButtonFormField<String>(
+                          validator: (value) =>
+                              value == null ? 'Selecione um fornecedor' : null,
+                          decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent))),
+                          hint: Text('Selecione'),
+                          value: serviceProviderNameMobx.name,
+                          onChanged: (String newValue) {
+                            serviceProviderNameMobx.setName(newValue);
+                          },
+                          items: serviceProviderNames
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17),
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       )
                     ]),
               ),

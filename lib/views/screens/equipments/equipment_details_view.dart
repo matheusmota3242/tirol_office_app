@@ -97,7 +97,7 @@ class EquipmentDetailsView extends StatelessWidget {
                       InkWell(
                         onTap: () => RouteUtils
                             .pushToEquipmentCorrectiveMaintenancesView(
-                                context, equipment.description, departmentDTO),
+                                context, equipment, departmentDTO),
                         child: Text(
                           'Manutenções corretivas',
                           style: PageUtils.textButtonStyle,

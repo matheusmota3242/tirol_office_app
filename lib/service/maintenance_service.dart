@@ -1,10 +1,49 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tirol_office_app/db/firestore.dart';
+import 'package:tirol_office_app/helpers/maintenance_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class MaintenanceService {
+  Future<QuerySnapshot> getByEquipmentAndDepartment(
+      String departmentId, equipmentDescription) async {
+    return await FirestoreDB.db_maintenances
+        .where('departmentId', isEqualTo: departmentId)
+        .where('equipmentDescription', isEqualTo: equipmentDescription)
+        .orderBy('dateTime', descending: true)
+        .get();
+  }
+
+  getAll() async {
+    return await FirestoreDB.db_maintenances
+        .orderBy('dateTime', descending: true)
+        .get();
+  }
+
+  save(Maintenance maintenance) async {
+    bool result = false;
+    String maintenanceId =
+        MaintenanceHelper.convertToMaintenanceId(maintenance);
+    try {
+      var doc = await FirestoreDB.db_maintenances.doc(maintenanceId).get();
+      if (doc.exists) {
+        Toasts.showToast(content: 'Manutenção já existe');
+      } else {
+        await FirestoreDB.db_maintenances
+            .doc(maintenanceId)
+            .set(maintenance.toJson());
+        result = true;
+      }
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+      print(e);
+    }
+
+    return result;
+  }
+
   saveCorrective(String departmentId, String equipmentDescription,
       Maintenance maintenance) async {
     var doc = await FirestoreDB.db_departments.doc(departmentId).get();
