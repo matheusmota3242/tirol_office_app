@@ -98,6 +98,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
         title:
             Text(checkEdition() ? 'Editar departamento' : 'Novo departamento'),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: List.generate(PageUtils.fabIcons.length, (int index) {
@@ -151,6 +152,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       body: Container(
         padding: PageUtils.BODY_PADDING,
         child: ListView(
+          shrinkWrap: true,
           children: [
             departmentNameField(),
             SizedBox(
@@ -184,6 +186,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                       ],
                     )
                   : ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: widget.currentDepartment.equipments.length,
                       itemBuilder: (context, index) {
