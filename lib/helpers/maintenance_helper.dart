@@ -4,7 +4,7 @@ import 'package:tirol_office_app/utils/datetime_utils.dart';
 class MaintenanceHelper {
   static String convertToMaintenanceId(Maintenance maintenance) {
     return DateTimeUtils.compressDate(maintenance.dateTime) +
-        maintenance.departmentId +
+        maintenance.departmentName +
         maintenance.equipmentDescription.replaceAll(' ', '');
   }
 }

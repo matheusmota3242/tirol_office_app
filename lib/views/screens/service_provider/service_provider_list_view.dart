@@ -49,7 +49,17 @@ class ServiceProviderListView extends StatelessWidget {
 
                 break;
               case ConnectionState.active:
-                if (!snapshot.hasData) return EmptyView();
+                if (!snapshot.hasData || snapshot.data.docs.length == 0)
+                  return Container(
+                      color: Colors.white,
+                      child: Center(
+                          child: Text(
+                        'Não há itens cadastrados.',
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
+                      )));
 
                 if (snapshot.hasError) return ErrorView();
 
@@ -99,7 +109,7 @@ class ServiceProviderListView extends StatelessWidget {
                 return ErrorView();
                 break;
               case ConnectionState.done:
-                return null;
+                return Text('dksdjskl');
                 break;
             }
             return LoadingView();

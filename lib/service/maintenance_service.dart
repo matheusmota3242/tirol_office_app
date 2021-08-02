@@ -11,9 +11,9 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class MaintenanceService {
   Future<QuerySnapshot> getByEquipmentAndDepartment(
-      String departmentId, equipmentDescription) async {
+      String departmentName, equipmentDescription) async {
     return await FirestoreDB.db_maintenances
-        .where('departmentId', isEqualTo: departmentId)
+        .where('departmentName', isEqualTo: departmentName)
         .where('equipmentDescription', isEqualTo: equipmentDescription)
         .orderBy('dateTime', descending: true)
         .get();
@@ -37,6 +37,7 @@ class MaintenanceService {
         await FirestoreDB.db_maintenances
             .doc(maintenanceId)
             .set(maintenance.toJson());
+        Toasts.showToast(content: 'Manutenção cadastrada com sucesso');
         result = true;
       }
     } catch (e) {

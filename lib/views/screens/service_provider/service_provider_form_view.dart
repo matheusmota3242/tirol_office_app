@@ -81,6 +81,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
           TextEditingController(text: this.widget.serviceProvider.email);
       return Container(
         child: TextFormField(
+          controller: controller,
           onChanged: (value) => this.widget.serviceProvider.email = value,
           validator: (value) => _validationHelper.validateEmail(value),
           decoration: InputDecoration(

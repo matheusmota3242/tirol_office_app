@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 part 'department_service.g.dart';
 
@@ -50,18 +52,44 @@ abstract class DepartmentServiceBase with Store {
   @action
   setEquipmentStatus(String value) => equipmentStatus = value;
 
-  void save(Department department) {
-    FirestoreDB.db_departments.add(department.toJson());
+  Future<bool> save(Department department) async {
+    bool result = false;
+    var snapshot = await FirestoreDB.db_departments.get();
+    if (!departmentAlreadyExists(snapshot, department.name)) {
+      try {
+        await FirestoreDB.db_departments.add(department.toJson());
+        Toasts.showToast(content: 'Departamento criado com sucesso');
+        result = true;
+      } catch (e) {
+        Toasts.showToast(content: 'Ocorreu um erro');
+      }
+    }
+    return result;
   }
 
-  void update(Department department) {
-    FirestoreDB.db_departments.doc(department.id).update(
-          department.toJson(),
-        );
+  Future<bool> update(Department department) async {
+    bool result = false;
+    var snapshot = await FirestoreDB.db_departments.get();
+    if (!departmentAlreadyExists(snapshot, department.name)) {
+      try {
+        await FirestoreDB.db_departments
+            .doc(department.id)
+            .update(department.toJson());
+        Toasts.showToast(content: 'Departamento editado com sucesso');
+        result = true;
+      } catch (e) {
+        Toasts.showToast(content: 'Ocorreu um erro');
+      }
+    }
+    return result;
   }
 
-  void remove(Department department) {
-    FirestoreDB.db_departments.doc(department.id).delete();
+  void remove(Department department) async {
+    try {
+      await FirestoreDB.db_departments.doc(department.id).delete();
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+    }
   }
 
   void modifyEquipment(Equipment editedEquipment) {
@@ -77,4 +105,8 @@ abstract class DepartmentServiceBase with Store {
         .where('name', isEqualTo: process.departmentId)
         .get();
   }
+
+  bool departmentAlreadyExists(QuerySnapshot snapshot, String name) =>
+      snapshot.docs
+          .any((element) => Department.fromJson(element.data()).name == name);
 }

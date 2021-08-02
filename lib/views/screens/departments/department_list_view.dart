@@ -27,7 +27,6 @@ class DepartmentListView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        shadowColor: Colors.transparent,
         actions: [
           Visibility(
             visible: Provider.of<UserService>(context).getUser.role ==
@@ -81,7 +80,17 @@ class DepartmentListView extends StatelessWidget {
 
     var docs = snapshot.data.docs;
     var theme = Theme.of(context);
-    if (docs.isEmpty) return EmptyView();
+    if (docs.isEmpty)
+      return Container(
+          color: Colors.white,
+          child: Center(
+              child: Text(
+            'Não há itens cadastrados',
+            style: TextStyle(
+                color: Colors.grey[800],
+                fontSize: 20,
+                fontWeight: FontWeight.w500),
+          )));
     return Container(
       color: Colors.white,
       padding: EdgeInsets.all(16),

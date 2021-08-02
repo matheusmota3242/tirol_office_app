@@ -17,8 +17,6 @@ class ValidationUtils {
   String validateName(String name) {
     if (name.isEmpty) {
       return isEmptyMessage('nome');
-    } else if (!isAlpha(name)) {
-      return 'Apenas letras podem ser utilizadas';
     }
   }
 

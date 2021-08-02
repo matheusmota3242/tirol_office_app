@@ -19,14 +19,17 @@ class UserListView extends StatefulWidget {
 class _UserListViewState extends State<UserListView> {
   User currentUser;
   var _users = FirestoreDB.db_users;
-
-  var choices = <String>['Alterar papel do usuário'];
+  static const CHANGE_USER_ROLE = 'Alterar papel do usuário';
+  static const REMOVE = 'Remover';
+  var choices = <String>[CHANGE_USER_ROLE, REMOVE];
   String selectedRole = '';
-
+  UserService _userService = UserService();
   @override
   Widget build(BuildContext context) {
-    currentUser = Provider.of<UserService>(context).getUser;
+    _userService = Provider.of<UserService>(context);
+    currentUser = _userService.getUser;
     final title = PageUtils.USERS_TITLE;
+
     return StreamBuilder(
       stream: _users.orderBy('name').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -73,7 +76,7 @@ class _UserListViewState extends State<UserListView> {
               trailing: Visibility(
                 visible: currentUser.role == 'Administrador' ? true : false,
                 child: PopupMenuButton<String>(
-                  onSelected: (value) => onSelectedChoice(value, context, user),
+                  onSelected: (value) => onSelectedChoice(value, user),
                   icon: Icon(Icons.more_vert),
                   itemBuilder: (BuildContext context) {
                     return choices.map((String choice) {
@@ -109,9 +112,75 @@ class _UserListViewState extends State<UserListView> {
         );
   }
 
-  onSelectedChoice(String choice, BuildContext context, User user) {
+  Color handleIcon(String role) {
+    switch (role) {
+      case 'Administrador':
+        return Colors.green[200];
+        break;
+      case 'Comum':
+        return Colors.yellow[200];
+        break;
+      case 'Aguardando aprovação':
+        return Colors.red[200];
+        break;
+      default:
+    }
+  }
+
+  showDeleteDialog(User user) {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          StatefulBuilder(builder: (BuildContext localContext, innerSetState) {
+        return AlertDialog(
+          title: Text(
+            'Remover',
+            style: TextStyle(color: Colors.red[500]),
+          ),
+          content: Text('Você realmente deseja remover esse usuário?'),
+          actions: [
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cancelar'),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (currentUser.id != user.id) {
+                        _userService.removeUser(user);
+                      } else {
+                        Toasts.showToast(
+                            content: 'Não pode remover a si mesmo');
+                      }
+                      Navigator.pop(localContext);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).buttonColor),
+                    ),
+                    child: Text('Sim'),
+                  )
+                ],
+              ),
+            )
+          ],
+        );
+      }),
+    );
+  }
+
+  onSelectedChoice(String choice, User user) {
     switch (choice) {
-      case 'Alterar papel do usuário':
+      case CHANGE_USER_ROLE:
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -179,20 +248,8 @@ class _UserListViewState extends State<UserListView> {
               });
             });
         break;
-      default:
-    }
-  }
-
-  Color handleIcon(String role) {
-    switch (role) {
-      case 'Administrador':
-        return Colors.green[200];
-        break;
-      case 'Comum':
-        return Colors.yellow[200];
-        break;
-      case 'Aguardando aprovação':
-        return Colors.red[200];
+      case REMOVE:
+        showDeleteDialog(user);
         break;
       default:
     }

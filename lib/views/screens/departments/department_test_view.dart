@@ -79,19 +79,17 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       );
     }
 
-    void submit() {
-      String msg = '';
+    void submit() async {
+      bool result = false;
       if (_key.currentState.validate()) {
         if (checkEdition()) {
-          _service.update(widget.currentDepartment);
-          msg = 'Departamendo editado com sucesso';
+          result = await _service.update(widget.currentDepartment);
         } else {
-          _service.save(widget.currentDepartment);
-          msg = 'Departamendo salvo com sucesso';
+          result = await _service.save(widget.currentDepartment);
         }
-        Navigator.pushNamedAndRemoveUntil(
-            context, RouteUtils.DEPARTMENTS, (route) => false);
-        Toasts.showToast(content: msg);
+        if (result)
+          Navigator.pushNamedAndRemoveUntil(
+              context, RouteUtils.DEPARTMENTS, (route) => false);
       }
     }
 
@@ -270,78 +268,6 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                                 ),
                               );
                             }).toList(),
-                          ),
-                        ),
-                        SizedBox(height: 30.0),
-                        ToggleButtons(
-                          borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Comum'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Especial'),
-                            )
-                          ],
-                          isSelected: [!isSpecial, isSpecial],
-                          fillColor: Colors.white,
-                          color: Colors.red,
-                          onPressed: (int index) {
-                            if (index == 0) {
-                              setState(() {
-                                isSpecial = false;
-                              });
-                            } else if (index == 1) {
-                              setState(() {
-                                isSpecial = true;
-                              });
-                            }
-                          },
-                        ),
-                        Visibility(
-                            visible: isSpecial, child: SizedBox(height: 30.0)),
-                        Visibility(
-                          visible: isSpecial,
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Intervalo em dias entre manutenções preventivas',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                            visible: isSpecial, child: SizedBox(height: 16.0)),
-                        Visibility(
-                          visible: isSpecial,
-                          child: Container(
-                            child: TextFormField(
-                              key: formKey,
-                              validator: (value) =>
-                                  value.isEmpty ? 'Campo obrigatório' : null,
-                              onChanged: (value) =>
-                                  specialEquipment.interval = int.parse(value),
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                alignLabelWithHint: false,
-                                labelText: 'Intervalo',
-                                labelStyle: TextStyle(
-                                    color: Colors.grey[800],
-                                    height: 0.9,
-                                    fontWeight: FontWeight.w600),
-                                filled: true,
-                                counterStyle: TextStyle(color: Colors.red),
-                                hintText: 'Exemplo: 30',
-                                contentPadding: EdgeInsets.only(
-                                  left: 10.0,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                            ),
                           ),
                         ),
                       ],

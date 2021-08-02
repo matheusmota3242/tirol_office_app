@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
@@ -7,11 +6,9 @@ import 'package:tirol_office_app/service/maintenance_service.dart';
 import 'package:tirol_office_app/utils/datetime_utils.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
-import 'package:tirol_office_app/views/screens/equipments/equipment_details_view.dart';
 import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
-import '../../empty_view.dart';
 import '../../loading_view.dart';
 
 class EquipmentCorrectiveMaintenancesView extends StatefulWidget {
@@ -102,8 +99,6 @@ class _EquipmentCorrectiveMaintenancesViewState
       }
     }
 
-    isSnapshotOk(hasError, hasData) => !hasError && hasData;
-
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushNamed(context, RouteUtils.DEPARTMENTS);
@@ -112,7 +107,7 @@ class _EquipmentCorrectiveMaintenancesViewState
       child: Scaffold(
         appBar: AppBar(
             shadowColor: Colors.transparent,
-            title: Text("Manutenções corretivas"),
+            title: Text("Detalhes do equipamento"),
             actions: [
               IconButton(
                 onPressed: () {
@@ -158,7 +153,7 @@ class _EquipmentCorrectiveMaintenancesViewState
             Container(
               child: FutureBuilder(
                   future: _service.getByEquipmentAndDepartment(
-                      widget.departmentDTO.id, widget.equipment.description),
+                      widget.departmentDTO.name, widget.equipment.description),
                   builder: (context, snapshot) {
                     var hasError = snapshot.hasError;
                     var hasData = hasError
@@ -183,7 +178,7 @@ class _EquipmentCorrectiveMaintenancesViewState
                           height: MediaQuery.of(context).size.height / 2,
                           child: Center(
                             child: Text(
-                              'Não há itens cadastrados',
+                              'Não há manutenções cadastradas.',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

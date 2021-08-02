@@ -97,6 +97,18 @@ class _MaintenancesViewState extends State<MaintenancesView> {
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.active ||
                   snapshot.connectionState == ConnectionState.done) {
+                /* Caso não exista conteudo */
+                if (!snapshot.hasData || snapshot.data.docs.length == 0)
+                  return Center(
+                    child: Text(
+                      'Não há itens cadastrados',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  );
+                /* Caso tenha conteúdo */
                 return ListView.builder(
                     shrinkWrap: true,
                     itemCount: snapshot.data.docs.length,
@@ -117,6 +129,16 @@ class _MaintenancesViewState extends State<MaintenancesView> {
                                     'Data',
                                     DateTimeUtils.toBRFormat(
                                         maintenance.dateTime)),
+                                SizedBox(
+                                  height: 24,
+                                ),
+                                PageUtils.getAttributeField('Equipamento',
+                                    maintenance.equipmentDescription),
+                                SizedBox(
+                                  height: 24,
+                                ),
+                                PageUtils.getAttributeField(
+                                    'Departamento', maintenance.departmentName),
                                 SizedBox(
                                   height: 24,
                                 ),
