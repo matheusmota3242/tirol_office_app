@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'package:tirol_office_app/helpers/equipment_helper.dart';
+import 'package:tirol_office_app/mobx/equipment/equipment_mobx.dart';
 import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/equipment_sevice.dart';
 
 class DepartmentFormEquipmentItem extends StatefulWidget {
-  final Equipment equipment;
+  final EquipmentMobx mobx;
   final bool editing;
+  final Function remove;
+  final Function check;
 
   const DepartmentFormEquipmentItem(
-      {Key key, @required this.equipment, this.editing})
+      {Key key, this.editing, this.remove, this.mobx, this.check})
       : super(key: key);
 
   @override
@@ -22,26 +26,11 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
   Widget build(BuildContext context) {
     final EquipmentService _service = EquipmentService();
 
-    // Service recebe equipamento do componente
-    _service.currentEquipment = widget.equipment;
+    // // Service recebe equipamento do componente
+    // _service.currentEquipment = widget.equipment;
 
-    // Lista com opções do menu
+    // // Lista com opções do menu
     var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
-
-    // Variáveis que guardam valores temporários
-    String descriptionTemp = widget.equipment.description;
-    String statusTemp = widget.equipment.status;
-
-    // Atribui nova descrição ao equipamento do service
-    void setEquipmentDescription(String value) {
-      widget.equipment.description = value;
-      //_service.currentEquipment.setDescription(value);
-    }
-
-    // Atribui novo status ao equipamento do service
-    void setEquipmentStatus(String value) {
-      widget.equipment.status = value;
-    }
 
     // Botão de cancelar modal
     Widget cancelButton(BuildContext context) {
@@ -58,13 +47,14 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     }
 
     // Campo descrição do equipamento
-    Widget equipmentDescriptionField(String description) {
+    Widget equipmentDescriptionField(String description, GlobalKey formKey) {
       TextEditingController controller =
           TextEditingController(text: description);
       return Container(
         child: TextFormField(
-          validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
-          onChanged: (value) => descriptionTemp = value.trim(),
+          key: formKey,
+          validator: (value) => widget.check(value),
+          onChanged: (value) => widget.mobx.setDescription(value),
           controller: controller,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
@@ -89,15 +79,61 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     }
 
     // Atualiza equipamento após confirmação do modal
-    void updateEquipment() {
-      setState(() {
-        setEquipmentDescription(descriptionTemp);
-        setEquipmentStatus(statusTemp);
-      });
+    // void updateEquipment() {
+    //   setState(() {
+    //     setEquipmentDescription(descriptionTemp);
+    //     setEquipmentStatus(statusTemp);
+    //   });
+    // }
+
+    showDeleteDialog() {
+      showDialog(
+        context: context,
+        builder: (_) => StatefulBuilder(
+            builder: (BuildContext localContext, innerSetState) {
+          return AlertDialog(
+            title: Text(
+              'Remover',
+              style: TextStyle(color: Colors.red[500]),
+            ),
+            content: Text('Você realmente deseja remover esse item?'),
+            actions: [
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(localContext);
+                      },
+                      child: Text('Cancelar'),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        widget.remove(widget.mobx.getDescription);
+                        Navigator.pop(localContext);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).buttonColor),
+                      ),
+                      child: Text('Sim'),
+                    )
+                  ],
+                ),
+              )
+            ],
+          );
+        }),
+      );
     }
 
     // Abre modal de edição
-    void edit(Equipment equipment) {
+    void edit() {
       final _formKey = GlobalKey<FormState>();
 
       showDialog(
@@ -108,54 +144,54 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
             title: Text('Novo equipamento'),
             content: Form(
               key: _formKey,
-              child: Container(
-                height: 190.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    equipmentDescriptionField(equipment.description),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Status atual do equipamento',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+              child: Observer(
+                builder: (_) => Container(
+                  height: 190.0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      equipmentDescriptionField(
+                          widget.mobx.getDescription, _formKey),
+                      SizedBox(
+                        height: 30.0,
                       ),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(4.0),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Status atual do equipamento',
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.only(left: 3.0),
-                      child: DropdownButton<String>(
-                        underline: SizedBox(),
-                        isExpanded: true,
-                        value: statusTemp,
-                        onChanged: (value) {
-                          setState(() {
-                            print('novo valor: ' + value);
-                            widget.equipment.status = value;
-                            statusTemp = value;
-                          });
-                        },
-                        items: equipmentStatusOptions.map((value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+                      SizedBox(
+                        height: 16.0,
                       ),
-                    ),
-                  ],
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(4.0),
+                          ),
+                        ),
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(left: 3.0),
+                        child: DropdownButton<String>(
+                          underline: SizedBox(),
+                          isExpanded: true,
+                          value: widget.mobx.getStatus,
+                          onChanged: (value) {
+                            print('novo valor: ' + value);
+                            widget.mobx.setStatus(value);
+                          },
+                          items: equipmentStatusOptions.map((value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -173,7 +209,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          updateEquipment();
                           Navigator.of(context).pop(true);
                         }
                       },
@@ -191,61 +226,68 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
       );
     }
 
-    void handleChoice(String value) {
-      if (value == 'Editar') edit(widget.equipment);
-    }
+    // void handleChoice(String value) {
+    //   if (value == 'Editar') edit(widget.equipment);
+    // }
 
     var themeData = Theme.of(context);
-    return Card(
-      child: Container(
-        height: 90.0,
-        padding: EdgeInsets.all(12.0),
-        child: Stack(
-          children: [
-            Positioned(
-              child: Text(widget.equipment.description,
-                  style: Theme.of(context).textTheme.headline6),
-            ),
-            Positioned(
-              //top: 28.0,
-              bottom: 0.0,
-              child: Row(
-                children: [
-                  Text(
-                    'Status:',
-                    style: themeData.textTheme.subtitle1,
-                  ),
-                  SizedBox(
-                    width: 6.0,
-                  ),
-                  Text(
-                    widget.equipment.status ==
-                            EquipmentHelper()
-                                .getRoleByEnum(EquipmentStatus.ABLE)
-                        ? 'Funcionando'
-                        : 'Danificado',
-                    style: TextStyle(fontSize: 15.0, color: Colors.grey[700]),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              top: 9.0,
-              child: PopupMenuButton(
-                onSelected: (value) => handleChoice(value),
-                padding: EdgeInsets.all(0),
-                itemBuilder: (_) => ['Editar', 'Remover']
-                    .map(
-                      (choice) => PopupMenuItem<String>(
-                        child: Text(choice),
-                        value: choice,
+    return InkWell(
+      onLongPress: () => showDeleteDialog(),
+      onDoubleTap: () => edit(),
+      child: Observer(
+        builder: (_) => Card(
+          child: Container(
+            height: 90.0,
+            padding: EdgeInsets.all(12.0),
+            child: Stack(
+              children: [
+                Positioned(
+                  child: Text(widget.mobx.getDescription,
+                      style: Theme.of(context).textTheme.headline6),
+                ),
+                Positioned(
+                  //top: 28.0,
+                  bottom: 0.0,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Status:',
+                        style: themeData.textTheme.subtitle1,
                       ),
-                    )
-                    .toList(),
-              ),
+                      SizedBox(
+                        width: 6.0,
+                      ),
+                      Text(
+                        widget.mobx.getStatus ==
+                                EquipmentHelper()
+                                    .getRoleByEnum(EquipmentStatus.ABLE)
+                            ? 'Funcionando'
+                            : 'Danificado',
+                        style:
+                            TextStyle(fontSize: 15.0, color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                ),
+                // Positioned(
+                //   right: 0,
+                //   top: 9.0,
+                //   child: PopupMenuButton(
+                //     onSelected: (value) => null,
+                //     padding: EdgeInsets.all(0),
+                //     itemBuilder: (_) => ['Editar', 'Remover']
+                //         .map(
+                //           (choice) => PopupMenuItem<String>(
+                //             child: Text(choice),
+                //             value: choice,
+                //           ),
+                //         )
+                //         .toList(),
+                //   ),
+                // ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

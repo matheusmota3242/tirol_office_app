@@ -9,6 +9,9 @@ abstract class EquipmentListMobxBase with Store {
   @observable
   ObservableList<EquipmentMobx> equipmentList = ObservableList<EquipmentMobx>();
 
+  @computed
+  get getEquipmentList => this.equipmentList;
+
   @action
   void addEquipment(EquipmentMobx equipmentMobx) =>
       equipmentList.add(equipmentMobx);

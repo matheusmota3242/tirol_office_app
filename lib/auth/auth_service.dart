@@ -72,7 +72,9 @@ class AuthService {
           'email': email
         });
       });
-    } catch (e) {}
+    } on Exception catch (e) {
+      print(e);
+    }
     return result.user != null;
   }
 

@@ -9,6 +9,13 @@ part of 'equipment_mobx.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$EquipmentMobx on EquipmentMobxBase, Store {
+  Computed<dynamic> _$getDescriptionComputed;
+
+  @override
+  dynamic get getDescription => (_$getDescriptionComputed ??= Computed<dynamic>(
+          () => super.getDescription,
+          name: 'EquipmentMobxBase.getDescription'))
+      .value;
   Computed<dynamic> _$getStatusComputed;
 
   @override
@@ -16,6 +23,21 @@ mixin _$EquipmentMobx on EquipmentMobxBase, Store {
       (_$getStatusComputed ??= Computed<dynamic>(() => super.getStatus,
               name: 'EquipmentMobxBase.getStatus'))
           .value;
+
+  final _$descriptionAtom = Atom(name: 'EquipmentMobxBase.description');
+
+  @override
+  String get description {
+    _$descriptionAtom.reportRead();
+    return super.description;
+  }
+
+  @override
+  set description(String value) {
+    _$descriptionAtom.reportWrite(value, super.description, () {
+      super.description = value;
+    });
+  }
 
   final _$statusAtom = Atom(name: 'EquipmentMobxBase.status');
 
@@ -34,6 +56,17 @@ mixin _$EquipmentMobx on EquipmentMobxBase, Store {
 
   final _$EquipmentMobxBaseActionController =
       ActionController(name: 'EquipmentMobxBase');
+
+  @override
+  dynamic setDescription(String description) {
+    final _$actionInfo = _$EquipmentMobxBaseActionController.startAction(
+        name: 'EquipmentMobxBase.setDescription');
+    try {
+      return super.setDescription(description);
+    } finally {
+      _$EquipmentMobxBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic setStatus(String status) {
@@ -60,7 +93,9 @@ mixin _$EquipmentMobx on EquipmentMobxBase, Store {
   @override
   String toString() {
     return '''
+description: ${description},
 status: ${status},
+getDescription: ${getDescription},
 getStatus: ${getStatus}
     ''';
   }

@@ -6,13 +6,12 @@ import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
 import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
-import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
-import 'package:tirol_office_app/views/screens/equipments/equipment_details_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
@@ -24,6 +23,7 @@ class DepartmentListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String title = PageUtils.DEPARTIMENTS_TITLE;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -108,7 +108,8 @@ class DepartmentListView extends StatelessWidget {
               data:
                   Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: InkWell(
-                onLongPress: () => Navigator.push(
+                onLongPress: () => showDeleteDialog(context, department.id),
+                onDoubleTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (_) => DepartmentTestView(
@@ -174,5 +175,51 @@ class DepartmentListView extends StatelessWidget {
         MaterialPageRoute(
             builder: (_) => EquipmentCorrectiveMaintenancesView(
                 equipment: equipment, departmentDTO: departmentDTO)));
+  }
+
+  showDeleteDialog(BuildContext context, String departmentId) {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          StatefulBuilder(builder: (BuildContext localContext, innerSetState) {
+        return AlertDialog(
+          title: Text(
+            'Remover',
+            style: TextStyle(color: Colors.red[500]),
+          ),
+          content: Text('Você realmente deseja remover esse item?'),
+          actions: [
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(localContext);
+                    },
+                    child: Text('Cancelar'),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      DepartmentService().remove(departmentId);
+                      Navigator.pop(localContext);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).buttonColor),
+                    ),
+                    child: Text('Sim'),
+                  )
+                ],
+              ),
+            )
+          ],
+        );
+      }),
+    );
   }
 }

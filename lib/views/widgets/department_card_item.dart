@@ -139,7 +139,7 @@ class _DepartmentCardItemState extends State<DepartmentCardItem> {
     if (choice == 'Editar')
       pushToEditDepartmentView();
     else if (choice == 'Remover') {
-      _service.remove(widget.department);
+      _service.remove(widget.department.id);
       Toasts.showToast(content: 'Departamento removido com sucesso');
     }
   }

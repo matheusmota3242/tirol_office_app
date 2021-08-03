@@ -207,7 +207,6 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                           var equipment = _departmentService.equipments[index];
                           equipment.id = index;
                           return DepartmentFormEquipmentItem(
-                            equipment: equipment,
                             editing: false,
                           );
                         },

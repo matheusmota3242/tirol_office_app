@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:tirol_office_app/models/department_model.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:tirol_office_app/mobx/equipment/equipment_mobx.dart';
+import 'package:tirol_office_app/mobx/equipment_list.dart/equipment_list_mobx.dart';
+import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
-import 'package:tirol_office_app/models/special_equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
-import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class DepartmentTestView extends StatefulWidget {
   final Department currentDepartment;
@@ -29,13 +30,23 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       'Nome de equipamento já usado';
   AnimationController _animationController;
   DepartmentService _service = DepartmentService();
-
+  EquipmentListMobx equipmentListMobx = EquipmentListMobx();
   @override
   void initState() {
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+
+    if (widget.edit) {
+      widget.currentDepartment.equipments.forEach((element) {
+        EquipmentMobx mobx = EquipmentMobx();
+        mobx.setDescription(element.description);
+        mobx.setStatus(element.status);
+        equipmentListMobx.addEquipment(mobx);
+      });
+    }
+
     super.initState();
   }
 
@@ -82,6 +93,15 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
     void submit() async {
       bool result = false;
       if (_key.currentState.validate()) {
+        List equipmentList =
+            equipmentListMobx.equipmentList.map<Equipment>((element) {
+          Equipment equipment = Equipment();
+          equipment.description = element.description;
+          equipment.status = element.status;
+          return equipment;
+        }).toList();
+        widget.currentDepartment.equipments = equipmentList;
+
         if (checkEdition()) {
           result = await _service.update(widget.currentDepartment);
         } else {
@@ -175,7 +195,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
               ],
             ),
             Container(
-              child: departmentEquipmentsIsEmpty(widget.currentDepartment)
+              child: equipmentListMobx.equipmentList.isEmpty
                   ? Row(
                       children: [
                         Text(
@@ -185,19 +205,22 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                         ),
                       ],
                     )
-                  : ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: widget.currentDepartment.equipments.length,
-                      itemBuilder: (context, index) {
-                        var equipment =
-                            widget.currentDepartment.equipments[index];
-                        equipment.id = index;
-                        return DepartmentFormEquipmentItem(
-                          equipment: equipment,
-                          editing: false,
-                        );
-                      },
+                  : Observer(
+                      builder: (_) => ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: equipmentListMobx.getEquipmentList.length,
+                        itemBuilder: (context, index) {
+                          equipmentListMobx.getEquipmentList[index].id = index;
+
+                          return DepartmentFormEquipmentItem(
+                            mobx: equipmentListMobx.getEquipmentList[index],
+                            editing: false,
+                            remove: removeEquipmentFromMobx,
+                            check: checkIfAlreadyExists,
+                          );
+                        },
+                      ),
                     ),
             ),
           ],
@@ -206,12 +229,29 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
     );
   }
 
+  void removeEquipmentFromMobx(String description) {
+    equipmentListMobx.equipmentList
+        .removeWhere((element) => element.description == description);
+  }
+
+  String checkIfAlreadyExists(String value) {
+    if (value.isEmpty) return 'Campo obrigatório';
+    if (equipmentListMobx.equipmentList
+        .any((element) => element.description == value))
+      return 'Equipmaneto já existe';
+  }
+
+  // void updateEquipmentFromMobx(EquipmentMobx mobx) {
+  //   equipmentListMobx.equipmentList[index].setDescription(mob);
+  //   equipmentListMobx.equipmentList[index].setStatus(status);
+  // }
+
   bool departmentEquipmentsIsEmpty(Department department) =>
       department.equipments.isEmpty ? true : false;
 
   showAddEquipmentDialog(GlobalKey<FormState> formKey, bool isSpecial) {
     GlobalKey<FormState> _formKey = GlobalKey();
-    SpecialEquipment specialEquipment = new SpecialEquipment();
+    Equipment equipment = Equipment();
     showDialog(
         context: context,
         builder: (_) =>
@@ -230,7 +270,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                       shrinkWrap: true,
                       //mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        equipmentNameField(specialEquipment, _formKey),
+                        equipmentNameField(equipment, _formKey),
                         SizedBox(
                           height: 30.0,
                         ),
@@ -256,10 +296,10 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                           child: DropdownButton<String>(
                             underline: SizedBox(),
                             isExpanded: true,
-                            value: specialEquipment.status,
+                            value: equipment.status,
                             onChanged: (value) {
                               setState(() {
-                                specialEquipment.status = value;
+                                equipment.status = value;
                               });
                             },
                             items: equipmentStatusOptions.map((value) {
@@ -306,16 +346,10 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
               );
             })).then((result) {
       if (result) {
-        setState(() {
-          /* Verifica caso o equipamento em questão seja especial */
-          if (isSpecial == false) {
-            Equipment defaultEquipment = new Equipment.fromSpecial(
-                specialEquipment.description, specialEquipment.status);
-            widget.currentDepartment.equipments.add(defaultEquipment);
-          } else if (isSpecial == true) {
-            widget.currentDepartment.equipments.add(specialEquipment);
-          }
-        });
+        EquipmentMobx equipmentMobx = new EquipmentMobx();
+        equipmentMobx.setDescription(equipment.description);
+        equipmentMobx.setStatus(equipment.status);
+        equipmentListMobx.addEquipment(equipmentMobx);
       }
     });
   }
@@ -339,7 +373,7 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
       key: equipmentFormKey,
       child: Container(
         child: TextFormField(
-          validator: (value) => validateNewEquipment(value),
+          validator: (value) => checkIfAlreadyExists(value),
           onChanged: (value) => equipment.description = value,
           keyboardType: TextInputType.name,
           controller: controller,

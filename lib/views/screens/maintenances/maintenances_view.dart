@@ -42,7 +42,7 @@ class _MaintenancesViewState extends State<MaintenancesView> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(localContext);
                       },
                       child: Text('Cancelar'),
                     ),

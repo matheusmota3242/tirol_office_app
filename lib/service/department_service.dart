@@ -69,27 +69,30 @@ abstract class DepartmentServiceBase with Store {
 
   Future<bool> update(Department department) async {
     bool result = false;
-    var snapshot = await FirestoreDB.db_departments.get();
-    if (!departmentAlreadyExists(snapshot, department.name)) {
-      try {
-        await FirestoreDB.db_departments
-            .doc(department.id)
-            .update(department.toJson());
-        Toasts.showToast(content: 'Departamento editado com sucesso');
-        result = true;
-      } catch (e) {
-        Toasts.showToast(content: 'Ocorreu um erro');
-      }
-    }
-    return result;
-  }
 
-  void remove(Department department) async {
     try {
-      await FirestoreDB.db_departments.doc(department.id).delete();
+      await FirestoreDB.db_departments
+          .doc(department.id)
+          .update(department.toJson());
+      Toasts.showToast(content: 'Departamento editado com sucesso');
+      result = true;
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
     }
+
+    return result;
+  }
+
+  remove(String departmentId) async {
+    bool result = false;
+    try {
+      await FirestoreDB.db_departments.doc(departmentId).delete();
+      result = true;
+      Toasts.showToast(content: 'Departamento removido com sucesso');
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+    }
+    return result;
   }
 
   void modifyEquipment(Equipment editedEquipment) {
