@@ -1,21 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/observation_model.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ObservationService {
-  void save(Observation observation) {
+  void save(Observation observation) async {
     observation.dateTime = DateTime.now();
-    FirestoreDB.db_observations.add(observation.toJson());
+    await FirestoreDB.db_observations.add(observation.toJson());
   }
 
-  void update(Observation observation) {
-    FirestoreDB.db_observations
+  void update(Observation observation) async {
+    await FirestoreDB.db_observations
         .doc(observation.id)
         .update(observation.toJson());
   }
 
-  void remove(String id) async {
-    await FirestoreDB.db_observations.doc(id).delete();
+  Future<bool> remove(String id) async {
+    bool result = false;
+    try {
+      await FirestoreDB.db_observations.doc(id).delete();
+      Toasts.showToast(content: 'Observação removida com sucesso');
+      result = true;
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+    }
+    return result;
   }
 
   Future<QuerySnapshot> queryByDate(DateTime picked) async {

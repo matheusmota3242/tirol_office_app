@@ -10,6 +10,54 @@ import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 
 class Dialogs {
+  static showDeleteDialog(
+      BuildContext context, Function remove, Function setState, Object arg) {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          StatefulBuilder(builder: (BuildContext localContext, innerSetState) {
+        return AlertDialog(
+          title: Text(
+            'Remover',
+            style: TextStyle(color: Colors.red[500]),
+          ),
+          content: Text('Você realmente deseja remover esse item?'),
+          actions: [
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(localContext);
+                    },
+                    child: Text('Cancelar'),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      remove(arg);
+                      Navigator.pop(localContext);
+                      setState();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).buttonColor),
+                    ),
+                    child: Text('Sim'),
+                  )
+                ],
+              ),
+            )
+          ],
+        );
+      }),
+    );
+  }
+
   // Filtra processos por data
   showProcessFilterDialog(BuildContext context) async {
     print('entrou no datepicker');

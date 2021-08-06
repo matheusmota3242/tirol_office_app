@@ -108,7 +108,8 @@ class DepartmentListView extends StatelessWidget {
               data:
                   Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: InkWell(
-                onLongPress: () => showDeleteDialog(context, department.id),
+                onLongPress: () =>
+                    showDeleteDialog(context, department.id, department.name),
                 onDoubleTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -177,7 +178,8 @@ class DepartmentListView extends StatelessWidget {
                 equipment: equipment, departmentDTO: departmentDTO)));
   }
 
-  showDeleteDialog(BuildContext context, String departmentId) {
+  showDeleteDialog(
+      BuildContext context, String departmentId, String departmentName) {
     showDialog(
       context: context,
       builder: (_) =>
@@ -187,7 +189,8 @@ class DepartmentListView extends StatelessWidget {
             'Remover',
             style: TextStyle(color: Colors.red[500]),
           ),
-          content: Text('Você realmente deseja remover esse item?'),
+          content: Text(
+              'Você realmente deseja remover o departamento $departmentName?'),
           actions: [
             Container(
               padding: EdgeInsets.all(10),

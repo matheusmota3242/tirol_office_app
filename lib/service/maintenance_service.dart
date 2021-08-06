@@ -57,7 +57,21 @@ class MaintenanceService {
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
     }
-    return true;
+    return result;
+  }
+
+  update(Maintenance maintenance) async {
+    bool result = false;
+    try {
+      await FirestoreDB.db_maintenances
+          .doc(maintenance.id)
+          .update(maintenance.toJson());
+      Toasts.showToast(content: 'Manutenção atualizada com sucesso');
+      result = true;
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+    }
+    return result;
   }
 
   saveCorrective(String departmentId, String equipmentDescription,

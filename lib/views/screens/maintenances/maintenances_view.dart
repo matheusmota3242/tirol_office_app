@@ -6,6 +6,7 @@ import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/datetime_utils.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
+import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class MaintenancesView extends StatefulWidget {
@@ -16,7 +17,7 @@ class MaintenancesView extends StatefulWidget {
 class _MaintenancesViewState extends State<MaintenancesView> {
   MaintenanceService _service = MaintenanceService();
   String dropdownValue = 'Remover';
-
+  static const double SIZEDBOX_HEIGHT = 18;
   @override
   Widget build(BuildContext context) {
     delete(String maintenanceId) async {
@@ -70,6 +71,10 @@ class _MaintenancesViewState extends State<MaintenancesView> {
       );
     }
 
+    superSetState() {
+      setState(() {});
+    }
+
     handlingOptionSelected(String value, Maintenance maintenance) async {
       if (value == 'Remover') {
         showDeleteDialog(maintenance);
@@ -116,81 +121,87 @@ class _MaintenancesViewState extends State<MaintenancesView> {
                       Maintenance maintenance = Maintenance.fromJson(
                           snapshot.data.docs[index].data());
                       maintenance.id = snapshot.data.docs[index].id;
-                      return Card(
-                        margin: EdgeInsets.only(
-                            bottom: PageUtils.BODY_PADDING_VALUE),
-                        child: Container(
-                          padding: PageUtils.BODY_PADDING,
-                          child: Stack(children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                PageUtils.getAttributeField(
-                                    'Data',
-                                    DateTimeUtils.toBRFormat(
-                                        maintenance.dateTime)),
-                                SizedBox(
-                                  height: 24,
-                                ),
-                                PageUtils.getAttributeField('Equipamento',
-                                    maintenance.equipmentDescription),
-                                SizedBox(
-                                  height: 24,
-                                ),
-                                PageUtils.getAttributeField(
-                                    'Departamento', maintenance.departmentName),
-                                SizedBox(
-                                  height: 24,
-                                ),
-                                PageUtils.getAttributeField(
-                                    'Provedor do serviço',
-                                    maintenance.serviceProvider.name),
-                                SizedBox(
-                                  height: 24,
-                                ),
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      'Status',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.grey[600]),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      maintenance.hasOccurred
-                                          ? "Concluída"
-                                          : "Aguardando",
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.w400,
-                                          color: defineColorForStatus(
-                                              maintenance)),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            Positioned(
-                                top: -10,
-                                right: -12,
-                                child: PopupMenuButton<String>(
-                                    onSelected: (value) =>
-                                        handlingOptionSelected(
-                                            value, maintenance),
-                                    icon: Icon(Icons.more_vert,
-                                        color: Colors.black),
-                                    itemBuilder: (context) =>
-                                        defineOptionsForMaintenance(maintenance)
-                                            .map((value) => PopupMenuItem(
-                                                value: value,
-                                                child: Text(value)))
-                                            .toList()))
-                          ]),
+                      return InkWell(
+                        onDoubleTap: () => null,
+                        onLongPress: () => Dialogs.showDeleteDialog(
+                            context, delete, superSetState, maintenance.id),
+                        child: Card(
+                          margin: EdgeInsets.only(
+                              bottom: PageUtils.BODY_PADDING_VALUE),
+                          child: Container(
+                            padding: PageUtils.BODY_PADDING,
+                            child: Stack(children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  PageUtils.getAttributeField(
+                                      'Data',
+                                      DateTimeUtils.toBRFormat(
+                                          maintenance.dateTime)),
+                                  SizedBox(
+                                    height: SIZEDBOX_HEIGHT,
+                                  ),
+                                  PageUtils.getAttributeField('Equipamento',
+                                      maintenance.equipmentDescription),
+                                  SizedBox(
+                                    height: SIZEDBOX_HEIGHT,
+                                  ),
+                                  PageUtils.getAttributeField('Departamento',
+                                      maintenance.departmentName),
+                                  SizedBox(
+                                    height: SIZEDBOX_HEIGHT,
+                                  ),
+                                  PageUtils.getAttributeField(
+                                      'Provedor do serviço',
+                                      maintenance.serviceProvider.name),
+                                  SizedBox(
+                                    height: SIZEDBOX_HEIGHT,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        'Status',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey[600]),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        maintenance.hasOccurred
+                                            ? "Concluída"
+                                            : "Aguardando",
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            fontStyle: FontStyle.italic,
+                                            fontWeight: FontWeight.w400,
+                                            color: defineColorForStatus(
+                                                maintenance)),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Positioned(
+                                  top: -10,
+                                  right: -12,
+                                  child: PopupMenuButton<String>(
+                                      onSelected: (value) =>
+                                          handlingOptionSelected(
+                                              value, maintenance),
+                                      icon: Icon(Icons.more_vert,
+                                          color: Colors.black),
+                                      itemBuilder: (context) =>
+                                          defineOptionsForMaintenance(
+                                                  maintenance)
+                                              .map((value) => PopupMenuItem(
+                                                  value: value,
+                                                  child: Text(value)))
+                                              .toList()))
+                            ]),
+                          ),
                         ),
                       );
                     });

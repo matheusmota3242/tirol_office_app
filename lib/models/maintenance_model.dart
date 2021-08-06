@@ -39,7 +39,7 @@ class Maintenance {
 
   Map<String, dynamic> toJson() => {
         'dateTime': _dateTime,
-        'departmentId': _departmentName,
+        'departmentName': _departmentName,
         'equipmentDescription': _equipmentDescription,
         'hasOccurred': _hasOccurred,
         'serviceProvider': _serviceProvider.toJson(),

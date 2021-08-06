@@ -63,7 +63,7 @@ class _EquipmentCorrectiveMaintenancesViewState
                   children: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(localContext);
                       },
                       child: Text('Cancelar'),
                     ),
@@ -112,7 +112,11 @@ class _EquipmentCorrectiveMaintenancesViewState
               IconButton(
                 onPressed: () {
                   RouteUtils.pushToEquipmentCorrectiveMaintenancesFormView(
-                      context, widget.equipment, widget.departmentDTO);
+                      context: context,
+                      equipment: widget.equipment,
+                      departmentDTO: widget.departmentDTO,
+                      maintenance: Maintenance(),
+                      edit: false);
                 },
                 icon: Icon(Icons.add),
               ),
@@ -198,80 +202,93 @@ class _EquipmentCorrectiveMaintenancesViewState
                                       Maintenance.fromJson(
                                           snapshot.data.docs[index].data());
                                   maintenance.id = snapshot.data.docs[index].id;
-                                  return Card(
-                                    margin: EdgeInsets.only(
-                                        bottom: PageUtils.BODY_PADDING_VALUE),
-                                    child: Container(
-                                      padding: PageUtils.BODY_PADDING,
-                                      child: Stack(children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            PageUtils.getAttributeField(
-                                                'Data',
-                                                DateTimeUtils.toBRFormat(
-                                                    maintenance.dateTime)),
-                                            SizedBox(
-                                              height: 24,
-                                            ),
-                                            PageUtils.getAttributeField(
-                                                'Provedor do serviço',
-                                                maintenance
-                                                    .serviceProvider.name),
-                                            SizedBox(
-                                              height: 24,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.stretch,
-                                              children: [
-                                                Text(
-                                                  'Status',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.grey[600]),
-                                                ),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  maintenance.hasOccurred
-                                                      ? "Concluída"
-                                                      : "Aguardando",
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color:
-                                                          defineColorForStatus(
-                                                              maintenance)),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        Positioned(
-                                            top: -10,
-                                            right: -12,
-                                            child: PopupMenuButton<String>(
-                                                onSelected: (value) =>
-                                                    handlingOptionSelected(
-                                                        value, maintenance),
-                                                icon: Icon(Icons.more_vert,
-                                                    color: Colors.black),
-                                                itemBuilder: (context) =>
-                                                    defineOptionsForMaintenance(
-                                                            maintenance)
-                                                        .map((value) =>
-                                                            PopupMenuItem(
-                                                                value: value,
-                                                                child: Text(
-                                                                    value)))
-                                                        .toList()))
-                                      ]),
+                                  return InkWell(
+                                    onDoubleTap: () => RouteUtils
+                                        .pushToEquipmentCorrectiveMaintenancesFormView(
+                                            context: context,
+                                            departmentDTO: widget.departmentDTO,
+                                            equipment: widget.equipment,
+                                            maintenance: maintenance,
+                                            edit: true),
+                                    onLongPress: () =>
+                                        showDeleteDialog(maintenance),
+                                    child: Card(
+                                      margin: EdgeInsets.only(
+                                          bottom: PageUtils.BODY_PADDING_VALUE),
+                                      child: Container(
+                                        padding: PageUtils.BODY_PADDING,
+                                        child: Stack(children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              PageUtils.getAttributeField(
+                                                  'Data',
+                                                  DateTimeUtils.toBRFormat(
+                                                      maintenance.dateTime)),
+                                              SizedBox(
+                                                height: 24,
+                                              ),
+                                              PageUtils.getAttributeField(
+                                                  'Provedor do serviço',
+                                                  maintenance
+                                                      .serviceProvider.name),
+                                              SizedBox(
+                                                height: 24,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                children: [
+                                                  Text(
+                                                    'Status',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    maintenance.hasOccurred
+                                                        ? "Concluída"
+                                                        : "Aguardando",
+                                                    style: TextStyle(
+                                                        fontSize: 17,
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            defineColorForStatus(
+                                                                maintenance)),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          DateTime.now().isAfter(maintenance.dateTime)
+                                              ? Positioned(
+                                                  top: -10,
+                                                  right: -12,
+                                                  child: PopupMenuButton<String>(
+                                                      onSelected: (value) =>
+                                                          handlingOptionSelected(
+                                                              value, maintenance),
+                                                      icon: Icon(Icons.more_vert,
+                                                          color: Colors.black),
+                                                      itemBuilder: (context) =>
+                                                          defineOptionsForMaintenance(
+                                                                  maintenance)
+                                                              .map((value) =>
+                                                                  PopupMenuItem(
+                                                                      value: value,
+                                                                      child: Text(value)))
+                                                              .toList()))
+                                              : Container()
+                                        ]),
+                                      ),
                                     ),
                                   );
                                 }),
@@ -295,13 +312,15 @@ class _EquipmentCorrectiveMaintenancesViewState
       if (maintenance.hasOccurred)
         color = Colors.green[700];
       else
-        color = color = Colors.yellow[700];
+        color = Colors.red[700];
+    } else {
+      color = Colors.yellow[700];
     }
     return color;
   }
 
   List<String> defineOptionsForMaintenance(Maintenance maintenance) {
-    var list = [dropdownValue];
+    var list = <String>[];
     if (DateTime.now().isAfter(maintenance.dateTime)) {
       if (maintenance.hasOccurred)
         list.insert(0, "Desconcluir");

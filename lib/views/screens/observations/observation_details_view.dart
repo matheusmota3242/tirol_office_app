@@ -16,6 +16,7 @@ class ObservationDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime dateTime = observation.dateTime;
+    const double SIZEDBOX_PADDING = 26;
     return Scaffold(
       appBar: AppBar(
         title: Text(PageUtils.OBSERVATIONS_TITLE),
@@ -27,12 +28,12 @@ class ObservationDetailsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             observationAttribute(AUTHOR_LABEL, observation.author),
-            separator,
+            SizedBox(height: SIZEDBOX_PADDING),
             observationAttribute(DATETIME_LABEL,
                 '${DateTimeHelper.convertIntToStringWeekday(dateTime.weekday)}, ${dateTime.day} de ${DateTimeHelper.convertIntToStringMonth(dateTime.month)} de ${dateTime.year} às ${DateTimeHelper.formatTime(dateTime)}'),
-            separator,
+            SizedBox(height: SIZEDBOX_PADDING),
             observationAttribute(TITLE_LABEL, observation.title),
-            separator,
+            SizedBox(height: SIZEDBOX_PADDING),
             observationAttribute(CONTENT_LABEL,
                 'ob servati on.contento bserva tion.c ontentobse rvation.contentob servation.content')
           ],
@@ -51,7 +52,7 @@ class ObservationDetailsView extends StatelessWidget {
             style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.grey[600],
-                fontWeight: FontWeight.w500),
+                fontWeight: FontWeight.w400),
           ),
           SizedBox(
             height: 8.0,

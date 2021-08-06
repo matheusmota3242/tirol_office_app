@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-
+import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
 import 'package:tirol_office_app/models/observation_model.dart';
 import 'package:tirol_office_app/models/user_model.dart';
@@ -15,8 +15,6 @@ import 'package:tirol_office_app/views/screens/observations/observation_details_
 import 'package:tirol_office_app/views/screens/observations/observation_form_view.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
-import 'package:tirol_office_app/views/widgets/toast.dart';
-import 'package:tirol_office_app/helpers/datetime_helper.dart';
 
 class ObservationListView extends StatefulWidget {
   @override
@@ -130,97 +128,81 @@ class _ObservationListViewState extends State<ObservationListView> {
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                       bottom: PageUtils.BODY_PADDING_VALUE),
-                                  child: Card(
-                                    margin: EdgeInsets.all(0),
-                                    child: Container(
-                                        height: 133,
-                                        padding: EdgeInsets.only(
-                                            left: PageUtils.BODY_PADDING_VALUE,
-                                            bottom:
-                                                PageUtils.BODY_PADDING_VALUE),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () => Navigator.push(
-                                                      _,
-                                                      MaterialPageRoute(
-                                                          builder: (_) =>
-                                                              ObservationDetailsView(
-                                                                observation:
-                                                                    observation,
-                                                              ))),
-                                                  child: Text(
-                                                    observation.title,
-                                                    style: themeData
-                                                        .textTheme.headline5,
-                                                  ),
-                                                ),
-                                                PopupMenuButton(
-                                                    onSelected: (value) =>
-                                                        handleChoice(context,
-                                                            value, observation),
-                                                    itemBuilder: (_) => [
-                                                          'Editar',
-                                                          'Remover'
-                                                        ]
-                                                            .map((choice) =>
-                                                                PopupMenuItem(
-                                                                  child: Text(
-                                                                      choice),
-                                                                  value: choice,
-                                                                ))
-                                                            .toList())
-                                              ],
-                                            ),
-                                            Text(
-                                              observation.author,
-                                              style: TextStyle(
-                                                  color: Colors.grey[600],
-                                                  fontSize: 14),
-                                            ),
-                                            SizedBox(height: 14),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Flexible(
-                                                          child: Container(
-                                                            child: Text(
-                                                              observation
-                                                                  .content,
-                                                              style: TextStyle(
-                                                                  fontSize: 15),
-                                                              maxLines: 2,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
+                                  child: InkWell(
+                                    onTap: () => Navigator.push(
+                                        _,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                ObservationDetailsView(
+                                                  observation: observation,
+                                                ))),
+                                    onDoubleTap: () =>
+                                        pushToObservationEditView(
+                                            context, observation),
+                                    onLongPress: () => Dialogs.showDeleteDialog(
+                                        context,
+                                        remove,
+                                        superSetState,
+                                        observation.id),
+                                    child: Card(
+                                      margin: EdgeInsets.all(0),
+                                      child: Container(
+                                          height: 133,
+                                          padding: PageUtils.BODY_PADDING,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                observation.title,
+                                                style: themeData
+                                                    .textTheme.headline5,
+                                              ),
+                                              SizedBox(height: 14),
+                                              Text(
+                                                observation.author,
+                                                style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 14),
+                                              ),
+                                              SizedBox(height: 14),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Flexible(
+                                                    child: Container(
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Flexible(
+                                                            child: Container(
+                                                              child: Text(
+                                                                observation
+                                                                    .content,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        15),
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: 12.0,
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        )),
+                                                  SizedBox(
+                                                    width: 12.0,
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                    ),
                                   ),
                                 );
                               }),
@@ -261,7 +243,11 @@ class _ObservationListViewState extends State<ObservationListView> {
 
   void remove(String id) {
     _service.remove(id);
-    Toasts.showToast(content: 'Conteúdo removido com sucesso');
+    setState(() {});
+  }
+
+  superSetState() {
+    setState(() {});
   }
 
   void handleChoice(
@@ -271,7 +257,9 @@ class _ObservationListViewState extends State<ObservationListView> {
         pushToObservationEditView(context, observation);
         break;
       case 'Remover':
-        remove(observation.id);
+        Dialogs.showDeleteDialog(
+            context, remove, superSetState, observation.id);
+        // remove(observation.id);
         break;
       default:
     }

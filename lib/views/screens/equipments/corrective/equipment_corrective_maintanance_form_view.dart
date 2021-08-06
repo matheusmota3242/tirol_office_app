@@ -21,10 +21,16 @@ import '../../loading_view.dart';
 class EquipmentCorrectiveMaintenanceFormView extends StatefulWidget {
   final Equipment equipment;
   final DepartmentDTO departmentDTO;
+  final Maintenance maintenance;
+  final bool edit;
 
-  const EquipmentCorrectiveMaintenanceFormView(
-      {Key key, @required this.equipment, @required this.departmentDTO})
-      : super(key: key);
+  const EquipmentCorrectiveMaintenanceFormView({
+    Key key,
+    @required this.equipment,
+    @required this.departmentDTO,
+    this.edit,
+    this.maintenance,
+  }) : super(key: key);
   _EquipmentCorrectiveMaintenanceFormViewState createState() =>
       _EquipmentCorrectiveMaintenanceFormViewState();
 }
@@ -36,6 +42,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
   var serviceProviderNames = <String>[];
   QuerySnapshot snapshot;
   ServiceProviderNameMobx serviceProviderNameMobx = ServiceProviderNameMobx();
+  var pickedDateMobx = PickedDateMobx();
   AnimationController _animationController;
   LoadingMobx loadingMobx = LoadingMobx();
 
@@ -60,39 +67,53 @@ class _EquipmentCorrectiveMaintenanceFormViewState
 
   @override
   Widget build(BuildContext context) {
-    final Maintenance maintenance = new Maintenance();
     final MaintenanceService service = MaintenanceService();
     final GlobalKey<FormState> _formKey = GlobalKey();
-    var pickedDateMobx = PickedDateMobx();
-    maintenance.dateTime = pickedDateMobx.getPicked;
+
+    widget.maintenance.dateTime = pickedDateMobx.getPicked;
+    isEdition() {
+      return widget.edit;
+    }
 
     pickDate() async {
       var pickedTimestamp = await Dialogs().showPickDateDialog(context);
       if (pickedTimestamp != null) {
         pickedDateMobx.setPicked(pickedTimestamp);
-        maintenance.dateTime = DateTimeUtils.skipTime(pickedTimestamp);
+        widget.maintenance.dateTime = DateTimeUtils.skipTime(pickedTimestamp);
       }
+    }
+
+    if (isEdition()) {
+      serviceProviderNameMobx.setName(widget.maintenance.serviceProvider.name);
+      pickedDateMobx.setPicked(widget.maintenance.dateTime);
     }
 
     persist() async {
       if (_formKey.currentState.validate()) {
         ServiceProvider serviceProvider = serviceProviders.firstWhere(
             (element) => element.name == serviceProviderNameMobx.name);
-        maintenance.serviceProvider = serviceProvider;
-        maintenance.departmentName = widget.departmentDTO.name;
-        maintenance.equipmentDescription = widget.equipment.description;
+        widget.maintenance.serviceProvider = serviceProvider;
 
         bool result;
-        result = await service.save(maintenance);
+        if (isEdition())
+          result = await service.update(widget.maintenance);
+        else {
+          widget.maintenance.departmentName = widget.departmentDTO.name;
+          widget.maintenance.equipmentDescription =
+              widget.equipment.description;
+          result = await service.save(widget.maintenance);
+        }
 
         if (result) {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => EquipmentCorrectiveMaintenancesView(
-                        equipment: widget.equipment,
-                        departmentDTO: widget.departmentDTO,
-                      )));
+            context,
+            MaterialPageRoute(
+              builder: (_) => EquipmentCorrectiveMaintenancesView(
+                equipment: widget.equipment,
+                departmentDTO: widget.departmentDTO,
+              ),
+            ),
+          );
         }
       }
     }
@@ -102,118 +123,120 @@ class _EquipmentCorrectiveMaintenanceFormViewState
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(PageUtils.EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE),
-        ),
-        floatingActionButton: PageUtils.getFloatActionButton(
-            _animationController, persist, cancel),
-        body: Observer(builder: (_) {
-          if (!loadingMobx.status) {
-            if (serviceProviders.isNotEmpty)
-              return Container(
-                padding: PageUtils.BODY_PADDING,
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            '${widget.departmentDTO.name} - ${widget.equipment.description}',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600)),
-                        PageUtils.HORIZONTAL_SEPARATOR_GREY,
-                        Text(
-                          'Data',
+      appBar: AppBar(
+        title: Text(PageUtils.EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE),
+      ),
+      floatingActionButton:
+          PageUtils.getFloatActionButton(_animationController, persist, cancel),
+      body: Observer(builder: (_) {
+        if (!loadingMobx.status) {
+          if (serviceProviders.isNotEmpty)
+            return Container(
+              padding: PageUtils.BODY_PADDING,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          '${widget.departmentDTO.name} - ${widget.equipment.description}',
                           style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(height: 6),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Observer(
-                                builder: (_) => Text(
-                                      '${DateTimeUtils.toBRFormat(pickedDateMobx.getPicked)}',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 17),
-                                    )),
-                            Container(
-                              height: 28,
-                              width: 28,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: PageUtils.PRIMARY_COLOR),
-                              child: IconButton(
-                                iconSize: 15,
-                                onPressed: () {
-                                  pickDate();
-                                },
-                                padding: EdgeInsets.all(0),
-                                icon: Icon(Icons.calendar_today),
-                                color: Colors.white,
+                              fontSize: 20, fontWeight: FontWeight.w600)),
+                      PageUtils.HORIZONTAL_SEPARATOR_GREY,
+                      Text(
+                        'Data',
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Observer(
+                              builder: (_) => Text(
+                                    '${DateTimeUtils.toBRFormat(pickedDateMobx.getPicked)}',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17),
+                                  )),
+                          Container(
+                            height: 28,
+                            width: 28,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: PageUtils.PRIMARY_COLOR),
+                            child: IconButton(
+                              iconSize: 15,
+                              onPressed: () {
+                                pickDate();
+                              },
+                              padding: EdgeInsets.all(0),
+                              icon: Icon(Icons.calendar_today),
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: PageUtils.BODY_PADDING_VALUE),
+                      Text(
+                        'Prestador de serviço',
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500),
+                      ),
+                      Observer(
+                        builder: (_) => DropdownButtonFormField<String>(
+                          validator: (value) =>
+                              value == null ? 'Selecione um fornecedor' : null,
+                          decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent))),
+                          hint: isEdition()
+                              ? Text(widget.maintenance.serviceProvider.name)
+                              : Text('Selecione'),
+                          value: serviceProviderNameMobx.name,
+                          onChanged: (String newValue) {
+                            serviceProviderNameMobx.setName(newValue);
+                          },
+                          items: serviceProviderNames
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17),
                               ),
-                            )
-                          ],
+                            );
+                          }).toList(),
                         ),
-                        SizedBox(height: PageUtils.BODY_PADDING_VALUE),
-                        Text(
-                          'Prestador de serviço',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Observer(
-                          builder: (_) => DropdownButtonFormField<String>(
-                            validator: (value) => value == null
-                                ? 'Selecione um fornecedor'
-                                : null,
-                            decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent))),
-                            hint: Text('Selecione'),
-                            value: serviceProviderNameMobx.name,
-                            onChanged: (String newValue) {
-                              serviceProviderNameMobx.setName(newValue);
-                            },
-                            items: serviceProviderNames
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 17),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        )
-                      ]),
-                ),
-              );
-            else
-              return Center(
-                  child: Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: Text(
-                  'Por favor, cadastre um provedor de serviço antes de cadastrar uma manutenção.',
-                  style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500),
-                ),
-              ));
-          } else {
-            return LoadingView();
-          }
-        }));
+                      )
+                    ]),
+              ),
+            );
+          else
+            return Center(
+                child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: Text(
+                'Por favor, cadastre um provedor de serviço antes de cadastrar uma manutenção.',
+                style: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500),
+              ),
+            ));
+        } else {
+          return LoadingView();
+        }
+      }),
+    );
   }
 }
