@@ -20,7 +20,7 @@ class EquipmentService {
       currentEquipmentStatus = value;
 
   getEquipment(String departmentId, String equipmentDescription) async {
-    var doc = await FirestoreDB.db_departments.doc(departmentId).get();
+    var doc = await FirestoreDB.departments.doc(departmentId).get();
     Department department = Department.fromJson(doc.data());
     List<Equipment> equipments = department.equipments;
     return equipments

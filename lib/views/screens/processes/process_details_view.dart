@@ -131,7 +131,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
       ),
       backgroundColor: Colors.grey[200],
       body: FutureBuilder(
-        future: FirestoreDB.db_departments.doc(process.departmentId).get(),
+        future: FirestoreDB.departments.doc(process.departmentId).get(),
         builder: (_, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return LoadingView(

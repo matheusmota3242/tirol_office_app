@@ -16,7 +16,7 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class AuthService {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
-  CollectionReference usersCollection = FirestoreDB.DB_USERS;
+  CollectionReference usersCollection = FirestoreDB.users;
   UserService _userService = UserService();
   auth.User user;
 
@@ -30,8 +30,7 @@ class AuthService {
           email: email, password: password);
 
       try {
-        var userResponse =
-            await FirestoreDB.DB_USERS.doc(result.user.uid).get();
+        var userResponse = await FirestoreDB.users.doc(result.user.uid).get();
         _userService = Provider.of<UserService>(context, listen: false);
         _userService.setUserByUid(userResponse, result.user.uid);
         var user = User.fromJson(userResponse.data());
@@ -90,7 +89,7 @@ class AuthService {
   void update(User user, BuildContext context) async {
     bool result = updateEmail(user.email, context);
     if (result)
-      await FirestoreDB.DB_USERS.doc(user.id).update({'email': user.email});
+      await FirestoreDB.users.doc(user.id).update({'email': user.email});
   }
 
   updateEmail(String newEmail, BuildContext context) async {

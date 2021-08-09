@@ -10,7 +10,6 @@ import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/departments/department_form_view.dart';
-import 'package:tirol_office_app/views/screens/departments/department_test_view.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
@@ -37,7 +36,7 @@ class DepartmentListView extends StatelessWidget {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DepartmentTestView(
+                  builder: (_) => DepartmentFormView(
                     currentDepartment: new Department(),
                     edit: false,
                   ),
@@ -56,7 +55,7 @@ class DepartmentListView extends StatelessWidget {
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: StreamBuilder(
-        stream: FirestoreDB.db_departments.orderBy('name').snapshots(),
+        stream: FirestoreDB.departments.orderBy('name').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -79,7 +78,7 @@ class DepartmentListView extends StatelessWidget {
       );
 
     var docs = snapshot.data.docs;
-    var theme = Theme.of(context);
+
     if (docs.isEmpty)
       return Container(
         color: Colors.white,
@@ -99,7 +98,6 @@ class DepartmentListView extends StatelessWidget {
       child: ListView.builder(
           itemCount: docs.length,
           itemBuilder: (_, index) {
-            String name = docs[index]['name'];
             var data = docs[index].data();
             Department department = Department.fromJson(data);
             department.id = docs[index].id;
@@ -115,7 +113,7 @@ class DepartmentListView extends StatelessWidget {
                 onDoubleTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => DepartmentTestView(
+                        builder: (_) => DepartmentFormView(
                             currentDepartment: department, edit: true))),
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.all(0),
@@ -165,14 +163,14 @@ class DepartmentListView extends StatelessWidget {
   bool atLeastOneDamaged(List<Equipment> equipments) =>
       equipments.any((e) => e.status == PageUtils.STATUS_DAMAGED);
 
-  void pushToDepartmentFormView(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => DepartmentFormView(),
-      ),
-    );
-  }
+  // void pushToDepartmentFormView(BuildContext context) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => null,
+  //     ),
+  //   );
+  // }
 
   void pushToEquipmentCorrectiveMaintenancesView(
       BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {

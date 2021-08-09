@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 
 class FirestoreDB {
-  static CollectionReference DB_USERS =
+  static CollectionReference users =
       FirebaseFirestore.instance.collection("users");
-  static CollectionReference db_departments =
+  static CollectionReference departments =
       FirebaseFirestore.instance.collection("departments");
   static CollectionReference db_processes =
       FirebaseFirestore.instance.collection("processes");
@@ -16,7 +16,7 @@ class FirestoreDB {
       FirebaseFirestore.instance.collection("maintenances");
 
   findById(String uid) async {
-    var json = await DB_USERS.doc(uid).get();
+    var json = await users.doc(uid).get();
     var user = User.fromJson(json.data());
     return user;
   }

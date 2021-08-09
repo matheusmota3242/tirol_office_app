@@ -76,7 +76,7 @@ class MaintenanceService {
 
   saveCorrective(String departmentId, String equipmentDescription,
       Maintenance maintenance) async {
-    var doc = await FirestoreDB.db_departments.doc(departmentId).get();
+    var doc = await FirestoreDB.departments.doc(departmentId).get();
     Department department = Department.fromJson(doc.data());
 
     int equipmentIndex = department.equipments
@@ -101,7 +101,7 @@ class MaintenanceService {
       equipment.correctiveMaintenances.add(maintenance);
       department.equipments[equipmentIndex] = equipment;
       try {
-        await FirestoreDB.db_departments
+        await FirestoreDB.departments
             .doc(departmentId)
             .update(department.toJson());
         result = equipment;
@@ -115,7 +115,7 @@ class MaintenanceService {
 
   deleteCorrective(String departmentId, String equipmentDescription,
       Maintenance maintenance) async {
-    var doc = await FirestoreDB.db_departments.doc(departmentId).get();
+    var doc = await FirestoreDB.departments.doc(departmentId).get();
     Department department = Department.fromJson(doc.data());
     int indexOfEquipment = department.equipments
         .map((e) => e.description)
@@ -131,7 +131,7 @@ class MaintenanceService {
     department.equipments[indexOfEquipment] = equipment;
     var result;
     try {
-      await FirestoreDB.db_departments
+      await FirestoreDB.departments
           .doc(departmentId)
           .update(department.toJson());
       result = true;

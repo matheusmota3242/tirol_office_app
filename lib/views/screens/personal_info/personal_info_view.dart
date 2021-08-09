@@ -30,7 +30,7 @@ class PersonalInfoView extends StatelessWidget {
       body: Container(
         padding: PageUtils.BODY_PADDING,
         child: FutureBuilder(
-          future: FirestoreDB.DB_USERS.doc(user.id).get(),
+          future: FirestoreDB.users.doc(user.id).get(),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             switch (snapshot.connectionState) {

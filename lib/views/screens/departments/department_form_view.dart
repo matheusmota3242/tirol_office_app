@@ -1,42 +1,126 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:tirol_office_app/mobx/equipment/equipment_mobx.dart';
+import 'package:tirol_office_app/mobx/equipment_list.dart/equipment_list_mobx.dart';
+import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
+import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
-import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class DepartmentFormView extends StatefulWidget {
+  final Department currentDepartment;
+  final bool edit;
+
+  const DepartmentFormView(
+      {Key key, this.currentDepartment, @required this.edit})
+      : super(key: key);
+  @override
   _DepartmentFormViewState createState() => _DepartmentFormViewState();
 }
 
 class _DepartmentFormViewState extends State<DepartmentFormView>
     with TickerProviderStateMixin {
-  //var equipmentStatus;
-  var _departmentService = DepartmentService();
-  AnimationController _animationController;
   var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
-  static const List<IconData> fabIcons = const [Icons.done, Icons.close];
-  static const List<Color> fabIconsColors = const [Colors.green, Colors.red];
-
+  static const String MSG_REQUIRED_FIELD = 'Campo obrigatório';
+  static const String MSG_EQUIPMENT_DESCRIPTION_ALREADY_EXISTS =
+      'Nome de equipamento já usado';
+  AnimationController _animationController;
+  DepartmentService _service = DepartmentService();
+  EquipmentListMobx equipmentListMobx = EquipmentListMobx();
   @override
   void initState() {
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    if (widget.edit) {
+      widget.currentDepartment.equipments.forEach((element) {
+        EquipmentMobx mobx = EquipmentMobx();
+        mobx.setDescription(element.description);
+        mobx.setStatus(element.status);
+        equipmentListMobx.addEquipment(mobx);
+      });
+    }
+
     super.initState();
   }
+
+  bool checkEdition() => widget.edit ? true : false;
 
   @override
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
+    GlobalKey<FormState> _key = GlobalKey<FormState>();
+    // Campo nome do deprtamento a ser adicionado
+    Widget departmentNameField() {
+      TextEditingController controller =
+          TextEditingController(text: widget.currentDepartment?.name);
+
+      return Container(
+        child: Form(
+          key: _key,
+          child: TextFormField(
+            onChanged: (value) => widget.currentDepartment.name = value,
+            validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
+            controller: controller,
+            decoration: InputDecoration(
+              alignLabelWithHint: true,
+              labelText: 'Nome',
+              labelStyle: TextStyle(
+                  color: Colors.grey[700],
+                  height: 0.9,
+                  fontWeight: FontWeight.w600),
+              filled: true,
+              counterStyle: TextStyle(color: Colors.red),
+              hintText: 'Nome',
+              contentPadding: EdgeInsets.only(
+                left: 10.0,
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    void submit() async {
+      bool result = false;
+      if (_key.currentState.validate()) {
+        List equipmentList =
+            equipmentListMobx.equipmentList.map<Equipment>((element) {
+          Equipment equipment = Equipment();
+          equipment.description = element.description;
+          equipment.status = element.status;
+          return equipment;
+        }).toList();
+        widget.currentDepartment.equipments = equipmentList;
+
+        if (checkEdition()) {
+          result = await _service.update(widget.currentDepartment);
+        } else {
+          result = await _service.save(widget.currentDepartment);
+        }
+        if (result)
+          Navigator.pushNamedAndRemoveUntil(
+              context, RouteUtils.DEPARTMENTS, (route) => false);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo departamento'),
+        title:
+            Text(checkEdition() ? 'Editar departamento' : 'Novo departamento'),
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
-        children: List.generate(fabIcons.length, (int index) {
+        children: List.generate(PageUtils.fabIcons.length, (int index) {
           Widget child = Container(
             height: 70.0,
             width: 56.0,
@@ -44,15 +128,16 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
             child: ScaleTransition(
               scale: CurvedAnimation(
                 parent: _animationController,
-                curve: Interval(0.0, 1.0 - index / fabIcons.length / 2.0,
+                curve: Interval(
+                    0.0, 1.0 - index / PageUtils.fabIcons.length / 2.0,
                     curve: Curves.easeOut),
               ),
               child: FloatingActionButton(
                 heroTag: null,
-                backgroundColor: fabIconsColors[index],
+                backgroundColor: PageUtils.fabIconsColors[index],
                 mini: true,
-                child: Icon(fabIcons[index], color: Colors.white),
-                onPressed: () => index == 0 ? saveDepartment() : cancel(),
+                child: Icon(PageUtils.fabIcons[index], color: Colors.white),
+                onPressed: () => index == 0 ? submit() : Navigator.pop(context),
               ),
             ),
           );
@@ -84,8 +169,9 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
           ),
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: PageUtils.BODY_PADDING,
         child: ListView(
+          shrinkWrap: true,
           children: [
             departmentNameField(),
             SizedBox(
@@ -96,93 +182,11 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
             ),
             Row(
               children: [
-                Text('Equipamentos', style: themeData.textTheme.headline6),
+                Text('Equipamentos', style: themeData.textTheme.headline5),
                 IconButton(
                   onPressed: () {
                     final _formKey = GlobalKey<FormState>();
-                    showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        title: Text('Novo equipamento'),
-                        content: Form(
-                          key: _formKey,
-                          child: Container(
-                            height: 190.0,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                equipmentNameField(),
-                                SizedBox(
-                                  height: 30.0,
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Status atual do equipamento',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 16.0,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(4.0),
-                                    ),
-                                  ),
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.only(left: 3.0),
-                                  child: Observer(
-                                    builder: (_) => DropdownButton<String>(
-                                      underline: SizedBox(),
-                                      isExpanded: true,
-                                      value:
-                                          _departmentService.getEquipmentStatus,
-                                      onChanged: (value) {
-                                        selectStatusEquipment(value);
-                                      },
-                                      items:
-                                          equipmentStatusOptions.map((value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        actions: [
-                          cancelButton(context),
-                          RaisedButton(
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                Navigator.of(context).pop(true);
-                              }
-                            },
-                            child: Text(
-                              'Salvar',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ).then((result) {
-                      if (result) {
-                        Equipment equipment = new Equipment();
-                        equipment.description =
-                            _departmentService.equipmentName;
-                        setState(() {
-                          _departmentService.equipments.add(equipment);
-                        });
-                      }
-                    });
+                    showAddEquipmentDialog(_formKey, false);
                   },
                   color: Theme.of(context).buttonColor,
                   icon: Icon(Icons.add_circle),
@@ -190,145 +194,222 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
               ],
             ),
             Observer(
-              builder: (_) => Container(
-                child: _departmentService.equipments.isEmpty
-                    ? Row(
-                        children: [
-                          Text(
-                            'Nenhum equipamento adicionado.',
-                            style: themeData.textTheme.bodyText1,
-                          ),
-                        ],
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _departmentService.equipments.length,
-                        itemBuilder: (context, index) {
-                          var equipment = _departmentService.equipments[index];
-                          equipment.id = index;
-                          return DepartmentFormEquipmentItem(
-                            editing: false,
-                          );
-                        },
-                      ),
-              ),
-            )
+                builder: (_) => (Container(
+                      child: equipmentListMobx.getEquipmentList.isEmpty
+                          ? Row(
+                              children: [
+                                Text(
+                                  'Nenhum equipamento adicionado.',
+                                  style: TextStyle(
+                                      fontSize: 14.0, color: Colors.grey[600]),
+                                ),
+                              ],
+                            )
+                          : ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  equipmentListMobx.getEquipmentList.length,
+                              itemBuilder: (context, index) {
+                                equipmentListMobx.getEquipmentList[index].id =
+                                    index;
+
+                                return DepartmentFormEquipmentItem(
+                                  mobx:
+                                      equipmentListMobx.getEquipmentList[index],
+                                  editing: false,
+                                  remove: removeEquipmentFromMobx,
+                                  check: checkIfAlreadyExists,
+                                );
+                              },
+                            ),
+                    ))),
           ],
         ),
       ),
     );
   }
 
-  void addEquipmentDialog(BuildContext context) {}
+  void removeEquipmentFromMobx(String description) {
+    equipmentListMobx.equipmentList
+        .removeWhere((element) => element.description == description);
+  }
 
-  // Seleciona o status do equipamento a ser adicionado
-  selectStatusEquipment(String value) {
-    _departmentService.setEquipmentStatus(value);
+  String checkIfAlreadyExists(String value) {
+    if (value.isEmpty) return 'Campo obrigatório';
+    if (equipmentListMobx.equipmentList
+        .any((element) => element.description == value))
+      return 'Equipmaneto já existe';
+  }
+
+  // void updateEquipmentFromMobx(EquipmentMobx mobx) {
+  //   equipmentListMobx.equipmentList[index].setDescription(mob);
+  //   equipmentListMobx.equipmentList[index].setStatus(status);
+  // }
+
+  bool departmentEquipmentsIsEmpty(Department department) =>
+      department.equipments.isEmpty ? true : false;
+
+  showAddEquipmentDialog(GlobalKey<FormState> formKey, bool isSpecial) {
+    GlobalKey<FormState> _formKey = GlobalKey();
+    Equipment equipment = Equipment();
+    showDialog(
+        context: context,
+        builder: (_) =>
+            StatefulBuilder(builder: (BuildContext context, setState) {
+              return AlertDialog(
+                title: Text(
+                  'Novo equipamento',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                content: Form(
+                  key: formKey,
+                  child: Container(
+                    //height: isSpecial ? 384 : 256,
+                    width: double.maxFinite,
+                    child: ListView(
+                      shrinkWrap: true,
+                      //mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        equipmentNameField(equipment, _formKey),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Status atual do equipamento',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16.0,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(4.0),
+                            ),
+                          ),
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: 3.0),
+                          child: DropdownButton<String>(
+                            underline: SizedBox(),
+                            isExpanded: true,
+                            value: equipment.status,
+                            onChanged: (value) {
+                              setState(() {
+                                equipment.status = value;
+                              });
+                            },
+                            items: equipmentStatusOptions.map((value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Container(
+                                  padding: EdgeInsets.only(left: 6.0),
+                                  child: Text(value),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                actions: [
+                  Container(
+                      padding: EdgeInsets.only(right: 14.0, bottom: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          cancelButton(context),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (formKey.currentState.validate() &&
+                                  _formKey.currentState.validate()) {
+                                Navigator.of(context).pop(true);
+                              }
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).buttonColor),
+                            ),
+                            child: Text(
+                              'Salvar',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ))
+                ],
+              );
+            })).then((result) {
+      if (result) {
+        EquipmentMobx equipmentMobx = new EquipmentMobx();
+        equipmentMobx.setDescription(equipment.description);
+        equipmentMobx.setStatus(equipment.status);
+        equipmentListMobx.addEquipment(equipmentMobx);
+      }
+    });
+  }
+
+  String validateNewEquipment(String description) {
+    String msg;
+    if (description.isEmpty)
+      msg = MSG_REQUIRED_FIELD;
+    else if (widget.currentDepartment.equipments
+        .any((element) => element.description == description))
+      msg = MSG_EQUIPMENT_DESCRIPTION_ALREADY_EXISTS;
+    return msg;
   }
 
   // Campo nome do equipamento a ser adicionado ao deprtamento
-  Widget equipmentNameField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
-        onChanged: (value) => setEquipmentName(value.trim()),
-        keyboardType: TextInputType.name,
-        decoration: InputDecoration(
-          alignLabelWithHint: true,
-          labelText: 'Descrição',
-          labelStyle: TextStyle(
-              color: Colors.grey[800],
-              height: 0.9,
-              fontWeight: FontWeight.w600),
-          filled: true,
-          counterStyle: TextStyle(color: Colors.red),
-          hintText: 'Descrição',
-          contentPadding: EdgeInsets.only(
-            left: 10.0,
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Campo nome do deprtamento a ser adicionado
-  Widget departmentNameField() {
-    return Container(
-      child: TextFormField(
-        onChanged: (value) =>
-            _departmentService.currentDepartment.setName(value.trim()),
-        decoration: InputDecoration(
-          alignLabelWithHint: true,
-          labelText: 'Nome',
-          labelStyle: TextStyle(
-              color: Colors.grey[700],
-              height: 0.9,
-              fontWeight: FontWeight.w600),
-          filled: true,
-          counterStyle: TextStyle(color: Colors.red),
-          hintText: 'Nome',
-          contentPadding: EdgeInsets.only(
-            left: 10.0,
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
+  Widget equipmentNameField(
+      Equipment equipment, GlobalKey<FormState> equipmentFormKey) {
+    TextEditingController controller =
+        TextEditingController(text: equipment.description);
+    return Form(
+      key: equipmentFormKey,
+      child: Container(
+        child: TextFormField(
+          validator: (value) => checkIfAlreadyExists(value),
+          onChanged: (value) => equipment.description = value,
+          keyboardType: TextInputType.name,
+          controller: controller,
+          decoration: InputDecoration(
+            alignLabelWithHint: true,
+            labelText: 'Descrição',
+            labelStyle: TextStyle(
+                color: Colors.grey[800],
+                height: 0.9,
+                fontWeight: FontWeight.w600),
+            filled: true,
+            counterStyle: TextStyle(color: Colors.red),
+            hintText: 'Descrição',
+            contentPadding: EdgeInsets.only(
+              left: 10.0,
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget submitButton(GlobalKey<FormState> formKey, BuildContext context) {
-    return RaisedButton(
-      onPressed: () {
-        if (formKey.currentState.validate()) {
-          Equipment equipment = new Equipment();
-          equipment.description = _departmentService.equipmentName;
-
-          _departmentService.setCurrentEquipment(equipment);
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      },
-      child: Text(
-        'Salvar',
-        style: TextStyle(color: Colors.white),
       ),
     );
   }
 
   Widget cancelButton(BuildContext context) {
-    return RaisedButton(
-      color: Colors.red,
+    return TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      ),
       onPressed: () => Navigator.pop(context),
       child: Text(
         'Cancelar',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Theme.of(context).buttonColor),
       ),
     );
-  }
-
-  setEquipmentName(String value) {
-    _departmentService.setEquipmentName(value);
-  }
-
-  void saveDepartment() {
-    print("Entrou");
-    _departmentService.currentDepartment.equipments =
-        _departmentService.equipments;
-    // !!!
-    //_departmentService.save();
-    Toasts.showToast(content: 'Departamento criado com sucesso!');
-    Navigator.pop(context);
-  }
-
-  void cancel() {
-    _departmentService.setCurrentDepartment(null);
-    _departmentService.equipments.clear();
-    _departmentService.setEquipmentName('');
-    _departmentService.setEquipmentStatus(null);
-    Navigator.pop(context);
   }
 }

@@ -54,10 +54,10 @@ abstract class DepartmentServiceBase with Store {
 
   Future<bool> save(Department department) async {
     bool result = false;
-    var snapshot = await FirestoreDB.db_departments.get();
+    var snapshot = await FirestoreDB.departments.get();
     if (!departmentAlreadyExists(snapshot, department.name)) {
       try {
-        await FirestoreDB.db_departments.add(department.toJson());
+        await FirestoreDB.departments.add(department.toJson());
         Toasts.showToast(content: 'Departamento criado com sucesso');
         result = true;
       } catch (e) {
@@ -71,7 +71,7 @@ abstract class DepartmentServiceBase with Store {
     bool result = false;
 
     try {
-      await FirestoreDB.db_departments
+      await FirestoreDB.departments
           .doc(department.id)
           .update(department.toJson());
       Toasts.showToast(content: 'Departamento editado com sucesso');
@@ -86,7 +86,7 @@ abstract class DepartmentServiceBase with Store {
   remove(String departmentId) async {
     bool result = false;
     try {
-      await FirestoreDB.db_departments.doc(departmentId).delete();
+      await FirestoreDB.departments.doc(departmentId).delete();
       result = true;
       Toasts.showToast(content: 'Departamento removido com sucesso');
     } catch (e) {
@@ -104,7 +104,7 @@ abstract class DepartmentServiceBase with Store {
   }
 
   queryByProcess(Process process) async {
-    return await FirestoreDB.db_departments
+    return await FirestoreDB.departments
         .where('name', isEqualTo: process.departmentId)
         .get();
   }

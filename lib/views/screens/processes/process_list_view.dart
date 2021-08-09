@@ -41,7 +41,7 @@ class _ProcessListViewState extends State<ProcessListView> {
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var uid = prefs.getString('uid');
-    var json = await FirestoreDB.DB_USERS.doc(uid).get();
+    var json = await FirestoreDB.users.doc(uid).get();
     user = User.fromJson(json.data());
     user.id = uid;
     setState(() {
