@@ -24,7 +24,7 @@ class UserService {
 
   void findById(String uid) async {
     var data;
-    FirestoreDB.db_users.doc(uid).get().then((value) {
+    FirestoreDB.DB_USERS.doc(uid).get().then((value) {
       data = value.data();
       _user = User.fromJson(data);
     });
@@ -36,7 +36,7 @@ class UserService {
   removeUser(User user) async {
     bool result = false;
     try {
-      await FirestoreDB.db_users.doc(user.id).delete();
+      await FirestoreDB.DB_USERS.doc(user.id).delete();
       Toasts.showToast(content: 'Usuário removido com sucesso');
       result = true;
     } catch (e) {

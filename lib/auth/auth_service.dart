@@ -16,7 +16,7 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class AuthService {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
-  CollectionReference usersCollection = FirestoreDB.db_users;
+  CollectionReference usersCollection = FirestoreDB.DB_USERS;
   UserService _userService = UserService();
   auth.User user;
 
@@ -31,7 +31,7 @@ class AuthService {
 
       try {
         var userResponse =
-            await FirestoreDB.db_users.doc(result.user.uid).get();
+            await FirestoreDB.DB_USERS.doc(result.user.uid).get();
         _userService = Provider.of<UserService>(context, listen: false);
         _userService.setUserByUid(userResponse, result.user.uid);
         var user = User.fromJson(userResponse.data());
@@ -90,7 +90,7 @@ class AuthService {
   void update(User user, BuildContext context) async {
     bool result = updateEmail(user.email, context);
     if (result)
-      await FirestoreDB.db_users.doc(user.id).update({'email': user.email});
+      await FirestoreDB.DB_USERS.doc(user.id).update({'email': user.email});
   }
 
   updateEmail(String newEmail, BuildContext context) async {
@@ -114,7 +114,7 @@ class AuthService {
     try {
       await _auth.currentUser.updatePassword(newPassword);
       result = true;
-    } on Exception catch (e) {
+    } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
     }
     return result;
@@ -127,7 +127,7 @@ class AuthService {
     try {
       await _auth.currentUser.reauthenticateWithCredential(credential);
       result = true;
-    } on Exception catch (e) {}
+    } catch (e) {}
     return result;
   }
 
@@ -142,7 +142,7 @@ class AuthService {
         Toasts.showToast(content: 'E-mail enviado com sucesso');
         Navigator.pop(context);
       }
-    } on auth.FirebaseAuthException catch (e) {
+    } catch (e) {
       Toasts.showToast(content: 'E-mail inválido');
     }
     return result;
