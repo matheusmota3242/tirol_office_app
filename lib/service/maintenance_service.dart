@@ -142,7 +142,7 @@ class MaintenanceService {
     return result;
   }
 
-  updateHasOccured(Maintenance maintenance) async {
+  updateHasOccured(Maintenance maintenance, bool value) async {
     bool result = false;
     if (!maintenance.hasOccurred &&
         DateTimeUtils.firstHour(maintenance.dateTime)
@@ -152,7 +152,7 @@ class MaintenanceService {
       try {
         await FirestoreDB.db_maintenances
             .doc(maintenance.id)
-            .update({'hasOccurred': !maintenance.hasOccurred});
+            .update({'hasOccurred': value});
         result = true;
       } catch (e) {
         Toasts.showToast(content: 'Ocorreu um erro');

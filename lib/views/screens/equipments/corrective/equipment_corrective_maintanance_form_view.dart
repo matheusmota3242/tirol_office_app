@@ -14,6 +14,7 @@ import 'package:tirol_office_app/service/maintenance_service.dart';
 import 'package:tirol_office_app/utils/datetime_utils.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
+import 'package:tirol_office_app/views/screens/maintenances/maintenances_view.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 
 import '../../loading_view.dart';
@@ -23,6 +24,7 @@ class EquipmentCorrectiveMaintenanceFormView extends StatefulWidget {
   final DepartmentDTO departmentDTO;
   final Maintenance maintenance;
   final bool edit;
+  final bool fromMaintenancesView;
 
   const EquipmentCorrectiveMaintenanceFormView({
     Key key,
@@ -30,6 +32,7 @@ class EquipmentCorrectiveMaintenanceFormView extends StatefulWidget {
     @required this.departmentDTO,
     this.edit,
     this.maintenance,
+    this.fromMaintenancesView,
   }) : super(key: key);
   _EquipmentCorrectiveMaintenanceFormViewState createState() =>
       _EquipmentCorrectiveMaintenanceFormViewState();
@@ -52,6 +55,9 @@ class _EquipmentCorrectiveMaintenanceFormViewState
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     loadServiceProviders();
+    if (widget.edit) {
+      pickedDateMobx.setPicked(widget.maintenance.dateTime);
+    }
   }
 
   loadServiceProviders() async {
@@ -79,13 +85,11 @@ class _EquipmentCorrectiveMaintenanceFormViewState
       var pickedTimestamp = await Dialogs().showPickDateDialog(context);
       if (pickedTimestamp != null) {
         pickedDateMobx.setPicked(pickedTimestamp);
-        widget.maintenance.dateTime = DateTimeUtils.skipTime(pickedTimestamp);
       }
     }
 
     if (isEdition()) {
       serviceProviderNameMobx.setName(widget.maintenance.serviceProvider.name);
-      pickedDateMobx.setPicked(widget.maintenance.dateTime);
     }
 
     persist() async {
@@ -93,7 +97,8 @@ class _EquipmentCorrectiveMaintenanceFormViewState
         ServiceProvider serviceProvider = serviceProviders.firstWhere(
             (element) => element.name == serviceProviderNameMobx.name);
         widget.maintenance.serviceProvider = serviceProvider;
-
+        widget.maintenance.dateTime =
+            DateTimeUtils.skipTime(pickedDateMobx.getPicked);
         bool result;
         if (isEdition())
           result = await service.update(widget.maintenance);
@@ -105,15 +110,19 @@ class _EquipmentCorrectiveMaintenanceFormViewState
         }
 
         if (result) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => EquipmentCorrectiveMaintenancesView(
-                equipment: widget.equipment,
-                departmentDTO: widget.departmentDTO,
+          if (widget.fromMaintenancesView)
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => MaintenancesView()));
+          else
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => EquipmentCorrectiveMaintenancesView(
+                  equipment: widget.equipment,
+                  departmentDTO: widget.departmentDTO,
+                ),
               ),
-            ),
-          );
+            );
         }
       }
     }

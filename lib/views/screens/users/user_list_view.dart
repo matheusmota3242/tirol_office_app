@@ -56,7 +56,6 @@ class _UserListViewState extends State<UserListView> {
   }
 
   Widget setBody(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    print(snapshot.connectionState);
     if (snapshot.hasError) {
       return ErrorView();
     }
@@ -69,24 +68,29 @@ class _UserListViewState extends State<UserListView> {
             User user = User.fromJson(snapshot.data.docs[index].data());
 
             user.id = snapshot.data.docs[index].id;
-            return ListTile(
-              title: Text(user.name),
-              leading: Icon(Icons.person_outline, color: handleIcon(user.role)),
-              subtitle: Text(user.email != null ? user.email : ''),
-              trailing: Visibility(
-                visible: currentUser.role == 'Administrador' ? true : false,
-                child: PopupMenuButton<String>(
-                  onSelected: (value) => onSelectedChoice(value, user),
-                  icon: Icon(Icons.more_vert),
-                  itemBuilder: (BuildContext context) {
-                    return choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                ),
+            return InkWell(
+              onLongPress: () => showDeleteDialog(user),
+              onDoubleTap: () => showSelectRoleDialog(user),
+              child: ListTile(
+                title: Text(user.name),
+                leading:
+                    Icon(Icons.person_outline, color: handleIcon(user.role)),
+                subtitle: Text(user.email != null ? user.email : ''),
+                // trailing: Visibility(
+                //   visible: currentUser.role == 'Administrador' ? true : false,
+                //   child: PopupMenuButton<String>(
+                //     onSelected: (value) => onSelectedChoice(value, user),
+                //     icon: Icon(Icons.more_vert),
+                //     itemBuilder: (BuildContext context) {
+                //       return choices.map((String choice) {
+                //         return PopupMenuItem<String>(
+                //           value: choice,
+                //           child: Text(choice),
+                //         );
+                //       }).toList();
+                //     },
+                //   ),
+                // ),
               ),
             );
           },
@@ -115,16 +119,81 @@ class _UserListViewState extends State<UserListView> {
   Color handleIcon(String role) {
     switch (role) {
       case 'Administrador':
-        return Colors.green[200];
+        return Colors.green[500];
         break;
       case 'Comum':
-        return Colors.yellow[200];
+        return Colors.yellow[500];
         break;
       case 'Aguardando aprovação':
-        return Colors.red[200];
+        return Colors.red[500];
         break;
       default:
     }
+  }
+
+  showSelectRoleDialog(User user) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (_, setState) {
+            selectedRole = user.role;
+            return AlertDialog(
+                //title: Text('Alterar papel do usuário'),
+                content: Container(
+              height: 310.0,
+              child: Column(
+                children: <Widget>[
+                  Text(
+                      'Selecione o papel a ser atribuído ao usuário ${user.name}:'),
+                  SizedBox(height: 20.0),
+                  Container(
+                    width: double.maxFinite,
+                    height: 200,
+                    child: ListView.builder(
+                      itemCount: Role().getRoles().length,
+                      itemBuilder: (context, index) {
+                        var role = Role().getRoles()[index];
+                        return RadioListTile(
+                            title: Text(role),
+                            value: selectedRole == role ? 1 : 0,
+                            groupValue: 1,
+                            onChanged: (value) {
+                              setState(() {
+                                user.role = role;
+                                selectedRole = user.role;
+                              });
+                            });
+                      },
+                    ),
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(
+                              'Cancelar',
+                              style: TextStyle(color: PageUtils.PRIMARY_COLOR),
+                            )),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).buttonColor),
+                            ),
+                            onPressed: () {
+                              changeFirestoreUserRole(selectedRole, user.id);
+                              Navigator.pop(context);
+                            },
+                            child: Text('Salvar'))
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ));
+          });
+        });
   }
 
   showDeleteDialog(User user) {
@@ -137,7 +206,8 @@ class _UserListViewState extends State<UserListView> {
             'Remover',
             style: TextStyle(color: Colors.red[500]),
           ),
-          content: Text('Você realmente deseja remover esse usuário?'),
+          content:
+              Text('Você realmente deseja remover o usuário ${user.name}?'),
           actions: [
             Container(
               padding: EdgeInsets.all(10),

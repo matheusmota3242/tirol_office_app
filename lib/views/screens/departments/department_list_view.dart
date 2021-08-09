@@ -56,7 +56,7 @@ class DepartmentListView extends StatelessWidget {
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: StreamBuilder(
-        stream: FirestoreDB.db_departments.snapshots(),
+        stream: FirestoreDB.db_departments.orderBy('name').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -82,15 +82,17 @@ class DepartmentListView extends StatelessWidget {
     var theme = Theme.of(context);
     if (docs.isEmpty)
       return Container(
-          color: Colors.white,
-          child: Center(
-              child: Text(
+        color: Colors.white,
+        child: Center(
+          child: Text(
             'Não há itens cadastrados',
             style: TextStyle(
                 color: Colors.grey[800],
                 fontSize: 20,
                 fontWeight: FontWeight.w500),
-          )));
+          ),
+        ),
+      );
     return Container(
       color: Colors.white,
       padding: EdgeInsets.all(16),
@@ -126,7 +128,8 @@ class DepartmentListView extends StatelessWidget {
                               : Colors.black)),
                   childrenPadding: EdgeInsets.all(0),
                   children: department.equipments
-                      .map((e) => Container(
+                      .map(
+                        (e) => Container(
                           padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: InkWell(
                             onTap: () =>
@@ -146,7 +149,9 @@ class DepartmentListView extends StatelessWidget {
                                 EquipmentStatusWidget(status: e.status)
                               ],
                             ),
-                          )))
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ),

@@ -5,8 +5,6 @@ import 'package:tirol_office_app/models/maintenance_model.dart';
 
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintanance_form_view.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
-import 'package:tirol_office_app/views/screens/equipments/preventive/equipment_preventive_maintenance_form_view.dart';
-import 'package:tirol_office_app/views/screens/equipments/preventive/equipment_preventive_maintenances_view.dart';
 
 class RouteUtils {
   static const String processes = 'processes';
@@ -23,22 +21,6 @@ class RouteUtils {
   static const String personalInfo = 'personalInfo';
   static const String personalInfoForm = 'personalInfoForm';
 
-  /* Página de formulário de manutenção preventiva */
-  static void pushToEquipmentPreventiveMaintenancesFormView(
-      BuildContext context,
-      String equipmentDescription,
-      DepartmentDTO departmentDTO) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => EquipmentPreventiveMaintananceFormView(
-          equipmentDescription: equipmentDescription,
-          departmentDTO: departmentDTO,
-        ),
-      ),
-    );
-  }
-
   /* Página de formulário de manutenção corretiva.
    * Recebe a descrição do equipmaneto e o nome do departamento
    */
@@ -47,7 +29,8 @@ class RouteUtils {
       Equipment equipment,
       DepartmentDTO departmentDTO,
       Maintenance maintenance,
-      bool edit}) {
+      bool edit,
+      bool fromMaintenancesView}) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -56,6 +39,7 @@ class RouteUtils {
           departmentDTO: departmentDTO,
           maintenance: maintenance,
           edit: edit,
+          fromMaintenancesView: fromMaintenancesView,
         ),
       ),
     );
@@ -68,19 +52,6 @@ class RouteUtils {
       MaterialPageRoute(
         builder: (_) => EquipmentCorrectiveMaintenancesView(
           equipment: equipment,
-          departmentDTO: departmentDTO,
-        ),
-      ),
-    );
-  }
-
-  static void pushToEquipmentPreventiveMaintenancesView(BuildContext context,
-      String equipmentDescription, DepartmentDTO departmentDTO) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => EquipmentPreventiveMaintenancesView(
-          equipmentDescription: equipmentDescription,
           departmentDTO: departmentDTO,
         ),
       ),

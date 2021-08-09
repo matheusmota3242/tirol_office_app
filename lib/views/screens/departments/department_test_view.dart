@@ -193,35 +193,37 @@ class _DepartmentTestViewState extends State<DepartmentTestView>
                 )
               ],
             ),
-            Container(
-              child: equipmentListMobx.equipmentList.isEmpty
-                  ? Row(
-                      children: [
-                        Text(
-                          'Nenhum equipamento adicionado.',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Colors.grey[600]),
-                        ),
-                      ],
-                    )
-                  : Observer(
-                      builder: (_) => ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: equipmentListMobx.getEquipmentList.length,
-                        itemBuilder: (context, index) {
-                          equipmentListMobx.getEquipmentList[index].id = index;
+            Observer(
+                builder: (_) => (Container(
+                      child: equipmentListMobx.getEquipmentList.isEmpty
+                          ? Row(
+                              children: [
+                                Text(
+                                  'Nenhum equipamento adicionado.',
+                                  style: TextStyle(
+                                      fontSize: 14.0, color: Colors.grey[600]),
+                                ),
+                              ],
+                            )
+                          : ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  equipmentListMobx.getEquipmentList.length,
+                              itemBuilder: (context, index) {
+                                equipmentListMobx.getEquipmentList[index].id =
+                                    index;
 
-                          return DepartmentFormEquipmentItem(
-                            mobx: equipmentListMobx.getEquipmentList[index],
-                            editing: false,
-                            remove: removeEquipmentFromMobx,
-                            check: checkIfAlreadyExists,
-                          );
-                        },
-                      ),
-                    ),
-            ),
+                                return DepartmentFormEquipmentItem(
+                                  mobx:
+                                      equipmentListMobx.getEquipmentList[index],
+                                  editing: false,
+                                  remove: removeEquipmentFromMobx,
+                                  check: checkIfAlreadyExists,
+                                );
+                              },
+                            ),
+                    ))),
           ],
         ),
       ),

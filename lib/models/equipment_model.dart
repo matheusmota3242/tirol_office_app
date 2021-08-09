@@ -22,6 +22,10 @@ class Equipment {
   set correctiveMaintenances(List<Maintenance> correctiveMaintenances) =>
       this._correctiveMaintenances = correctiveMaintenances;
 
+  Equipment.withDescription(String description) {
+    this._description = description;
+  }
+
   Equipment() {
     this._status = EquipmentHelper().getRoleByEnum(EquipmentStatus.ABLE);
   }

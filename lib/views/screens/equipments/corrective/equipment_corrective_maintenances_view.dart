@@ -90,13 +90,19 @@ class _EquipmentCorrectiveMaintenancesViewState
       );
     }
 
+    /* TODO refatorar esse metodo */
     handlingOptionSelected(String value, Maintenance maintenance) async {
       if (value == 'Remover') {
         showDeleteDialog(maintenance);
       } else {
-        await _service.updateHasOccured(maintenance);
+        await _service.updateHasOccured(maintenance, false);
         setState(() {});
       }
+    }
+
+    updateHasOccured(Maintenance maintenance, bool value) async {
+      await _service.updateHasOccured(maintenance, value);
+      setState(() {});
     }
 
     return WillPopScope(
@@ -216,77 +222,127 @@ class _EquipmentCorrectiveMaintenancesViewState
                                       margin: EdgeInsets.only(
                                           bottom: PageUtils.BODY_PADDING_VALUE),
                                       child: Container(
+                                        height: 105,
                                         padding: PageUtils.BODY_PADDING,
                                         child: Stack(children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              PageUtils.getAttributeField(
-                                                  'Data',
-                                                  DateTimeUtils.toBRFormat(
-                                                      maintenance.dateTime)),
-                                              SizedBox(
-                                                height: 24,
+                                              Flexible(
+                                                child: Text(
+                                                  '${maintenance.departmentName} - ${maintenance.equipmentDescription}',
+                                                  style: TextStyle(
+                                                      color:
+                                                          defineColorForStatus(
+                                                              maintenance),
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                              PageUtils.getAttributeField(
-                                                  'Provedor do serviço',
-                                                  maintenance
-                                                      .serviceProvider.name),
-                                              SizedBox(
-                                                height: 24,
+                                              Text(
+                                                DateTimeUtils.toBRFormat(
+                                                    maintenance.dateTime),
+                                                style: TextStyle(
+                                                    color: Colors.grey[700]),
                                               ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.stretch,
-                                                children: [
-                                                  Text(
-                                                    'Status',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    maintenance.hasOccurred
-                                                        ? "Concluída"
-                                                        : "Aguardando",
-                                                    style: TextStyle(
-                                                        fontSize: 17,
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            defineColorForStatus(
-                                                                maintenance)),
-                                                  ),
-                                                ],
-                                              )
                                             ],
                                           ),
-                                          DateTime.now().isAfter(maintenance.dateTime)
-                                              ? Positioned(
-                                                  top: -10,
-                                                  right: -12,
-                                                  child: PopupMenuButton<String>(
-                                                      onSelected: (value) =>
-                                                          handlingOptionSelected(
-                                                              value, maintenance),
-                                                      icon: Icon(Icons.more_vert,
-                                                          color: Colors.black),
-                                                      itemBuilder: (context) =>
-                                                          defineOptionsForMaintenance(
-                                                                  maintenance)
-                                                              .map((value) =>
-                                                                  PopupMenuItem(
-                                                                      value: value,
-                                                                      child: Text(value)))
-                                                              .toList()))
-                                              : Container()
+
+                                          Positioned(
+                                              top: 45,
+                                              child: Text(
+                                                  maintenance
+                                                      .serviceProvider.name,
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500))),
+
+                                          Positioned(
+                                            top: 30,
+                                            right: 0,
+                                            child: Switch(
+                                              value: maintenance.hasOccurred,
+                                              onChanged: (value) {
+                                                updateHasOccured(
+                                                    maintenance, value);
+                                              },
+                                            ),
+                                          ),
+
+                                          // Column(
+                                          //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          //   children: [
+                                          //     PageUtils.getAttributeField(
+                                          //         'Data',
+                                          //         DateTimeUtils.toBRFormat(
+                                          //             maintenance.dateTime)),
+                                          //     SizedBox(
+                                          //       height: SIZEDBOX_HEIGHT,
+                                          //     ),
+                                          //     PageUtils.getAttributeField('Equipamento',
+                                          //         maintenance.equipmentDescription),
+                                          //     SizedBox(
+                                          //       height: SIZEDBOX_HEIGHT,
+                                          //     ),
+                                          //     PageUtils.getAttributeField('Departamento',
+                                          //         maintenance.departmentName),
+                                          //     SizedBox(
+                                          //       height: SIZEDBOX_HEIGHT,
+                                          //     ),
+                                          //     PageUtils.getAttributeField(
+                                          //         'Provedor do serviço',
+                                          //         maintenance.serviceProvider.name),
+                                          //     SizedBox(
+                                          //       height: SIZEDBOX_HEIGHT,
+                                          //     ),
+                                          //     Column(
+                                          //       crossAxisAlignment:
+                                          //           CrossAxisAlignment.stretch,
+                                          //       children: [
+                                          //         Text(
+                                          //           'Status',
+                                          //           style: TextStyle(
+                                          //               fontSize: 16,
+                                          //               fontWeight: FontWeight.w400,
+                                          //               color: Colors.grey[600]),
+                                          //         ),
+                                          //         SizedBox(height: 8),
+                                          //         Text(
+                                          //           maintenance.hasOccurred
+                                          //               ? "Concluída"
+                                          //               : "Aguardando",
+                                          //           style: TextStyle(
+                                          //               fontSize: 17,
+                                          //               fontStyle: FontStyle.italic,
+                                          //               fontWeight: FontWeight.w400,
+                                          //               color: defineColorForStatus(
+                                          //                   maintenance)),
+                                          //         ),
+                                          //       ],
+                                          //     )
+                                          //   ],
+                                          // ),
+                                          // Positioned(
+                                          //     top: -10,
+                                          //     right: -12,
+                                          //     child: PopupMenuButton<String>(
+                                          //         onSelected: (value) =>
+                                          //             handlingOptionSelected(
+                                          //                 value, maintenance),
+                                          //         icon: Icon(Icons.more_vert,
+                                          //             color: Colors.black),
+                                          //         itemBuilder: (context) =>
+                                          //             defineOptionsForMaintenance(
+                                          //                     maintenance)
+                                          //                 .map((value) => PopupMenuItem(
+                                          //                     value: value,
+                                          //                     child: Text(value)))
+                                          //                 .toList()))
                                         ]),
                                       ),
                                     ),
