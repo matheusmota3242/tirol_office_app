@@ -231,16 +231,9 @@ class LoginView extends StatelessWidget {
   dynamic login(BuildContext context, AuthService authService) async {
     var result = await authService.loginWithEmail(
         email: _email, password: _password, context: context);
-    if (result is bool) {
-      if (result) {
-        Navigator.pushNamed(context, RouteUtils.processes);
-      } else {
-        Toasts.showToast(content: "E-mail ou senha inválida");
-      }
-    } else {
-      Toasts.showToast(content: "E-mail ou senha inválida");
+    if (result) {
+      Navigator.pushNamed(context, RouteUtils.processes);
     }
-
     return result;
   }
 }

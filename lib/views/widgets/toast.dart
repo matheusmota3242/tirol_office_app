@@ -5,8 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 class Toasts {
   static void showToast({@required String content}) {
     Fluttertoast.showToast(
-        msg: content,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.grey[900]);
+      msg: content,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: Colors.grey[900],
+    );
   }
 }

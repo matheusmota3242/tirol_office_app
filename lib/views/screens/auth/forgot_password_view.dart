@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/utils/validation_utils.dart';
 
 class ForgotPasswordView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -11,16 +12,18 @@ class ForgotPasswordView extends StatelessWidget {
     String _email;
     var WIDGETS_WIDTH = MediaQuery.of(context).size.width * 0.75;
     var SIZE_SCREEN = MediaQuery.of(context).size;
+    const double HORIZONTAL_PADDING = 40;
     Widget sizedBox = SizedBox(
-      height: 40,
+      height: 70,
     );
     return Scaffold(
       body: Container(
+        padding: EdgeInsets.only(
+            left: HORIZONTAL_PADDING, right: HORIZONTAL_PADDING),
         width: double.maxFinite,
-        padding: PageUtils.BODY_PADDING,
         child: Form(
             key: _formKey,
-            child: Column(children: [
+            child: ListView(children: [
               SizedBox(
                 height: SIZE_SCREEN.height * 0.1,
               ),
@@ -28,18 +31,21 @@ class ForgotPasswordView extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
-              Text(
-                'Esqueceu a senha',
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black54),
+              Center(
+                child: Text(
+                  'Esqueceu a senha',
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black54),
+                ),
               ),
               sizedBox,
               Container(
                 width: WIDGETS_WIDTH,
                 child: TextFormField(
                   onChanged: (value) => _email = value,
+                  validator: (value) => ValidationUtils().validateEmail(value),
                   style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.grey[800],
@@ -69,8 +75,10 @@ class ForgotPasswordView extends StatelessWidget {
                 height: 44,
                 width: WIDGETS_WIDTH,
                 child: ElevatedButton(
-                    onPressed: () =>
-                        AuthService().validateUserEmail(_email, context),
+                    onPressed: () {
+                      if (_formKey.currentState.validate())
+                        AuthService().sendPasswordResetEmail(_email);
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Theme.of(context).buttonColor),
@@ -95,146 +103,8 @@ class ForgotPasswordView extends StatelessWidget {
     );
   }
 
-  Widget _titlePage(double screenHeight) {
-    var fontSize = 32.0;
-    var paddingBottom = (screenHeight / 40);
-    return Padding(
-      padding: EdgeInsets.only(bottom: paddingBottom),
-      child: Center(
-        child: Text(
-          'Esqueceu a senha?',
-          style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w700,
-              color: Colors.black54),
-        ),
-      ),
-    );
-  }
-
-  Widget _usernameField(double screenHeight) {
-    var borderWidth = 1.0;
-    var verticalPadding = (screenHeight / 40);
-    var fieldVerticalPadding = 8.0;
-    var fieldLeftPadding = 8.0;
-    var fieldRightPadding = 0.0;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        _horizontalPadding,
-        verticalPadding,
-        _horizontalPadding,
-        (verticalPadding / 2),
-      ),
-      child: TextFormField(
-        decoration: InputDecoration(
-          filled: true,
-          contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
-              fieldVerticalPadding, fieldRightPadding, fieldVerticalPadding),
-          hintText: 'E-mail',
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _cpfField(double screenHeight) {
-    var borderWidth = 1.0;
-    var verticalPadding = (screenHeight / 40);
-    var fieldVerticalPadding = 8.0;
-    var fieldLeftPadding = 8.0;
-    var fieldRightPadding = 0.0;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        _horizontalPadding,
-        verticalPadding,
-        _horizontalPadding,
-        (verticalPadding / 2),
-      ),
-      child: TextFormField(
-        decoration: InputDecoration(
-          filled: true,
-          contentPadding: EdgeInsets.fromLTRB(fieldLeftPadding,
-              fieldVerticalPadding, fieldRightPadding, fieldVerticalPadding),
-          hintText: 'CPF',
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _passwordField(double screenHeight) {
-    var verticalPadding = (screenHeight / 40);
-    var fieldVerticalPadding = 8.0;
-    var fieldLeftPadding = 8.0;
-    var fieldRightPadding = 0.0;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        _horizontalPadding,
-        verticalPadding,
-        _horizontalPadding,
-        (verticalPadding / 2),
-      ),
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-              filled: true,
-              counterStyle: TextStyle(color: Colors.red),
-              hintText: 'Nova senha',
-              contentPadding: EdgeInsets.fromLTRB(
-                  fieldLeftPadding,
-                  fieldVerticalPadding,
-                  fieldRightPadding,
-                  fieldVerticalPadding),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _confirmPasswordField(double screenHeight) {
-    var verticalPadding = (screenHeight / 40);
-    var fieldVerticalPadding = 8.0;
-    var fieldLeftPadding = 8.0;
-    var fieldRightPadding = 0.0;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        _horizontalPadding,
-        verticalPadding,
-        _horizontalPadding,
-        (verticalPadding / 2),
-      ),
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-              filled: true,
-              counterStyle: TextStyle(color: Colors.red),
-              hintText: 'Confirmar nova senha',
-              contentPadding: EdgeInsets.fromLTRB(
-                  fieldLeftPadding,
-                  fieldVerticalPadding,
-                  fieldRightPadding,
-                  fieldVerticalPadding),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _submitButton(BuildContext context, double screenHeight) {
+  Widget _submitButton(
+      String email, BuildContext context, double screenHeight) {
     var buttonPadding = 16.0;
     var verticalPadding = (screenHeight / 40);
     return Padding(
@@ -242,7 +112,7 @@ class ForgotPasswordView extends StatelessWidget {
           _horizontalPadding, verticalPadding),
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        onPressed: () {},
+        onPressed: () => AuthService().sendPasswordResetEmail(email),
         child: Text(
           'Salvar',
           style: TextStyle(

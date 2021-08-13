@@ -24,25 +24,24 @@ class AuthService {
       {@required String email,
       @required String password,
       @required BuildContext context}) async {
-    var result;
+    bool result;
     try {
-      result = await _auth.signInWithEmailAndPassword(
+      var credentials = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      try {
-        var userResponse = await FirestoreDB.users.doc(result.user.uid).get();
-        _userService = Provider.of<UserService>(context, listen: false);
-        _userService.setUserByUid(userResponse, result.user.uid);
-        var user = User.fromJson(userResponse.data());
-        await saveUserInMemory(user.name, user.role, userResponse.id);
-      } catch (e) {
-        print(e);
-      }
-    } catch (e) {}
-    if (result != null) {
-      return result.user != null;
+      var userResponse =
+          await FirestoreDB.users.doc(credentials.user.uid).get();
+      _userService = Provider.of<UserService>(context, listen: false);
+      _userService.setUserByUid(userResponse, credentials.user.uid);
+      var user = User.fromJson(userResponse.data());
+      await saveUserInMemory(user.name, user.role, userResponse.id);
+      result = true;
+    } catch (e) {
+      result = false;
+      Toasts.showToast(content: 'Credenciais inválidas');
     }
-    return null;
+
+    return result;
   }
 
   saveUserInMemory(String username, String role, String id) async {
@@ -145,5 +144,14 @@ class AuthService {
       Toasts.showToast(content: 'E-mail inválido');
     }
     return result;
+  }
+
+  sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      Toasts.showToast(content: 'Confira sua caixa de entrada');
+    } catch (e) {
+      Toasts.showToast(content: 'E-mail não cadastrado');
+    }
   }
 }
