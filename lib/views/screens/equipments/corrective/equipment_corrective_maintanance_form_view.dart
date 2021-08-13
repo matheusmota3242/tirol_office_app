@@ -135,8 +135,10 @@ class _EquipmentCorrectiveMaintenanceFormViewState
       appBar: AppBar(
         title: Text(PageUtils.EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE),
       ),
-      floatingActionButton:
-          PageUtils.getFloatActionButton(_animationController, persist, cancel),
+      floatingActionButton: serviceProviders.isNotEmpty
+          ? PageUtils.getFloatActionButton(
+              _animationController, persist, cancel)
+          : Container(),
       body: Observer(builder: (_) {
         if (!loadingMobx.status) {
           if (serviceProviders.isNotEmpty)
