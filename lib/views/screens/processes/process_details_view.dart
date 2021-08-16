@@ -206,7 +206,29 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                                                             .id) &&
                                                                     process.end ==
                                                                         null
-                                                                ? CheckboxListTile(
+                                                                ? Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                        e.getDescription,
+                                                                        style: TextStyle(
+                                                                            color: e.getStatus == 'Danificado'
+                                                                                ? Colors.red[400]
+                                                                                : Colors.black),
+                                                                      ),
+                                                                      Switch(
+                                                                          value: isEquipmentOk(e
+                                                                              .getStatus),
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            e.changeStatus(e.getStatus);
+                                                                          }),
+                                                                    ],
+                                                                  )
+
+                                                                /* CheckboxListTile(
                                                                     contentPadding:
                                                                         EdgeInsets
                                                                             .all(
@@ -224,7 +246,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                                                         (value) {
                                                                       e.changeStatus(
                                                                           e.getStatus);
-                                                                    })
+                                                                    }) */
                                                                 : Container(
                                                                     padding: EdgeInsets
                                                                         .only(
@@ -237,14 +259,25 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
                                                                       children: [
                                                                         Text(e
                                                                             .description),
-                                                                        Icon(
-                                                                          e.getStatus == 'Funcionando'
-                                                                              ? Icons.done
-                                                                              : Icons.warning_amber_rounded,
-                                                                          color: e.getStatus == 'Funcionando'
-                                                                              ? Colors.green[400]
-                                                                              : Colors.red[400],
-                                                                        )
+                                                                        Container(
+                                                                          height:
+                                                                              24,
+                                                                          width:
+                                                                              24,
+                                                                          child:
+                                                                              Icon(
+                                                                            e.getStatus == 'Danificado'
+                                                                                ? Icons.warning_amber_rounded
+                                                                                : Icons.done,
+                                                                            color:
+                                                                                Colors.white,
+                                                                            size:
+                                                                                16,
+                                                                          ),
+                                                                          decoration: BoxDecoration(
+                                                                              shape: BoxShape.circle,
+                                                                              color: e.getStatus == 'Danificado' ? Colors.red : Colors.green),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                   ),
