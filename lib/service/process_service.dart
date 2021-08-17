@@ -44,12 +44,36 @@ class ProcessService {
     }
   }
 
-  // Método que salva o processo no banco de dados
-  void save(String response, User user, String observations) async {
-    var now = DateTime.now();
-    var processes;
+  create(Process process, User user, Department department) async {
+    process.setStart = DateTime.now();
+    process.setDepartment = department;
+    process.setResponsible = user.name;
+    process.setUserId = user.id;
     try {
-      processes = await FirestoreDB.db_processes
+      await FirestoreDB.db_processes.add(process.toJson());
+    } catch (e) {
+      Toasts.showToast(content: 'Ocorreu um erro');
+    }
+  }
+
+  // Método que salva o processo no banco de dados
+  void persist(String response, Department department, User user,
+      String observations) async {
+    var now = DateTime.now();
+    QuerySnapshot processSnapshot;
+    QuerySnapshot departmentSnapshot;
+    Process process;
+
+    if (department == null) {
+      departmentSnapshot = await FirestoreDB.departments
+          .where('name', isEqualTo: response)
+          .get();
+
+      department = Department.fromJson(departmentSnapshot.docs.first.data());
+    }
+
+    try {
+      processSnapshot = await FirestoreDB.db_processes
           .where(
             'start',
             isGreaterThanOrEqualTo: Timestamp.fromDate(
@@ -62,41 +86,67 @@ class ProcessService {
               DateTimeHelper.convertToEndDate(now),
             ),
           )
-          .where('departmentId', isEqualTo: response)
+          .where('department.name', isEqualTo: response)
           .get();
-    } catch (e) {
-      print('Erro: $e');
-    }
-    Process process;
-    // Caso o processo não exista no banco...
-    if (processes.size > 0) {
-      process = Process();
 
-      var docs = processes.docs;
-      for (var doc in docs) {
-        if (doc.data()['departmentId'] == response) {
+      if (processSnapshot != null) {
+        if (processSnapshot.docs.isNotEmpty) {
+          var doc = processSnapshot.docs.first;
           process = Process.fromJson(doc.data());
-          process.setId = doc.id;
+          process.setDepartment = department;
+          process.setEnd = now;
+          process.setObservations = observations;
+          FirestoreDB.db_processes
+              .doc(doc.id)
+              .update({
+                'end': process.getEnd,
+                'observations': observations,
+                'department': department
+              })
+              .then((value) =>
+                  print('Documento ${process.getId} atualizado com sucesso!'))
+              .catchError((error, stackTrace) => print('$error : $stackTrace'));
+        } else {
+          Process process = Process();
+          create(process, user, department);
         }
+      } else {
+        Process process = Process();
+        create(process, user, department);
       }
-      if (process != null) {
-        process.setEnd = DateTime.now();
-        process.setObservations = observations;
-        FirestoreDB.db_processes
-            .doc(process.getId)
-            .update({'end': process.getEnd, 'observations': observations})
-            .then((value) =>
-                print('Documento ${process.getId} atualizado com sucesso!'))
-            .catchError((error, stackTrace) => print('$error : $stackTrace'));
-      }
-    } else {
-      process = Process();
-      process.setResponsible = user.name;
-      process.setUserId = user.id;
-      process.setDepartmentId = response;
-      process.setStart = now;
-      FirestoreDB.db_processes.add(process.toJson());
+    } catch (e) {
+      print('Erro ao tentar criar um novo processo');
     }
+
+    // Caso o processo não exista no banco...
+    // if (snapshot.size > 0) {
+    //   process = Process();
+
+    //   var docs = snapshot.docs;
+    //   for (var doc in docs) {
+    //     if (doc.data()['departmentId'] == response) {
+    //       process = Process.fromJson(doc.data());
+    //       process.setId = doc.id;
+    //     }
+    //   }
+    //   if (process != null) {
+    //     process.setEnd = DateTime.now();
+    //     process.setObservations = observations;
+    //     FirestoreDB.db_processes
+    //         .doc(process.getId)
+    //         .update({'end': process.getEnd, 'observations': observations})
+    //         .then((value) =>
+    //             print('Documento ${process.getId} atualizado com sucesso!'))
+    //         .catchError((error, stackTrace) => print('$error : $stackTrace'));
+    //   }
+    // } else {
+    //   process = Process();
+    //   process.setResponsible = user.name;
+    //   process.setUserId = user.id;
+    //   process.getDepartment.id = response;
+    //   process.setStart = now;
+    //   FirestoreDB.db_processes.add(process.toJson());
+    // }
   }
 
   pickDate(BuildContext context) async {

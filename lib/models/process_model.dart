@@ -2,7 +2,7 @@ import 'department_model.dart';
 
 class Process {
   String id;
-  String departmentId;
+  Department department;
   String userId;
   DateTime start;
   DateTime end;
@@ -18,8 +18,8 @@ class Process {
   get getResponsible => this.responsible;
   set setResponsible(responsible) => this.responsible = responsible;
 
-  get getDepartmentId => this.departmentId;
-  set setDepartmentId(String departmentId) => this.departmentId = departmentId;
+  get getDepartment => this.department;
+  set setDepartment(Department department) => this.department = department;
 
   get getStart => this.start;
   set setStart(start) => this.start = start;
@@ -33,7 +33,7 @@ class Process {
   Process();
 
   Process.fromJson(Map<String, dynamic> json)
-      : departmentId = json['departmentId'],
+      : department = json['department'],
         userId = json['userId'],
         start = DateTime.parse(json['start'].toDate().toString()),
         observations = json['observations'],
@@ -43,7 +43,7 @@ class Process {
         responsible = json['responsible'];
 
   Map<String, dynamic> toJson() => {
-        'departmentId': departmentId,
+        'department': department,
         'userId': userId,
         'start': start,
         'end': end,

@@ -26,7 +26,7 @@ class ProcessCardItem extends StatelessWidget {
             Positioned(
                 child: this.isProcessDetailsView
                     ? Text(
-                        process.getDepartmentId,
+                        process.getDepartment.id,
                         style: theme.textTheme.headline5,
                       )
                     : GestureDetector(
@@ -38,7 +38,7 @@ class ProcessCardItem extends StatelessWidget {
                                   this.isProcessDetailsView ? false : true
                             }),
                         child: Text(
-                          process.getDepartmentId,
+                          process.getDepartment.id,
                           style: theme.textTheme.headline5,
                         ),
                       ),

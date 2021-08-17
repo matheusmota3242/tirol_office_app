@@ -158,8 +158,9 @@ class Dialogs {
       if (result) {
         if (department != null) DepartmentService().update(department);
 
-        await processService.save(
+        processService.persist(
             response,
+            department,
             Provider.of<UserService>(context, listen: false).getUser,
             observations);
 

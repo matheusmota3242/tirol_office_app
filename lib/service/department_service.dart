@@ -105,7 +105,7 @@ abstract class DepartmentServiceBase with Store {
 
   queryByProcess(Process process) async {
     return await FirestoreDB.departments
-        .where('name', isEqualTo: process.departmentId)
+        .where('name', isEqualTo: process.department.id)
         .get();
   }
 

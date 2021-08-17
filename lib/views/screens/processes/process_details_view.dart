@@ -38,10 +38,6 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
         ? _processService.currentProcess
         : arguments['process'];
 
-    _userService.getUser.id == process.getUserId
-        ? print('Usuário dono do processo')
-        : print('Usuário nao e dono do processo');
-
     handleUpdatedEquipments() {
       if (equipmentListMobx.equipmentList.isNotEmpty) {
         var updatedEquipments = <Equipment>[];
@@ -131,7 +127,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
       ),
       backgroundColor: Colors.grey[200],
       body: FutureBuilder(
-        future: FirestoreDB.departments.doc(process.departmentId).get(),
+        future: FirestoreDB.departments.doc(process.getDepartment.id).get(),
         builder: (_, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return LoadingView(
