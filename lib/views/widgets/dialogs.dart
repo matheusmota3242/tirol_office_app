@@ -8,6 +8,7 @@ import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
 
 class Dialogs {
   static showDeleteDialog(
@@ -132,6 +133,7 @@ class Dialogs {
                   Container(
                     padding: EdgeInsets.only(right: 5.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
                           onPressed: () {
@@ -158,13 +160,16 @@ class Dialogs {
       if (result) {
         if (department != null) DepartmentService().update(department);
 
-        processService.persist(
+        await processService.persist(
             response,
             department,
             Provider.of<UserService>(context, listen: false).getUser,
             observations);
 
-        Navigator.popAndPushNamed(context, RouteUtils.processes);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => ProcessListView()),
+            (route) => false);
       }
     });
   }

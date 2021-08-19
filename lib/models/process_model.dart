@@ -33,7 +33,7 @@ class Process {
   Process();
 
   Process.fromJson(Map<String, dynamic> json)
-      : department = json['department'],
+      : department = Department.fromJson(json['department']),
         userId = json['userId'],
         start = DateTime.parse(json['start'].toDate().toString()),
         observations = json['observations'],
@@ -43,7 +43,7 @@ class Process {
         responsible = json['responsible'];
 
   Map<String, dynamic> toJson() => {
-        'department': department,
+        'department': department.toJson(),
         'userId': userId,
         'start': start,
         'end': end,

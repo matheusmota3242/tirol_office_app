@@ -51,13 +51,14 @@ class ProcessService {
     process.setUserId = user.id;
     try {
       await FirestoreDB.db_processes.add(process.toJson());
+      Toasts.showToast(content: 'Processo iniciado com sucesso');
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
     }
   }
 
   // Método que salva o processo no banco de dados
-  void persist(String response, Department department, User user,
+  Future<void> persist(String response, Department department, User user,
       String observations) async {
     var now = DateTime.now();
     QuerySnapshot processSnapshot;
@@ -89,23 +90,31 @@ class ProcessService {
           .where('department.name', isEqualTo: response)
           .get();
 
+      /* Verificando existencia do snapshot para o processo resultado da query */
       if (processSnapshot != null) {
+        /* Verificando se snapshot não está vazio */
         if (processSnapshot.docs.isNotEmpty) {
           var doc = processSnapshot.docs.first;
           process = Process.fromJson(doc.data());
-          process.setDepartment = department;
-          process.setEnd = now;
-          process.setObservations = observations;
-          FirestoreDB.db_processes
-              .doc(doc.id)
-              .update({
+          /* Caso o processo exista, verificando se ele já não foi finalizado */
+          if (process.getEnd == null) {
+            process.setDepartment = department;
+            process.setEnd = now;
+            process.setObservations = observations;
+
+            try {
+              await FirestoreDB.db_processes.doc(doc.id).update({
                 'end': process.getEnd,
                 'observations': observations,
-                'department': department
-              })
-              .then((value) =>
-                  print('Documento ${process.getId} atualizado com sucesso!'))
-              .catchError((error, stackTrace) => print('$error : $stackTrace'));
+                'department': department.toJson()
+              });
+              Toasts.showToast(content: 'Processo finalizado com sucesso');
+            } catch (e) {
+              Toasts.showToast(content: 'Erro ao atualizar');
+            }
+          } else {
+            Toasts.showToast(content: 'Processo finalizado');
+          }
         } else {
           Process process = Process();
           create(process, user, department);

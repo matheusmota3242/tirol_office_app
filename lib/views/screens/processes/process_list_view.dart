@@ -105,10 +105,11 @@ class _ProcessListViewState extends State<ProcessListView> {
                                   onPressed: () => showFilterDialog(),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.qr_code),
-                                  onPressed: () =>
-                                      _processService.scanQRCode(context, null),
-                                ),
+                                    icon: Icon(Icons.qr_code),
+                                    onPressed: () {
+                                      _processService.scanQRCode(context, null);
+                                      setState(() {});
+                                    }),
                               ],
                             ),
                             resizeToAvoidBottomInset: false,
