@@ -38,7 +38,7 @@ class AppBarWidget extends PreferredSize {
         ),
         IconButton(
           icon: PageUtils.qrCodeIcon,
-          onPressed: () => _processService.scanQRCode(context),
+          onPressed: () => _processService.firstQRCodeScan(context),
         ),
       ],
     );

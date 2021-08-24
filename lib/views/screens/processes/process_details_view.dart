@@ -58,7 +58,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
     scanQRCode() async {
       handleUpdatedEquipments();
 
-      await _processService.scanQRCode(
+      await _processService.firstQRCodeScan(
           context, _currentDepartment, process.getObservations);
     }
 

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/department_model.dart';
+import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
@@ -25,7 +24,7 @@ class Dialogs {
           content: Text('Você realmente deseja remover esse item?'),
           actions: [
             Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -35,7 +34,7 @@ class Dialogs {
                     },
                     child: Text('Cancelar'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                   ElevatedButton(
@@ -104,8 +103,8 @@ class Dialogs {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Erro na leitura'),
-        content: Text(
+        title: const Text('Erro na leitura'),
+        content: const Text(
             'O leitor não identificou um código QR válido. Por favor, tente novamente.'),
         actions: [
           FlatButton(
@@ -117,7 +116,7 @@ class Dialogs {
     );
   }
 
-  showCheckinDialog(BuildContext context, String response,
+  showFirstScanDialog(BuildContext context, String response,
       Department department, observations) {
     ProcessService processService =
         Provider.of<ProcessService>(context, listen: false);
@@ -127,8 +126,9 @@ class Dialogs {
         builder: (_) =>
             StatefulBuilder(builder: (BuildContext context, setState) {
               return AlertDialog(
-                title: Text('Checkin'),
-                content: Text('Deseja realizar o checkin em ' + response + '?'),
+                title: const Text('Checkin'),
+                content: Text(
+                    'Deseja dar continuidade ao processo em ' + response + '?'),
                 actions: [
                   Container(
                     padding: EdgeInsets.only(right: 5.0),
@@ -174,6 +174,59 @@ class Dialogs {
     });
   }
 
+  updateProcess(Process process, BuildContext context) async {
+    ProcessService processService = ProcessService();
+    bool result = await processService.update(process);
+    if (result) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => ProcessListView()),
+          (route) => false);
+    }
+
+    return result;
+  }
+
+  showFinalScanDialog(
+      BuildContext context, String response, Process process) async {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          StatefulBuilder(builder: (BuildContext localContext, setState) {
+        return AlertDialog(
+            title: Text('Checkout'),
+            content: Text('Deseja finalizar o processo ' + response + '?'),
+            actions: [
+              Container(
+                padding: EdgeInsets.only(right: 5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(localContext);
+                      },
+                      child: Text('Cancelar'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        updateProcess(process, context);
+                        Navigator.of(localContext).pop();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).buttonColor),
+                      ),
+                      child: Text('Sim'),
+                    )
+                  ],
+                ),
+              )
+            ]);
+      }),
+    );
+  }
+
   static showErrorActualPassword(BuildContext context, String content) {
     showDialog(
       context: context,
@@ -214,8 +267,8 @@ class Dialogs {
         builder: (_) =>
             StatefulBuilder(builder: (BuildContext context, setState) {
               return AlertDialog(
-                title: Text('Logout'),
-                content: Text('Tem certeza que deseja sair?'),
+                title: const Text('Logout'),
+                content: const Text('Tem certeza que deseja sair?'),
                 actions: [
                   Container(
                     padding: EdgeInsets.only(

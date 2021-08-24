@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
+import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
@@ -17,30 +20,30 @@ class ProcessService {
     picked = DateTime.now();
   }
 
-  // Método que escaneia o QRCode
-  void scanQRCode(BuildContext context,
+  /* Método que escaneia o QRCode */
+  firstQRCodeScan(BuildContext context,
       [Department department, String observations]) async {
     String response = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000', "Cancelar", true, ScanMode.QR);
 
     if (response == '-1') {
-      // Caso o leitor não reconheça o código QR...
+      /* Caso o leitor não reconheça o código QR... */
       Toasts.showToast(content: 'Código inválido');
     } else {
-      // Caso reconheça como um código QR válido...
-
-      // var doc = await FirestoreDB()
-      //     .db_departments
-      //     .where('name', isEqualTo: response)
-      //     .get();
-
-      // if (doc.size > 0) {
-      //   // Caso o departamento lido exista
-      //   var department = Department.fromJson(doc.docs[0].data());
-      //   Provider.of<DepartmentService>(context, listen: false)
-      //       .setCurrentDepartment(department);
+      /* Caso reconheça como um código QR válido... */
       await Dialogs()
-          .showCheckinDialog(context, response, department, observations);
+          .showFirstScanDialog(context, response, department, observations);
+    }
+  }
+
+  finalQRCodeScan(BuildContext context, Process process) async {
+    String response = await FlutterBarcodeScanner.scanBarcode(
+        '#FF0000', "Cancelar", true, ScanMode.QR);
+
+    if (response == process.getDepartment.name) {
+      await Dialogs().showFinalScanDialog(context, response, process);
+    } else {
+      Toasts.showToast(content: 'Código diferente do esperado');
     }
   }
 
@@ -156,6 +159,52 @@ class ProcessService {
     //   process.setStart = now;
     //   FirestoreDB.db_processes.add(process.toJson());
     // }
+  }
+
+  update(Process process) async {
+    bool result = false;
+    var now = DateTime.now();
+    QuerySnapshot snapshot = await FirestoreDB.departments
+        .where('name', isEqualTo: process.getDepartment.name)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      try {
+        await FirestoreDB.departments.doc(snapshot.docs.first.id).update({
+          'equipments': process.getDepartment.equipments
+              .map((Equipment e) => e.toJson())
+              .toList(),
+        });
+
+        QuerySnapshot processSnapshot = await FirestoreDB.db_processes
+            .where(
+              'start',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(
+                DateTimeHelper.convertToInitialDate(now),
+              ),
+            )
+            .where(
+              'start',
+              isLessThanOrEqualTo: Timestamp.fromDate(
+                DateTimeHelper.convertToEndDate(now),
+              ),
+            )
+            .where('department.name', isEqualTo: process.getDepartment.name)
+            .get();
+        process.setEnd = now;
+        await FirestoreDB.db_processes
+            .doc(processSnapshot.docs.first.id)
+            .update(process.toJson());
+
+        Toasts.showToast(content: 'Processo finalizado com sucesso');
+
+        result = true;
+      } catch (e) {
+        Toasts.showToast(content: 'Erro ao finalizar processo');
+        print('[ERRO] $e');
+      }
+    }
+    return result;
   }
 
   pickDate(BuildContext context) async {

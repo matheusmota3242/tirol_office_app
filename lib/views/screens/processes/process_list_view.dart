@@ -107,7 +107,8 @@ class _ProcessListViewState extends State<ProcessListView> {
                                 IconButton(
                                     icon: Icon(Icons.qr_code),
                                     onPressed: () {
-                                      _processService.scanQRCode(context, null);
+                                      _processService.firstQRCodeScan(
+                                          context, null);
                                       setState(() {});
                                     }),
                               ],

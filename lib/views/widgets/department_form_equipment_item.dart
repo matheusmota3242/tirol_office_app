@@ -33,12 +33,17 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
 
     // Botão de cancelar modal
-    Widget cancelButton(BuildContext context) {
+    Widget cancelButton(
+        BuildContext context, String oldStatus, String oldDescription) {
       return TextButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
         ),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          widget.mobx.setStatus(oldStatus);
+          widget.mobx.setDescription(oldDescription);
+          Navigator.pop(context);
+        },
         child: Text(
           'Cancelar',
           style: TextStyle(color: Theme.of(context).buttonColor),
@@ -48,14 +53,13 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
 
     // Campo descrição do equipamento
     Widget equipmentDescriptionField(String description, GlobalKey formKey) {
-      TextEditingController controller =
-          TextEditingController(text: description);
       return Container(
         child: TextFormField(
-          key: formKey,
-          validator: (value) => widget.check(value),
-          onChanged: (value) => widget.mobx.setDescription(value),
-          controller: controller,
+          validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
+          onChanged: (value) {
+            widget.mobx.setDescription(value);
+          },
+          initialValue: description,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             alignLabelWithHint: true,
@@ -135,13 +139,15 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     // Abre modal de edição
     void edit() {
       final _formKey = GlobalKey<FormState>();
-
+      String descriptionTemp = widget.mobx.getDescription;
+      String statusTemp = widget.mobx.getStatus;
       showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (_) =>
-            StatefulBuilder(builder: (BuildContext context, setState) {
+            StatefulBuilder(builder: (BuildContext localContext, setState) {
           return AlertDialog(
-            title: Text('Novo equipamento'),
+            title: Text('Editar equipamento'),
             content: Form(
               key: _formKey,
               child: Observer(
@@ -179,7 +185,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                           isExpanded: true,
                           value: widget.mobx.getStatus,
                           onChanged: (value) {
-                            print('novo valor: ' + value);
                             widget.mobx.setStatus(value);
                           },
                           items: equipmentStatusOptions.map((value) {
@@ -201,7 +206,7 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    cancelButton(context),
+                    cancelButton(localContext, statusTemp, descriptionTemp),
                     ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
@@ -209,7 +214,10 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          Navigator.of(context).pop(true);
+                          Navigator.of(localContext).pop();
+                        } else {
+                          widget.mobx.setStatus(statusTemp);
+                          widget.mobx.setDescription(descriptionTemp);
                         }
                       },
                       child: Text(

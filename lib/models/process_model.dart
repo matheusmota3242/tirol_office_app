@@ -47,6 +47,7 @@ class Process {
         'userId': userId,
         'start': start,
         'end': end,
-        'responsible': responsible
+        'responsible': responsible,
+        'observations': observations
       };
 }
