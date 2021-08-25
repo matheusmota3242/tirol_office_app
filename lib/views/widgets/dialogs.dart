@@ -7,6 +7,7 @@ import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/views/screens/processes/process_details_view.dart';
 import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
 
 class Dialogs {
@@ -160,7 +161,7 @@ class Dialogs {
       if (result) {
         if (department != null) DepartmentService().update(department);
 
-        await processService.persist(
+        Process process = await processService.persist(
             response,
             department,
             Provider.of<UserService>(context, listen: false).getUser,
@@ -168,7 +169,9 @@ class Dialogs {
 
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (_) => ProcessListView()),
+            MaterialPageRoute(
+                builder: (_) =>
+                    ProcessDetailsView(edit: true, process: process)),
             (route) => false);
       }
     });

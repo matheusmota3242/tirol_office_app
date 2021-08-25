@@ -61,7 +61,7 @@ class ProcessService {
   }
 
   // Método que salva o processo no banco de dados
-  Future<void> persist(String response, Department department, User user,
+  Future<Process> persist(String response, Department department, User user,
       String observations) async {
     var now = DateTime.now();
     QuerySnapshot processSnapshot;
@@ -130,6 +130,7 @@ class ProcessService {
       print('Erro ao tentar criar um novo processo');
     }
 
+    return process;
     // Caso o processo não exista no banco...
     // if (snapshot.size > 0) {
     //   process = Process();

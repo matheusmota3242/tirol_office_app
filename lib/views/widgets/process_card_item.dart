@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/process_model.dart';
-import 'package:tirol_office_app/views/screens/processes/process_details_view_2.dart';
+import 'package:tirol_office_app/views/screens/processes/process_details_view.dart';
 
 class ProcessCardItem extends StatelessWidget {
   final Process process;
@@ -22,7 +22,7 @@ class ProcessCardItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ProcessDetailsViewTwo(
+              builder: (_) => ProcessDetailsView(
                   edit: this.isProcessDetailsView ? false : true,
                   process: process),
             ),

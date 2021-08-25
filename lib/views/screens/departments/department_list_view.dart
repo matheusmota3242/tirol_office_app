@@ -69,7 +69,8 @@ class DepartmentListView extends StatelessWidget {
     );
   }
 
-  Widget setBody(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget getPageOnSuccededConnectionState(
+      BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
     if (snapshot.hasError) return ErrorView();
 
     if (!snapshot.hasData)
@@ -156,6 +157,22 @@ class DepartmentListView extends StatelessWidget {
             );
           }),
     );
+  }
+
+  Widget setBody(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    switch (snapshot.connectionState) {
+      case ConnectionState.waiting:
+        return LoadingView();
+      case ConnectionState.active:
+        return getPageOnSuccededConnectionState(context, snapshot);
+        break;
+      case ConnectionState.none:
+        return ErrorView();
+        break;
+      case ConnectionState.done:
+        return getPageOnSuccededConnectionState(context, snapshot);
+        break;
+    }
   }
 
   bool isDamaged(String status) => status == 'Funcionando';
