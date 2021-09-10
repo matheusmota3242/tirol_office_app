@@ -32,12 +32,10 @@ class _EquipmentCorrectiveMaintenancesViewState
 
   @override
   Widget build(BuildContext context) {
-    deleteMaintenance(Maintenance maintenance, String equipmentDescription,
-        BuildContext dialogContext) async {
-      var result = await _service.deleteCorrective(
-          widget.departmentDTO.id, equipmentDescription, maintenance);
+    delete(String maintenanceId, BuildContext dialogContext) async {
+      var result = await _service.delete(maintenanceId);
       Navigator.of(dialogContext).pop();
-      if (result != null) {
+      if (result) {
         setState(() {
           Toasts.showToast(content: 'Manutenção removida com sucesso');
         });
@@ -72,8 +70,7 @@ class _EquipmentCorrectiveMaintenancesViewState
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        deleteMaintenance(maintenance,
-                            widget.equipment.description, localContext);
+                        delete(maintenance.id, localContext);
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(

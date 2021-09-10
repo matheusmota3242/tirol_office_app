@@ -109,8 +109,6 @@ class DepartmentListView extends StatelessWidget {
               data:
                   Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: InkWell(
-                onLongPress: () =>
-                    showDeleteDialog(context, department.id, department.name),
                 onDoubleTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -118,13 +116,20 @@ class DepartmentListView extends StatelessWidget {
                             currentDepartment: department, edit: true))),
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.all(0),
-                  title: Text(department.name,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                          color: atLeastOneDamaged(department.equipments)
-                              ? Colors.red
-                              : Colors.black)),
+                  title: InkWell(
+                    onLongPress: () => showDeleteDialog(
+                        context, department.id, department.name),
+                    child: Container(
+                      width: double.maxFinite,
+                      child: Text(department.name,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                              color: atLeastOneDamaged(department.equipments)
+                                  ? Colors.red
+                                  : Colors.black)),
+                    ),
+                  ),
                   childrenPadding: EdgeInsets.all(0),
                   children: department.equipments
                       .map(

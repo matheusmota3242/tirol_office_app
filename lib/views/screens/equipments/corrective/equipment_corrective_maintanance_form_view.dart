@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/mobx/loading/loading_mobx.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
+import 'package:tirol_office_app/mobx/service_provider_list_state/service_provider_list_state_mobx.dart';
 import 'package:tirol_office_app/mobx/service_provider_name/service_provider_name_mobx.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
@@ -48,19 +49,22 @@ class _EquipmentCorrectiveMaintenanceFormViewState
   var pickedDateMobx = PickedDateMobx();
   AnimationController _animationController;
   LoadingMobx loadingMobx = LoadingMobx();
+  ServiceProviderListStateMobx serviceProviderListState =
+      ServiceProviderListStateMobx();
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
-    loadServiceProviders();
+    loadServiceProviders()
+        .then((value) => serviceProviderListState.setIsEmpty(false));
     if (widget.edit) {
       pickedDateMobx.setPicked(widget.maintenance.dateTime);
     }
   }
 
-  loadServiceProviders() async {
+  Future<dynamic> loadServiceProviders() async {
     loadingMobx.setStatus(true);
     snapshot = await FirestoreDB.db_service_providers.get();
 
@@ -68,7 +72,9 @@ class _EquipmentCorrectiveMaintenanceFormViewState
         .map((json) => ServiceProvider.fromJson(json.data()))
         .toList();
     serviceProviderNames = serviceProviders.map((e) => e.name).toList();
-    loadingMobx.setStatus(false);
+    setState(() {
+      loadingMobx.setStatus(false);
+    });
   }
 
   @override
@@ -110,7 +116,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
         }
 
         if (result) {
-          if (widget.fromMaintenancesView)
+          if (widget.edit)
             Navigator.push(
                 context, MaterialPageRoute(builder: (_) => MaintenancesView()));
           else
@@ -135,10 +141,10 @@ class _EquipmentCorrectiveMaintenanceFormViewState
       appBar: AppBar(
         title: Text(PageUtils.EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE),
       ),
-      floatingActionButton: serviceProviders.isNotEmpty
-          ? PageUtils.getFloatActionButton(
-              _animationController, persist, cancel)
-          : Container(),
+      floatingActionButton: Visibility(
+          visible: serviceProviders.isNotEmpty,
+          child: PageUtils.getFloatActionButton(
+              _animationController, persist, cancel)),
       body: Observer(builder: (_) {
         if (!loadingMobx.status) {
           if (serviceProviders.isNotEmpty)
