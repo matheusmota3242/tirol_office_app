@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
@@ -109,7 +108,6 @@ class _ProcessListViewState extends State<ProcessListView> {
                                     onPressed: () {
                                       _processService.firstQRCodeScan(
                                           context, null);
-                                      setState(() {});
                                     }),
                               ],
                             ),

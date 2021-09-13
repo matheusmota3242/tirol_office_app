@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
@@ -21,7 +20,7 @@ class ProcessService {
   }
 
   /* Método que escaneia o QRCode */
-  firstQRCodeScan(BuildContext context,
+  Future<void> firstQRCodeScan(BuildContext context,
       [Department department, String observations]) async {
     String response = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000', "Cancelar", true, ScanMode.QR);
@@ -36,7 +35,7 @@ class ProcessService {
     }
   }
 
-  finalQRCodeScan(BuildContext context, Process process) async {
+  Future<void> finalQRCodeScan(BuildContext context, Process process) async {
     String response = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000', "Cancelar", true, ScanMode.QR);
 
@@ -47,7 +46,8 @@ class ProcessService {
     }
   }
 
-  create(Process process, User user, Department department) async {
+  Future<Process> create(
+      Process process, User user, Department department) async {
     process.setStart = DateTime.now();
     process.setDepartment = department;
     process.setResponsible = user.name;
@@ -58,6 +58,58 @@ class ProcessService {
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
     }
+    return process;
+  }
+
+  add(String response, String observations, User user) async {
+    Process process = Process();
+    QuerySnapshot processSnapshot;
+    QuerySnapshot departmentSnapshot;
+    var now = DateTime.now();
+
+    departmentSnapshot =
+        await FirestoreDB.departments.where('name', isEqualTo: response).get();
+
+    Department department =
+        Department.fromJson(departmentSnapshot.docs.first.data());
+
+    process.setStart = now;
+    process.department = department;
+    process.setResponsible = user.name;
+    process.setUserId = user.id;
+
+    try {
+      processSnapshot = await FirestoreDB.db_processes
+          .where(
+            'start',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+              DateTimeHelper.convertToInitialDate(now),
+            ),
+          )
+          .where(
+            'start',
+            isLessThanOrEqualTo: Timestamp.fromDate(
+              DateTimeHelper.convertToEndDate(now),
+            ),
+          )
+          .where('department.name', isEqualTo: response)
+          .get();
+    } catch (e) {
+      Toasts.showWarningToast(content: 'Erro ao criar processo!');
+      print("Error: $e");
+    }
+
+    if (processSnapshot.docs.isNotEmpty) {
+      Toasts.showToast(content: 'Processo já em andamento');
+    } else {
+      try {
+        await FirestoreDB.db_processes.add(process.toJson());
+      } catch (e) {
+        Toasts.showWarningToast(content: 'Erro ao criar processo!');
+        print("Error: $e");
+      }
+    }
+    return process;
   }
 
   // Método que salva o processo no banco de dados
@@ -120,46 +172,17 @@ class ProcessService {
           }
         } else {
           Process process = Process();
-          create(process, user, department);
+          process = await create(process, user, department);
         }
       } else {
         Process process = Process();
-        create(process, user, department);
+        process = await create(process, user, department);
       }
     } catch (e) {
       print('Erro ao tentar criar um novo processo');
     }
 
     return process;
-    // Caso o processo não exista no banco...
-    // if (snapshot.size > 0) {
-    //   process = Process();
-
-    //   var docs = snapshot.docs;
-    //   for (var doc in docs) {
-    //     if (doc.data()['departmentId'] == response) {
-    //       process = Process.fromJson(doc.data());
-    //       process.setId = doc.id;
-    //     }
-    //   }
-    //   if (process != null) {
-    //     process.setEnd = DateTime.now();
-    //     process.setObservations = observations;
-    //     FirestoreDB.db_processes
-    //         .doc(process.getId)
-    //         .update({'end': process.getEnd, 'observations': observations})
-    //         .then((value) =>
-    //             print('Documento ${process.getId} atualizado com sucesso!'))
-    //         .catchError((error, stackTrace) => print('$error : $stackTrace'));
-    //   }
-    // } else {
-    //   process = Process();
-    //   process.setResponsible = user.name;
-    //   process.setUserId = user.id;
-    //   process.getDepartment.id = response;
-    //   process.setStart = now;
-    //   FirestoreDB.db_processes.add(process.toJson());
-    // }
   }
 
   update(Process process) async {

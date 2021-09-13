@@ -8,6 +8,7 @@ import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
 import 'package:tirol_office_app/views/widgets/process_card_item.dart';
 
 class ProcessDetailsView extends StatefulWidget {
@@ -104,126 +105,139 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
         _userService.getUser.id == widget.process.getUserId &&
         widget.process.getEnd == null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(PageUtils.PROCESS_DETIALS_TITLE),
-        shadowColor: Colors.transparent,
-        actions: [
-          Visibility(
-            visible: getQRCodeVisibility(),
-            child: IconButton(
-              icon: PageUtils.qrCodeIcon,
-              onPressed: () {
-                scanQRCode();
-              },
-            ),
-          )
-        ],
-      ),
-      body: Container(
-          padding: EdgeInsets.all(12.0),
-          color: PageUtils.PRIMARY_COLOR,
-          child: ListView(
-            children: [
-              ProcessCardItem(
-                isProcessDetailsView: true,
-                isLastItem: false,
-                process: widget.process,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ProcessListView(),
+          ),
+        );
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(PageUtils.PROCESS_DETIALS_TITLE),
+          shadowColor: Colors.transparent,
+          actions: [
+            Visibility(
+              visible: getQRCodeVisibility(),
+              child: IconButton(
+                icon: PageUtils.qrCodeIcon,
+                onPressed: () {
+                  scanQRCode();
+                },
               ),
-              Card(
-                margin: EdgeInsets.all(0),
-                shadowColor: Colors.transparent,
-                child: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Equipamentos',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      SizedBox(
-                        height: 12.0,
-                      ),
-                      equipmentListMobx.equipmentList.isEmpty
-                          ? Text('Não há equipamentos cadastrados')
-                          : Observer(
-                              builder: (_) => Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: equipmentListMobx.equipmentList
-                                    .map(
-                                      (e) => processService.hasOwnership(
-                                                  widget.process.getUserId,
-                                                  _userService.getUser.id) &&
-                                              widget.process.end == null
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  e.getDescription,
-                                                  style: TextStyle(
-                                                      color: e.getStatus ==
-                                                              'Danificado'
-                                                          ? Colors.red[400]
-                                                          : Colors.black),
-                                                ),
-                                                Switch(
-                                                    value: isEquipmentOk(
-                                                        e.getStatus),
-                                                    onChanged: (value) {
-                                                      e.changeStatus(
-                                                          e.getStatus);
-                                                    }),
-                                              ],
-                                            )
-                                          : Container(
-                                              padding:
-                                                  EdgeInsets.only(top: 8.0),
-                                              child: Row(
+            )
+          ],
+        ),
+        body: Container(
+            padding: EdgeInsets.all(12.0),
+            color: PageUtils.PRIMARY_COLOR,
+            child: ListView(
+              children: [
+                ProcessCardItem(
+                  isProcessDetailsView: true,
+                  isLastItem: false,
+                  process: widget.process,
+                ),
+                Card(
+                  margin: EdgeInsets.all(0),
+                  shadowColor: Colors.transparent,
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Equipamentos',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        equipmentListMobx.equipmentList.isEmpty
+                            ? Text('Não há equipamentos cadastrados')
+                            : Observer(
+                                builder: (_) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: equipmentListMobx.equipmentList
+                                      .map(
+                                        (e) => processService.hasOwnership(
+                                                    widget.process.getUserId,
+                                                    _userService.getUser.id) &&
+                                                widget.process.end == null
+                                            ? Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text(e.description),
-                                                  Container(
-                                                    height: 24,
-                                                    width: 24,
-                                                    child: Icon(
-                                                      e.getStatus ==
-                                                              'Danificado'
-                                                          ? Icons
-                                                              .warning_amber_rounded
-                                                          : Icons.done,
-                                                      color: Colors.white,
-                                                      size: 16,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
+                                                  Text(
+                                                    e.getDescription,
+                                                    style: TextStyle(
                                                         color: e.getStatus ==
                                                                 'Danificado'
-                                                            ? Colors.red
-                                                            : Colors.green),
+                                                            ? Colors.red[400]
+                                                            : Colors.black),
                                                   ),
+                                                  Switch(
+                                                      value: isEquipmentOk(
+                                                          e.getStatus),
+                                                      onChanged: (value) {
+                                                        e.changeStatus(
+                                                            e.getStatus);
+                                                      }),
                                                 ],
+                                              )
+                                            : Container(
+                                                padding:
+                                                    EdgeInsets.only(top: 8.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(e.description),
+                                                    Container(
+                                                      height: 24,
+                                                      width: 24,
+                                                      child: Icon(
+                                                        e
+                                                                    .getStatus ==
+                                                                'Danificado'
+                                                            ? Icons
+                                                                .warning_amber_rounded
+                                                            : Icons.done,
+                                                        color: Colors.white,
+                                                        size: 16,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: e.getStatus ==
+                                                                  'Danificado'
+                                                              ? Colors.red
+                                                              : Colors.green),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                    )
-                                    .toList(),
-                              ),
-                            )
-                    ],
+                                      )
+                                      .toList(),
+                                ),
+                              )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              observationsField()
-            ],
-          )),
+                SizedBox(
+                  height: 16.0,
+                ),
+                observationsField()
+              ],
+            )),
+      ),
     );
   }
 }

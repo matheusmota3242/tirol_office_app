@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
-import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
@@ -117,15 +116,27 @@ class Dialogs {
     );
   }
 
+  Future persistProcess(ProcessService processService, String response,
+      Department department, String observations, BuildContext context) async {
+    return await processService.persist(response, department,
+        Provider.of<UserService>(context, listen: false).getUser, observations);
+  }
+
+  addProcess(BuildContext context, ProcessService processService,
+      String response, observations) async {
+    return await processService.add(response, observations,
+        Provider.of<UserService>(context, listen: false).getUser);
+  }
+
   showFirstScanDialog(BuildContext context, String response,
-      Department department, observations) {
+      Department department, observations) async {
     ProcessService processService =
         Provider.of<ProcessService>(context, listen: false);
 
-    showDialog(
+    await showDialog(
         context: context,
         builder: (_) =>
-            StatefulBuilder(builder: (BuildContext context, setState) {
+            StatefulBuilder(builder: (BuildContext dialogContext, setState) {
               return AlertDialog(
                 title: const Text('Checkin'),
                 content: Text(
@@ -143,8 +154,17 @@ class Dialogs {
                           child: Text('Cancelar'),
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
+                          onPressed: () async {
+                            Process process;
+                            process = await addProcess(context, processService,
+                                response, observations);
+                            Navigator.of(dialogContext).pop(true);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ProcessDetailsView(
+                                      edit: true, process: process),
+                                ));
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -157,24 +177,7 @@ class Dialogs {
                   )
                 ],
               );
-            })).then((result) async {
-      if (result) {
-        if (department != null) DepartmentService().update(department);
-
-        Process process = await processService.persist(
-            response,
-            department,
-            Provider.of<UserService>(context, listen: false).getUser,
-            observations);
-
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (_) =>
-                    ProcessDetailsView(edit: true, process: process)),
-            (route) => false);
-      }
-    });
+            }));
   }
 
   updateProcess(Process process, BuildContext context) async {

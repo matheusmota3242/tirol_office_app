@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
-
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
@@ -77,7 +76,7 @@ abstract class DepartmentServiceBase with Store {
       Toasts.showToast(content: 'Departamento editado com sucesso');
       result = true;
     } catch (e) {
-      Toasts.showToast(content: 'Ocorreu um erro');
+      Toasts.showToast(content: 'Erro ao editar departamento');
     }
 
     return result;

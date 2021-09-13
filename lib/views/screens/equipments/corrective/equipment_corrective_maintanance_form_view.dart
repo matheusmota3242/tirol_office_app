@@ -5,7 +5,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/mobx/loading/loading_mobx.dart';
 import 'package:tirol_office_app/mobx/picked_date/picked_date_mobx.dart';
-import 'package:tirol_office_app/mobx/service_provider_list_state/service_provider_list_state_mobx.dart';
 import 'package:tirol_office_app/mobx/service_provider_name/service_provider_name_mobx.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
@@ -49,16 +48,13 @@ class _EquipmentCorrectiveMaintenanceFormViewState
   var pickedDateMobx = PickedDateMobx();
   AnimationController _animationController;
   LoadingMobx loadingMobx = LoadingMobx();
-  ServiceProviderListStateMobx serviceProviderListState =
-      ServiceProviderListStateMobx();
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
-    loadServiceProviders()
-        .then((value) => serviceProviderListState.setIsEmpty(false));
+    loadServiceProviders();
     if (widget.edit) {
       pickedDateMobx.setPicked(widget.maintenance.dateTime);
     }

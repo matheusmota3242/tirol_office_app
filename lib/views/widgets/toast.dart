@@ -10,4 +10,12 @@ class Toasts {
       backgroundColor: Colors.grey[900],
     );
   }
+
+  static void showWarningToast({@required String content}) {
+    Fluttertoast.showToast(
+      msg: content,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: Colors.red[500],
+    );
+  }
 }
