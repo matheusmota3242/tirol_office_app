@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/service_provider_model.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_form_view.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ServiceProviderService {
   void persist(ServiceProvider serviceProvider) {
@@ -28,7 +29,13 @@ class ServiceProviderService {
                 ServiceProviderFormView(serviceProvider: serviceProvider)));
   }
 
-  void remove(String id) async {
-    await FirestoreDB.db_service_providers.doc(id).delete();
+  Future<void> remove(String id) async {
+    try {
+      await FirestoreDB.db_service_providers.doc(id).delete();
+      Toasts.showToast(content: 'Serviço removido com sucesso');
+    } catch (e) {
+      Toasts.showWarningToast(content: 'Erro ao tentar remover');
+      print(e);
+    }
   }
 }

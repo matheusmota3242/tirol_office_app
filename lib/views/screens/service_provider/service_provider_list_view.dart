@@ -7,15 +7,20 @@ import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/service_provider_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/views/screens/empty_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_form_view.dart';
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_view.dart';
+import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
-class ServiceProviderListView extends StatelessWidget {
+class ServiceProviderListView extends StatefulWidget {
+  _ServiceProviderListViewState createState() =>
+      _ServiceProviderListViewState();
+}
+
+class _ServiceProviderListViewState extends State<ServiceProviderListView> {
   ServiceProviderService _service = ServiceProviderService();
 
   @override
@@ -74,35 +79,42 @@ class ServiceProviderListView extends StatelessWidget {
                       return ListTile(
                         //isThreeLine: true,
                         leading: Icon(Icons.person),
-                        title: GestureDetector(
+                        title: InkWell(
+                          onLongPress: () async => Dialogs.showDeleteDialog(
+                              context,
+                              _service.remove,
+                              setState,
+                              serviceProvider.id),
+                          onDoubleTap: () =>
+                              _service.edit(context, serviceProvider),
                           onTap: () => _pushToServiceProviderView(
                               context, serviceProvider),
                           child: Text(serviceProvider.name),
                         ),
                         subtitle: Text(serviceProvider.category),
 
-                        trailing: Visibility(
-                          visible:
-                              Provider.of<UserService>(context).getUser.role ==
-                                      'Administrador'
-                                  ? true
-                                  : false,
-                          child: PopupMenuButton<String>(
-                            itemBuilder: (_) => [
-                              PopupMenuItem(
-                                value: 'Editar',
-                                child: Text('Editar'),
-                              ),
-                              PopupMenuItem(
-                                value: 'Remover',
-                                child: Text('Remover'),
-                              ),
-                            ],
-                            onSelected: (value) =>
-                                _handleChoice(context, value, serviceProvider),
-                            icon: Icon(Icons.more_vert),
-                          ),
-                        ),
+                        // trailing: Visibility(
+                        //   visible:
+                        //       Provider.of<UserService>(context).getUser.role ==
+                        //               'Administrador'
+                        //           ? true
+                        //           : false,
+                        //   child: PopupMenuButton<String>(
+                        //     itemBuilder: (_) => [
+                        //       PopupMenuItem(
+                        //         value: 'Editar',
+                        //         child: Text('Editar'),
+                        //       ),
+                        //       PopupMenuItem(
+                        //         value: 'Remover',
+                        //         child: Text('Remover'),
+                        //       ),
+                        //     ],
+                        //     onSelected: (value) =>
+                        //         _handleChoice(context, value, serviceProvider),
+                        //     icon: Icon(Icons.more_vert),
+                        //   ),
+                        // ),
                       );
                     });
               case ConnectionState.none:
