@@ -42,7 +42,7 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
       ),
       drawer: MenuDrawer(
         user: user,
-        currentPage: PageUtils.OBSERVATIONS_TITLE,
+        currentPage: PageUtils.SERVICE_PROVIDER_TITLE,
       ),
       body: StreamBuilder(
           stream: FirestoreDB.db_service_providers.snapshots(),
