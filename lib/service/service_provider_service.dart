@@ -12,11 +12,11 @@ class ServiceProviderService {
   }
 
   void save(ServiceProvider serviceProvider) {
-    FirestoreDB.db_service_providers.add(serviceProvider.toJson());
+    FirestoreDB.dbServiceProviders.add(serviceProvider.toJson());
   }
 
   void update(ServiceProvider serviceProvider) {
-    FirestoreDB.db_service_providers
+    FirestoreDB.dbServiceProviders
         .doc(serviceProvider.id)
         .update(serviceProvider.toJson());
   }
@@ -31,7 +31,7 @@ class ServiceProviderService {
 
   Future<void> remove(String id) async {
     try {
-      await FirestoreDB.db_service_providers.doc(id).delete();
+      await FirestoreDB.dbServiceProviders.doc(id).delete();
       Toasts.showToast(content: 'Serviço removido com sucesso');
     } catch (e) {
       Toasts.showWarningToast(content: 'Erro ao tentar remover');

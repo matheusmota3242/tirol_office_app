@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'equipment_model.dart';
 import 'special_equipment_model.dart';
 

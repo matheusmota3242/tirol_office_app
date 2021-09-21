@@ -26,7 +26,7 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserService>(context).getUser;
-    var theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(PageUtils.SERVICES_TITLE),
@@ -45,7 +45,7 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
         currentPage: PageUtils.SERVICE_PROVIDER_TITLE,
       ),
       body: StreamBuilder(
-          stream: FirestoreDB.db_service_providers.snapshots(),
+          stream: FirestoreDB.dbServiceProviders.snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             switch (snapshot.connectionState) {
@@ -76,45 +76,47 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
                               snapshot.data.docs[index].data());
                       serviceProvider.id = snapshot.data.docs[index].id;
 
-                      return ListTile(
-                        //isThreeLine: true,
-                        leading: Icon(Icons.person),
-                        title: InkWell(
-                          onLongPress: () async => Dialogs.showDeleteDialog(
-                              context,
-                              _service.remove,
-                              setState,
-                              serviceProvider.id),
-                          onDoubleTap: () =>
-                              _service.edit(context, serviceProvider),
-                          onTap: () => _pushToServiceProviderView(
-                              context, serviceProvider),
-                          child: Text(serviceProvider.name),
-                        ),
-                        subtitle: Text(serviceProvider.category),
+                      return InkWell(
+                        onLongPress: () async => Dialogs.showDeleteDialog(
+                            context,
+                            _service.remove,
+                            setState,
+                            serviceProvider.id),
+                        onDoubleTap: () =>
+                            _service.edit(context, serviceProvider),
+                        onTap: () => _pushToServiceProviderView(
+                            context, serviceProvider),
+                        child: ListTile(
+                          //isThreeLine: true,
+                          leading: Icon(Icons.person),
+                          title: InkWell(
+                            child: Text(serviceProvider.name),
+                          ),
+                          subtitle: Text(serviceProvider.category),
 
-                        // trailing: Visibility(
-                        //   visible:
-                        //       Provider.of<UserService>(context).getUser.role ==
-                        //               'Administrador'
-                        //           ? true
-                        //           : false,
-                        //   child: PopupMenuButton<String>(
-                        //     itemBuilder: (_) => [
-                        //       PopupMenuItem(
-                        //         value: 'Editar',
-                        //         child: Text('Editar'),
-                        //       ),
-                        //       PopupMenuItem(
-                        //         value: 'Remover',
-                        //         child: Text('Remover'),
-                        //       ),
-                        //     ],
-                        //     onSelected: (value) =>
-                        //         _handleChoice(context, value, serviceProvider),
-                        //     icon: Icon(Icons.more_vert),
-                        //   ),
-                        // ),
+                          // trailing: Visibility(
+                          //   visible:
+                          //       Provider.of<UserService>(context).getUser.role ==
+                          //               'Administrador'
+                          //           ? true
+                          //           : false,
+                          //   child: PopupMenuButton<String>(
+                          //     itemBuilder: (_) => [
+                          //       PopupMenuItem(
+                          //         value: 'Editar',
+                          //         child: Text('Editar'),
+                          //       ),
+                          //       PopupMenuItem(
+                          //         value: 'Remover',
+                          //         child: Text('Remover'),
+                          //       ),
+                          //     ],
+                          //     onSelected: (value) =>
+                          //         _handleChoice(context, value, serviceProvider),
+                          //     icon: Icon(Icons.more_vert),
+                          //   ),
+                          // ),
+                        ),
                       );
                     });
               case ConnectionState.none:
@@ -152,8 +154,6 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
       default:
     }
   }
-
-  Widget setBody(BuildContext context) {}
 
   void pushToServiceProvidersFormView(BuildContext context) {
     ServiceProvider serviceProvider = ServiceProvider();

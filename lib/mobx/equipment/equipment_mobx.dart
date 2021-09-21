@@ -1,5 +1,4 @@
 import 'package:mobx/mobx.dart';
-import 'package:tirol_office_app/models/equipment_model.dart';
 
 part 'equipment_mobx.g.dart';
 

@@ -19,7 +19,7 @@ class ObservationDetailsView extends StatelessWidget {
     const double SIZEDBOX_PADDING = 26;
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.OBSERVATIONS_TITLE),
+        title: Text(PageUtils.observationDetailsTitle),
         shadowColor: Colors.transparent,
       ),
       body: Padding(

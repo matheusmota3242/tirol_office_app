@@ -6,11 +6,11 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 class ObservationService {
   void save(Observation observation) async {
     observation.dateTime = DateTime.now();
-    await FirestoreDB.db_observations.add(observation.toJson());
+    await FirestoreDB.dbObservations.add(observation.toJson());
   }
 
   void update(Observation observation) async {
-    await FirestoreDB.db_observations
+    await FirestoreDB.dbObservations
         .doc(observation.id)
         .update(observation.toJson());
   }
@@ -18,7 +18,7 @@ class ObservationService {
   Future<bool> remove(String id) async {
     bool result = false;
     try {
-      await FirestoreDB.db_observations.doc(id).delete();
+      await FirestoreDB.dbObservations.doc(id).delete();
       Toasts.showToast(content: 'Observação removida com sucesso');
       result = true;
     } catch (e) {
@@ -34,7 +34,7 @@ class ObservationService {
     DateTime pickedEnd =
         DateTime(picked.year, picked.month, picked.day, 23, 59);
     print(picked);
-    return await FirestoreDB.db_observations
+    return await FirestoreDB.dbObservations
         .where('dateTime',
             isGreaterThanOrEqualTo: Timestamp.fromDate(pickedStart))
         .where('dateTime', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))

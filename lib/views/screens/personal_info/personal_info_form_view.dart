@@ -30,8 +30,8 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
     var auth = Provider.of<AuthService>(context, listen: false);
-    void update() async {
-      await auth.update(widget.user, context);
+    void update() {
+      auth.update(widget.user, context);
       Toasts.showToast(content: 'Informações atualizadas com sucesso');
       Navigator.pushNamed(context, RouteUtils.personalInfo);
     }
@@ -182,7 +182,7 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
         child: Column(
           children: [
             personalInfoNameField(PageUtils.NAME_FIELD, widget.user.name),
-            PageUtils.HORIZONTAL_SEPARATOR_GREY,
+            SizedBox(height: 20),
             personalInfoEmailField(PageUtils.EMAIL_FIELD, widget.user.email)
           ],
         ),

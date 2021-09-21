@@ -31,7 +31,6 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
   @override
   Widget build(BuildContext context) {
     ServiceProviderService _service = ServiceProviderService();
-    ServiceProvider currentServiceProvider = ServiceProvider();
     ValidationUtils _validationHelper = ValidationUtils();
     var themeData = Theme.of(context);
     GlobalKey<FormState> _formKey = GlobalKey();

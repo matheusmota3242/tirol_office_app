@@ -88,14 +88,14 @@ class _EquipmentCorrectiveMaintenancesViewState
     }
 
     /* TODO refatorar esse metodo */
-    handlingOptionSelected(String value, Maintenance maintenance) async {
-      if (value == 'Remover') {
-        showDeleteDialog(maintenance);
-      } else {
-        await _service.updateHasOccured(maintenance, false);
-        setState(() {});
-      }
-    }
+    // handlingOptionSelected(String value, Maintenance maintenance) async {
+    //   if (value == 'Remover') {
+    //     showDeleteDialog(maintenance);
+    //   } else {
+    //     await _service.updateHasOccured(maintenance, false);
+    //     setState(() {});
+    //   }
+    // }
 
     updateHasOccured(Maintenance maintenance, bool value) async {
       await _service.updateHasOccured(maintenance, value);

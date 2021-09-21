@@ -10,7 +10,7 @@ class Role {
   }
 
   List getRoles() {
-    var list = new List();
+    var list = [];
     map.forEach((key, value) => list.add(value));
     return list;
   }

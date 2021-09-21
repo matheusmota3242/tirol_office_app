@@ -62,7 +62,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
 
   Future<dynamic> loadServiceProviders() async {
     loadingMobx.setStatus(true);
-    snapshot = await FirestoreDB.db_service_providers.get();
+    snapshot = await FirestoreDB.dbServiceProviders.get();
 
     serviceProviders = snapshot.docs
         .map((json) => ServiceProvider.fromJson(json.data()))
@@ -155,7 +155,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
                           '${widget.departmentDTO.name} - ${widget.equipment.description}',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w600)),
-                      PageUtils.HORIZONTAL_SEPARATOR_GREY,
+                      PageUtils.horizonalSeparatorGrey,
                       Text(
                         'Data',
                         style: TextStyle(

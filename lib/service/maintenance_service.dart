@@ -12,7 +12,7 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 class MaintenanceService {
   Future<QuerySnapshot> getByEquipmentAndDepartment(
       String departmentName, equipmentDescription) async {
-    return await FirestoreDB.db_maintenances
+    return await FirestoreDB.dbMaintenances
         .where('departmentName', isEqualTo: departmentName)
         .where('equipmentDescription', isEqualTo: equipmentDescription)
         .orderBy('dateTime', descending: true)
@@ -20,7 +20,7 @@ class MaintenanceService {
   }
 
   getAll() async {
-    return await FirestoreDB.db_maintenances
+    return await FirestoreDB.dbMaintenances
         .orderBy('dateTime', descending: true)
         .get();
   }
@@ -30,11 +30,11 @@ class MaintenanceService {
     String maintenanceId =
         MaintenanceHelper.convertToMaintenanceId(maintenance);
     try {
-      var doc = await FirestoreDB.db_maintenances.doc(maintenanceId).get();
+      var doc = await FirestoreDB.dbMaintenances.doc(maintenanceId).get();
       if (doc.exists) {
         Toasts.showToast(content: 'Manutenção já existe');
       } else {
-        await FirestoreDB.db_maintenances
+        await FirestoreDB.dbMaintenances
             .doc(maintenanceId)
             .set(maintenance.toJson());
         Toasts.showToast(content: 'Manutenção cadastrada com sucesso');
@@ -51,7 +51,7 @@ class MaintenanceService {
   delete(String maintenanceId) async {
     bool result = false;
     try {
-      await FirestoreDB.db_maintenances.doc(maintenanceId).delete();
+      await FirestoreDB.dbMaintenances.doc(maintenanceId).delete();
       Toasts.showToast(content: 'Manutenção removida com sucesso');
       result = true;
     } catch (e) {
@@ -63,7 +63,7 @@ class MaintenanceService {
   update(Maintenance maintenance) async {
     bool result = false;
     try {
-      await FirestoreDB.db_maintenances
+      await FirestoreDB.dbMaintenances
           .doc(maintenance.id)
           .update(maintenance.toJson());
       Toasts.showToast(content: 'Manutenção atualizada com sucesso');
@@ -150,7 +150,7 @@ class MaintenanceService {
       Toasts.showToast(content: 'Impossível atualizar antes da data marcada');
     } else {
       try {
-        await FirestoreDB.db_maintenances
+        await FirestoreDB.dbMaintenances
             .doc(maintenance.id)
             .update({'hasOccurred': value});
         result = true;

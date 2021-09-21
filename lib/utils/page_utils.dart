@@ -6,6 +6,7 @@ class PageUtils {
   static const PROCESSES_TITLE = 'Processos';
   static const DEPARTIMENTS_TITLE = 'Departamentos';
   static const OBSERVATIONS_TITLE = 'Observações';
+  static const observationDetailsTitle = 'Detalhes da observação';
   static const EQUIPMENTS_TITLE = 'Equipamentos';
   static const MAINTENANCES_TITLE = 'Manutenções';
   static const EQUIPMENT_DETAILS_TITLE = 'Detalhes do equipamento';
@@ -45,7 +46,7 @@ class PageUtils {
   static const textButtonStyle = TextStyle(
       color: PRIMARY_COLOR, fontWeight: FontWeight.w500, fontSize: 15);
 
-  static Widget HORIZONTAL_SEPARATOR_GREY = Column(
+  static Widget horizonalSeparatorGrey = Column(
     children: [
       SizedBox(
         height: 16.0,

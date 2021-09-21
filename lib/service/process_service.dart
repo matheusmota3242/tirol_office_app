@@ -53,7 +53,7 @@ class ProcessService {
     process.setResponsible = user.name;
     process.setUserId = user.id;
     try {
-      await FirestoreDB.db_processes.add(process.toJson());
+      await FirestoreDB.dbProcesses.add(process.toJson());
       Toasts.showToast(content: 'Processo iniciado com sucesso');
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
@@ -79,7 +79,7 @@ class ProcessService {
     process.setUserId = user.id;
 
     try {
-      processSnapshot = await FirestoreDB.db_processes
+      processSnapshot = await FirestoreDB.dbProcesses
           .where(
             'start',
             isGreaterThanOrEqualTo: Timestamp.fromDate(
@@ -103,7 +103,7 @@ class ProcessService {
       Toasts.showToast(content: 'Processo já em andamento');
     } else {
       try {
-        await FirestoreDB.db_processes.add(process.toJson());
+        await FirestoreDB.dbProcesses.add(process.toJson());
       } catch (e) {
         Toasts.showWarningToast(content: 'Erro ao criar processo!');
         print("Error: $e");
@@ -129,7 +129,7 @@ class ProcessService {
     }
 
     try {
-      processSnapshot = await FirestoreDB.db_processes
+      processSnapshot = await FirestoreDB.dbProcesses
           .where(
             'start',
             isGreaterThanOrEqualTo: Timestamp.fromDate(
@@ -158,7 +158,7 @@ class ProcessService {
             process.setObservations = observations;
 
             try {
-              await FirestoreDB.db_processes.doc(doc.id).update({
+              await FirestoreDB.dbProcesses.doc(doc.id).update({
                 'end': process.getEnd,
                 'observations': observations,
                 'department': department.toJson()
@@ -200,7 +200,7 @@ class ProcessService {
               .toList(),
         });
 
-        QuerySnapshot processSnapshot = await FirestoreDB.db_processes
+        QuerySnapshot processSnapshot = await FirestoreDB.dbProcesses
             .where(
               'start',
               isGreaterThanOrEqualTo: Timestamp.fromDate(
@@ -216,7 +216,7 @@ class ProcessService {
             .where('department.name', isEqualTo: process.getDepartment.name)
             .get();
         process.setEnd = now;
-        await FirestoreDB.db_processes
+        await FirestoreDB.dbProcesses
             .doc(processSnapshot.docs.first.id)
             .update(process.toJson());
 
@@ -246,7 +246,7 @@ class ProcessService {
   //       DateTime(picked.year, picked.month, picked.day, 23, 59);
 
   //   return await FirestoreDB()
-  //       .db_processes
+  //       .dbProcesses
   //       .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
   //       .where('start', isGreaterThanOrEqualTo: Timestamp.fromDate(pickedStart))
   //       .get();
@@ -258,7 +258,7 @@ class ProcessService {
     DateTime pickedEnd =
         DateTime(picked.year, picked.month, picked.day, 23, 59);
     print(picked);
-    return await FirestoreDB.db_processes
+    return await FirestoreDB.dbProcesses
         .where('start', isGreaterThanOrEqualTo: Timestamp.fromDate(pickedStart))
         .where('start', isLessThanOrEqualTo: Timestamp.fromDate(pickedEnd))
         .get();

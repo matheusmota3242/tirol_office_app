@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:string_validator/string_validator.dart';
-import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/service/user_service.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/validation_utils.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';

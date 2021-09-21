@@ -1,5 +1,3 @@
-import 'enums/user_role_enum.dart';
-
 class User {
   String _id;
   String _name;

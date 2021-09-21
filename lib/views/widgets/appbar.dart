@@ -8,7 +8,6 @@ import 'package:tirol_office_app/views/widgets/dialogs.dart';
 
 class AppBarWidget extends PreferredSize {
   final String title;
-  ProcessService _ProcessService = ProcessService();
 
   AppBarWidget(this.title);
 

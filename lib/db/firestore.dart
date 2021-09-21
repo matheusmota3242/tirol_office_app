@@ -6,13 +6,13 @@ class FirestoreDB {
       FirebaseFirestore.instance.collection("users");
   static CollectionReference departments =
       FirebaseFirestore.instance.collection("departments");
-  static CollectionReference db_processes =
+  static CollectionReference dbProcesses =
       FirebaseFirestore.instance.collection("processes");
-  static CollectionReference db_service_providers =
+  static CollectionReference dbServiceProviders =
       FirebaseFirestore.instance.collection("service_providers");
-  static CollectionReference db_observations =
+  static CollectionReference dbObservations =
       FirebaseFirestore.instance.collection("observations");
-  static CollectionReference db_maintenances =
+  static CollectionReference dbMaintenances =
       FirebaseFirestore.instance.collection("maintenances");
 
   findById(String uid) async {

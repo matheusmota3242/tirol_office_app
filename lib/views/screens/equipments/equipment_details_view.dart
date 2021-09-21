@@ -71,7 +71,7 @@ class EquipmentDetailsView extends StatelessWidget {
                               ],
                             ),
                           )),
-                      PageUtils.HORIZONTAL_SEPARATOR_GREY,
+                      PageUtils.horizonalSeparatorGrey,
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Visibility(

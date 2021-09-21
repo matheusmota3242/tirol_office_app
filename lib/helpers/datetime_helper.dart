@@ -21,73 +21,75 @@ class DateTimeHelper {
   }
 
   static String convertIntToStringWeekday(int weekday) {
-    print('weekday: $weekday');
+    String str;
     switch (weekday) {
       case 1:
-        return 'Seg';
+        str = 'Seg';
         break;
       case 2:
-        return 'Ter';
+        str = 'Ter';
         break;
       case 3:
         return 'Qua';
         break;
       case 4:
-        return 'Qui';
+        str = 'Qui';
         break;
       case 5:
-        return 'Sex';
+        str = 'Sex';
         break;
       case 6:
-        return 'Sáb';
+        str = 'Sáb';
         break;
       case 7:
-        return 'Dom';
+        str = 'Dom';
         break;
       default:
     }
+    return str;
   }
 
   static String convertIntToStringMonth(int month) {
+    String str;
     switch (month) {
-      case 0:
-        return 'janeiro';
-        break;
       case 1:
-        return 'fevereiro';
+        str = 'janeiro';
         break;
       case 2:
-        return 'março';
+        str = 'fevereiro';
         break;
       case 3:
-        return 'abril';
+        str = 'março';
         break;
       case 4:
-        return 'maio';
+        str = 'abril';
         break;
       case 5:
-        return 'junho';
+        str = 'maio';
         break;
       case 6:
-        return 'julho';
+        str = 'junho';
         break;
-      case 7:
-        return 'agosto';
+      case 6:
+        str = 'julho';
         break;
       case 8:
-        return 'setembro';
+        str = 'agosto';
         break;
       case 9:
-        return 'outubro';
+        str = 'setembro';
         break;
       case 10:
-        return 'novembro';
+        return 'outubro';
         break;
       case 11:
-        return 'dezembro';
+        str = 'novembro';
         break;
-
+      case 12:
+        str = 'dezembro';
+        break;
       default:
     }
+    return str;
   }
 }

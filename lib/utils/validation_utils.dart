@@ -14,13 +14,14 @@ class ValidationUtils {
     return isValid;
   }
 
-  String validateName(String name) {
+  validateName(String name) {
+    String msg;
     if (name.isEmpty) {
       return isEmptyMessage('nome');
     }
   }
 
-  String validatePhoneNumber(String phoneNumber) {
+  validatePhoneNumber(String phoneNumber) {
     if (phoneNumber.isEmpty)
       return isEmptyMessage('telefone');
     else if (!isNumeric(phoneNumber))
@@ -28,7 +29,7 @@ class ValidationUtils {
     else if (phoneNumber.length > 13) return 'No máximo 13 dígitos';
   }
 
-  String validateEmail(String email) {
+  validateEmail(String email) {
     if (email.isEmpty) {
       return isEmptyMessage('e-mail');
     } else if (!checkEmail(email)) {
@@ -36,7 +37,7 @@ class ValidationUtils {
     }
   }
 
-  String validatePasswordFields(String password, String field) {
+  validatePasswordFields(String password, String field) {
     if (password.isEmpty)
       return isEmptyMessage(field);
     else if (!isAlphanumeric(password))
@@ -45,7 +46,7 @@ class ValidationUtils {
       return 'Sua $field deve conter no mínimo 6 caracteres';
   }
 
-  String validateActualPassword(String oldPassword, String value) {
+  validateActualPassword(String oldPassword, String value) {
     if (value.isEmpty) return isEmptyMessage('senha atual');
     if (value != oldPassword) return 'Senha atual não confere';
   }

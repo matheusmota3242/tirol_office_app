@@ -50,7 +50,7 @@ class PersonalInfoView extends StatelessWidget {
                     personalInfoAttribute(NAME_FIELD, loadedUser.name),
                     sizedBox,
                     personalInfoAttribute(EMAIL_FIELD, loadedUser.email),
-                    PageUtils.HORIZONTAL_SEPARATOR_GREY,
+                    PageUtils.horizonalSeparatorGrey,
                     InkWell(
                       onTap: () =>
                           pushToPersonalInfoFormView(context, loadedUser),
