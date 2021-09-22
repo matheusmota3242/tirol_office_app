@@ -102,6 +102,37 @@ class _EquipmentCorrectiveMaintenancesViewState
       setState(() {});
     }
 
+    Widget maintenanceHeader = Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Manutenções',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
+            ),
+            IconButton(
+              color: Colors.white,
+              padding: EdgeInsets.only(left: 22),
+              onPressed: () {
+                RouteUtils.pushToEquipmentCorrectiveMaintenancesFormView(
+                    context: context,
+                    equipment: widget.equipment,
+                    departmentDTO: widget.departmentDTO,
+                    maintenance: Maintenance(),
+                    edit: false);
+              },
+              icon: Icon(Icons.add),
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+      ],
+    );
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushNamed(context, RouteUtils.DEPARTMENTS);
@@ -109,21 +140,9 @@ class _EquipmentCorrectiveMaintenancesViewState
       },
       child: Scaffold(
         appBar: AppBar(
-            shadowColor: Colors.transparent,
-            title: Text("Detalhes do equipamento"),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  RouteUtils.pushToEquipmentCorrectiveMaintenancesFormView(
-                      context: context,
-                      equipment: widget.equipment,
-                      departmentDTO: widget.departmentDTO,
-                      maintenance: Maintenance(),
-                      edit: false);
-                },
-                icon: Icon(Icons.add),
-              ),
-            ]),
+          shadowColor: Colors.transparent,
+          title: Text("Detalhes do equipamento"),
+        ),
         backgroundColor: PageUtils.PRIMARY_COLOR,
         body: Container(
           padding: PageUtils.BODY_PADDING,
@@ -154,7 +173,16 @@ class _EquipmentCorrectiveMaintenancesViewState
                 ),
               ),
             ),
-            PageUtils.HORIZONTAL_SEPARATOR_WHITE,
+            Column(
+              children: [
+                SizedBox(height: 16),
+                Container(
+                  width: double.maxFinite,
+                  height: 0.5,
+                  color: Colors.white,
+                ),
+              ],
+            ),
 
             /* Verificando se snapshot está vazio */
             Container(
@@ -181,21 +209,25 @@ class _EquipmentCorrectiveMaintenancesViewState
                               ),
                             ));
                       else if (!hasData) {
-                        return Container(
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: Center(
-                            child: Text(
-                              'Não há manutenções cadastradas.',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500),
+                        return Column(children: [
+                          maintenanceHeader,
+                          Container(
+                            height: MediaQuery.of(context).size.height / 2,
+                            child: Center(
+                              child: Text(
+                                'Não há manutenções cadastradas.',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
-                        );
+                        ]);
                       } else {
                         return Column(
                           children: [
+                            maintenanceHeader,
                             ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
@@ -219,49 +251,46 @@ class _EquipmentCorrectiveMaintenancesViewState
                                       margin: EdgeInsets.only(
                                           bottom: PageUtils.BODY_PADDING_VALUE),
                                       child: Container(
-                                        height: 105,
+                                        height: 90,
                                         padding: PageUtils.BODY_PADDING,
                                         child: Stack(children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  '${maintenance.departmentName} - ${maintenance.equipmentDescription}',
-                                                  style: TextStyle(
-                                                      color:
-                                                          defineColorForStatus(
-                                                              maintenance),
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                              Text(
-                                                DateTimeUtils.toBRFormat(
-                                                    maintenance.dateTime),
-                                                style: TextStyle(
-                                                    color: Colors.grey[700]),
-                                              ),
-                                            ],
+                                          Positioned(
+                                            top: 45,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                // Flexible(
+                                                //   child: Text(
+                                                //     '${maintenance.equipmentDescription}',
+                                                //     style: TextStyle(
+                                                //         color:
+                                                //             defineColorForStatus(
+                                                //                 maintenance),
+                                                //         fontSize: 16.0,
+                                                //         fontWeight:
+                                                //             FontWeight.w500),
+                                                //     overflow:
+                                                //         TextOverflow.ellipsis,
+                                                //   ),
+                                                // ),
+                                              ],
+                                            ),
                                           ),
 
                                           Positioned(
-                                              top: 45,
                                               child: Text(
-                                                  maintenance
-                                                      .serviceProvider.name,
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500))),
+                                            maintenance.serviceProvider.name,
+                                            style: TextStyle(
+                                                color: defineColorForStatus(
+                                                    maintenance),
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w500),
+                                          )),
 
                                           Positioned(
-                                            top: 30,
-                                            right: 0,
+                                            top: -12,
+                                            right: -10,
                                             child: Switch(
                                               value: maintenance.hasOccurred,
                                               onChanged: (value) {
@@ -270,7 +299,16 @@ class _EquipmentCorrectiveMaintenancesViewState
                                               },
                                             ),
                                           ),
-
+                                          Positioned(
+                                            bottom: 0,
+                                            left: 0,
+                                            child: Text(
+                                              DateTimeUtils.toBRFormat(
+                                                  maintenance.dateTime),
+                                              style: TextStyle(
+                                                  color: Colors.grey[700]),
+                                            ),
+                                          ),
                                           // Column(
                                           //   crossAxisAlignment: CrossAxisAlignment.stretch,
                                           //   children: [
