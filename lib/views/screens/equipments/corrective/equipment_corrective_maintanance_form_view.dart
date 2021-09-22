@@ -41,6 +41,7 @@ class EquipmentCorrectiveMaintenanceFormView extends StatefulWidget {
 class _EquipmentCorrectiveMaintenanceFormViewState
     extends State<EquipmentCorrectiveMaintenanceFormView>
     with TickerProviderStateMixin {
+  String dropdownDefault = '--';
   var serviceProviders = <ServiceProvider>[];
   var serviceProviderNames = <String>[];
   QuerySnapshot snapshot;
@@ -68,6 +69,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
         .map((json) => ServiceProvider.fromJson(json.data()))
         .toList();
     serviceProviderNames = serviceProviders.map((e) => e.name).toList();
+    serviceProviderNames.add(dropdownDefault);
     setState(() {
       loadingMobx.setStatus(false);
     });
@@ -203,8 +205,9 @@ class _EquipmentCorrectiveMaintenanceFormViewState
                       ),
                       Observer(
                         builder: (_) => DropdownButtonFormField<String>(
-                          validator: (value) =>
-                              value == null ? 'Selecione um fornecedor' : null,
+                          validator: (value) => value == null || value == '--'
+                              ? 'Selecione um fornecedor'
+                              : null,
                           decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                   borderSide:
@@ -212,7 +215,9 @@ class _EquipmentCorrectiveMaintenanceFormViewState
                           hint: isEdition()
                               ? Text(widget.maintenance.serviceProvider.name)
                               : Text('Selecione'),
-                          value: serviceProviderNameMobx.name,
+                          value: isEdition()
+                              ? dropdownDefault
+                              : serviceProviderNameMobx.name,
                           onChanged: (String newValue) {
                             serviceProviderNameMobx.setName(newValue);
                           },
