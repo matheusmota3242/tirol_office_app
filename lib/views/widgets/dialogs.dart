@@ -8,6 +8,7 @@ import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/views/screens/processes/process_details_view.dart';
 import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
+import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class Dialogs {
   static showDeleteDialog(
@@ -122,8 +123,8 @@ class Dialogs {
         Provider.of<UserService>(context, listen: false).getUser, observations);
   }
 
-  addProcess(BuildContext context, ProcessService processService,
-      String response, observations) async {
+  addProcess(BuildContext context, BuildContext dialogContext,
+      ProcessService processService, String response, observations) async {
     return await processService.add(response, observations,
         Provider.of<UserService>(context, listen: false).getUser);
   }
@@ -149,22 +150,27 @@ class Dialogs {
                       children: [
                         TextButton(
                           onPressed: () {
-                            Navigator.pop(context, false);
+                            Navigator.pop(dialogContext, false);
                           },
                           child: Text('Cancelar'),
                         ),
                         ElevatedButton(
                           onPressed: () async {
                             Process process;
-                            process = await addProcess(context, processService,
-                                response, observations);
+                            process = await addProcess(context, dialogContext,
+                                processService, response, observations);
                             Navigator.of(dialogContext).pop(true);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => ProcessDetailsView(
-                                      edit: true, process: process),
-                                ));
+                            if (null != process) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ProcessDetailsView(
+                                        edit: true, process: process),
+                                  ));
+                            } else {
+                              Toasts.showWarningToast(
+                                  content: "Departamento não cadastrado");
+                            }
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(

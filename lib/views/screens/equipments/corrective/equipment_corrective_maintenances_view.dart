@@ -279,14 +279,15 @@ class _EquipmentCorrectiveMaintenancesViewState
                                           ),
 
                                           Positioned(
-                                              child: Text(
-                                            maintenance.serviceProvider.name,
-                                            style: TextStyle(
-                                                color: defineColorForStatus(
-                                                    maintenance),
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.w500),
-                                          )),
+                                            child: Text(
+                                              maintenance.serviceProvider.name,
+                                              style: TextStyle(
+                                                  color: defineColorForStatus(
+                                                      maintenance),
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
 
                                           Positioned(
                                             top: -12,

@@ -34,8 +34,7 @@ class ObservationDetailsView extends StatelessWidget {
             SizedBox(height: SIZEDBOX_PADDING),
             observationAttribute(TITLE_LABEL, observation.title),
             SizedBox(height: SIZEDBOX_PADDING),
-            observationAttribute(CONTENT_LABEL,
-                'ob servati on.contento bserva tion.c ontentobse rvation.contentob servation.content')
+            observationAttribute(CONTENT_LABEL, observation.content)
           ],
         ),
       ),

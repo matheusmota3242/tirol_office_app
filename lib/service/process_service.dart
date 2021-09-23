@@ -70,6 +70,9 @@ class ProcessService {
     departmentSnapshot =
         await FirestoreDB.departments.where('name', isEqualTo: response).get();
 
+    /* Caso o departamento não exista... */
+    if (departmentSnapshot.docs.isEmpty) return null;
+
     Department department =
         Department.fromJson(departmentSnapshot.docs.first.data());
 

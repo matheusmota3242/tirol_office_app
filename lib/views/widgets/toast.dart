@@ -15,7 +15,7 @@ class Toasts {
     Fluttertoast.showToast(
       msg: content,
       gravity: ToastGravity.CENTER,
-      backgroundColor: Colors.red[500],
+      backgroundColor: Colors.red[900],
     );
   }
 }
