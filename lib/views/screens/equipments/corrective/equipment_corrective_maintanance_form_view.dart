@@ -137,7 +137,7 @@ class _EquipmentCorrectiveMaintenanceFormViewState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE),
+        title: Text(PageUtils.maintenanceForm),
       ),
       floatingActionButton: Visibility(
           visible: serviceProviders.isNotEmpty,

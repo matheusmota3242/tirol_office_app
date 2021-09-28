@@ -10,8 +10,7 @@ class PageUtils {
   static const EQUIPMENTS_TITLE = 'Equipamentos';
   static const MAINTENANCES_TITLE = 'Manutenções';
   static const EQUIPMENT_DETAILS_TITLE = 'Detalhes do equipamento';
-  static const EQUIPMENT_CORRECTIVE_MAINTENANCE_FORM_TITLE =
-      'Nova manutenção corretiva';
+  static const maintenanceForm = 'Nova manutenção';
   static const EQUIPMENT_PREVENTIVE_MAINTENANCE_FORM_TITLE =
       'Nova manutenção preventiva';
   static const OBSERVATIONS_DETAILS_TITLE = 'Detalhes da observação';
