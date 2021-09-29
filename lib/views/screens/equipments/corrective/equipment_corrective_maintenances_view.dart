@@ -251,7 +251,7 @@ class _EquipmentCorrectiveMaintenancesViewState
                                       margin: EdgeInsets.only(
                                           bottom: PageUtils.BODY_PADDING_VALUE),
                                       child: Container(
-                                        height: 90,
+                                        height: 108,
                                         padding: PageUtils.BODY_PADDING,
                                         child: Stack(children: [
                                           Positioned(
@@ -282,16 +282,28 @@ class _EquipmentCorrectiveMaintenancesViewState
                                             child: Text(
                                               maintenance.serviceProvider.name,
                                               style: TextStyle(
-                                                  color: defineColorForStatus(
-                                                      maintenance),
                                                   fontSize: 16.0,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ),
-
                                           Positioned(
-                                            top: -12,
-                                            right: -10,
+                                            top: 0,
+                                            right: 0,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: defineColorForStatus(
+                                                      maintenance)),
+                                              height: 24,
+                                              width: 24,
+                                              child: Icon(Icons.av_timer,
+                                                  size: 16,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 40,
+                                            left: -10,
                                             child: Switch(
                                               value: maintenance.hasOccurred,
                                               onChanged: (value) {
@@ -301,8 +313,8 @@ class _EquipmentCorrectiveMaintenancesViewState
                                             ),
                                           ),
                                           Positioned(
-                                            bottom: 0,
-                                            left: 0,
+                                            top: 54,
+                                            right: 0,
                                             child: Text(
                                               DateTimeUtils.toBRFormat(
                                                   maintenance.dateTime),
@@ -409,6 +421,22 @@ class _EquipmentCorrectiveMaintenancesViewState
       color = Colors.yellow[700];
     }
     return color;
+  }
+
+  Icon defineIconForStatus(Maintenance maintenance) {
+    Icon icon;
+    if (DateTime.now().isAfter(maintenance.dateTime)) {
+      if (maintenance.hasOccurred)
+        icon = Icon(
+          Icons.done_all,
+          size: 16,
+        );
+      else
+        icon = Icon(Icons.close, size: 16);
+    } else {
+      icon = Icon(Icons.av_timer, size: 16);
+    }
+    return icon;
   }
 
   List<String> defineOptionsForMaintenance(Maintenance maintenance) {

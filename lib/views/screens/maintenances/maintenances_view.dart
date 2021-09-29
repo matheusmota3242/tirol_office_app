@@ -148,7 +148,7 @@ class _MaintenancesViewState extends State<MaintenancesView> {
                           margin: EdgeInsets.only(
                               bottom: PageUtils.BODY_PADDING_VALUE),
                           child: Container(
-                            height: 105,
+                            height: 128,
                             padding: PageUtils.BODY_PADDING,
                             child: Stack(children: [
                               Row(
@@ -159,31 +159,34 @@ class _MaintenancesViewState extends State<MaintenancesView> {
                                     child: Text(
                                       '${maintenance.departmentName} - ${maintenance.equipmentDescription}',
                                       style: TextStyle(
-                                          color:
-                                              defineColorForStatus(maintenance),
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w500),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Text(
-                                    DateTimeUtils.toBRFormat(
-                                        maintenance.dateTime),
-                                    style: TextStyle(color: Colors.grey[700]),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:
+                                            defineColorForStatus(maintenance)),
+                                    height: 24,
+                                    width: 24,
+                                    child: Icon(Icons.av_timer,
+                                        size: 16, color: Colors.white),
                                   ),
                                 ],
                               ),
-
                               Positioned(
-                                  top: 45,
-                                  child: Text(maintenance.serviceProvider.name,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500))),
-
+                                top: 38,
+                                child: Text(maintenance.serviceProvider.name,
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500)),
+                              ),
                               Positioned(
-                                top: 30,
-                                right: 0,
+                                top: 60,
+                                left: -8,
                                 child: Switch(
                                   value: maintenance.hasOccurred,
                                   onChanged: (value) {
@@ -191,6 +194,26 @@ class _MaintenancesViewState extends State<MaintenancesView> {
                                   },
                                 ),
                               ),
+                              Positioned(
+                                top: 75,
+                                right: 0,
+                                child: Text(
+                                  DateTimeUtils.toBRFormat(
+                                      maintenance.dateTime),
+                                  style: TextStyle(color: Colors.grey[700]),
+                                ),
+                              ),
+
+                              // Positioned(
+                              //   top: 30,
+                              //   right: 0,
+                              //   child: Switch(
+                              //     value: maintenance.hasOccurred,
+                              //     onChanged: (value) {
+                              //       updateHasOccured(maintenance, value);
+                              //     },
+                              //   ),
+                              // ),
 
                               // Column(
                               //   crossAxisAlignment: CrossAxisAlignment.stretch,
