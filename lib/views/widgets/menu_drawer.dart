@@ -68,29 +68,32 @@ class MenuDrawer extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.0),
-            child: TextButton(
-              onPressed: () => currentPage != PageUtils.OBSERVATIONS_TITLE
-                  ? pushToObservationListView(context)
-                  : null,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.assignment,
-                    color: Colors.grey[700],
+          user.role == 'Administrador'
+              ? Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: TextButton(
+                    onPressed: () => currentPage != PageUtils.OBSERVATIONS_TITLE
+                        ? pushToObservationListView(context)
+                        : null,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.assignment,
+                          color: Colors.grey[700],
+                        ),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          PageUtils.OBSERVATIONS_TITLE,
+                          style: TextStyle(
+                              color: Colors.grey[700], fontSize: 16.0),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Text(
-                    PageUtils.OBSERVATIONS_TITLE,
-                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                )
+              : Container(),
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(
@@ -114,72 +117,81 @@ class MenuDrawer extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.0),
-            child: TextButton(
-              onPressed: () => currentPage != PageUtils.MAINTENANCES_TITLE
-                  ? pushToMaintenancesView(context)
-                  : null,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.home_repair_service,
-                    color: Colors.grey[700],
-                  ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Text(
-                    PageUtils.MAINTENANCES_TITLE,
-                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.0),
-            child: TextButton(
-                onPressed: () => currentPage != PageUtils.USERS_TITLE
-                    ? pushToUserListView(context)
-                    : null,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.people,
-                      color: Colors.grey[700],
+          user.role == 'Administrador'
+              ? Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: TextButton(
+                    onPressed: () => currentPage != PageUtils.MAINTENANCES_TITLE
+                        ? pushToMaintenancesView(context)
+                        : null,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.home_repair_service,
+                          color: Colors.grey[700],
+                        ),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          PageUtils.MAINTENANCES_TITLE,
+                          style: TextStyle(
+                              color: Colors.grey[700], fontSize: 16.0),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 5.0,
+                  ),
+                )
+              : Container(),
+          user.role == 'Administrador'
+              ? Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: TextButton(
+                      onPressed: () => currentPage != PageUtils.USERS_TITLE
+                          ? pushToUserListView(context)
+                          : null,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.people,
+                            color: Colors.grey[700],
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          Text(
+                            PageUtils.USERS_TITLE,
+                            style: TextStyle(
+                                color: Colors.grey[700], fontSize: 16.0),
+                          ),
+                        ],
+                      )),
+                )
+              : Container(),
+          user.role == 'Administrador'
+              ? Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: TextButton(
+                    onPressed: () => pushToServiceProvidersView(context),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.miscellaneous_services,
+                          color: Colors.grey[700],
+                        ),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          PageUtils.SERVICES_TITLE,
+                          style: TextStyle(
+                              color: Colors.grey[700], fontSize: 16.0),
+                        ),
+                      ],
                     ),
-                    Text(
-                      PageUtils.USERS_TITLE,
-                      style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
-                    ),
-                  ],
-                )),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.0),
-            child: TextButton(
-              onPressed: () => pushToServiceProvidersView(context),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.miscellaneous_services,
-                    color: Colors.grey[700],
                   ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Text(
-                    PageUtils.SERVICES_TITLE,
-                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                )
+              : Container(),
           Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: TextButton(

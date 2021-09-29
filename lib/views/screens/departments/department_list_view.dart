@@ -6,6 +6,7 @@ import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
+import 'package:tirol_office_app/models/user_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
@@ -21,6 +22,7 @@ class DepartmentListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserService>(context).getUser;
     String title = PageUtils.DEPARTIMENTS_TITLE;
 
     return Scaffold(
@@ -28,10 +30,7 @@ class DepartmentListView extends StatelessWidget {
         title: Text(title),
         actions: [
           Visibility(
-            visible: Provider.of<UserService>(context).getUser.role ==
-                    'Administrador'
-                ? true
-                : false,
+            visible: user.role == 'Administrador',
             child: IconButton(
               onPressed: () => Navigator.push(
                 context,
@@ -62,15 +61,17 @@ class DepartmentListView extends StatelessWidget {
               return LoadingView();
               break;
             default:
-              return setBody(context, snapshot);
+              return setBody(context, snapshot, user);
           }
         },
       ),
     );
   }
 
+  bool isUserAdmin(User user) => user.role == 'Administrador';
+
   Widget getPageOnSuccededConnectionState(
-      BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot, User user) {
     if (snapshot.hasError) return ErrorView();
 
     if (!snapshot.hasData)
@@ -109,16 +110,20 @@ class DepartmentListView extends StatelessWidget {
               data:
                   Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: InkWell(
-                onDoubleTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => DepartmentFormView(
-                            currentDepartment: department, edit: true))),
+                onDoubleTap: () => isUserAdmin(user)
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => DepartmentFormView(
+                                currentDepartment: department, edit: true)))
+                    : null,
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.all(0),
                   title: InkWell(
-                    onLongPress: () => showDeleteDialog(
-                        context, department.id, department.name),
+                    onLongPress: () => isUserAdmin(user)
+                        ? showDeleteDialog(
+                            context, department.id, department.name)
+                        : null,
                     child: Container(
                       width: double.maxFinite,
                       child: Text(department.name,
@@ -136,12 +141,14 @@ class DepartmentListView extends StatelessWidget {
                         (e) => Container(
                           padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
                           child: InkWell(
-                            onTap: () =>
-                                pushToEquipmentCorrectiveMaintenancesView(
+                            onTap: () => isUserAdmin(user)
+                                ? pushToEquipmentCorrectiveMaintenancesView(
                                     context,
                                     e,
-                                    new DepartmentDTO(
-                                        department.id, department.name)),
+                                    DepartmentDTO(
+                                        department.id, department.name),
+                                  )
+                                : null,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -164,18 +171,19 @@ class DepartmentListView extends StatelessWidget {
     );
   }
 
-  Widget setBody(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget setBody(
+      BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot, User user) {
     switch (snapshot.connectionState) {
       case ConnectionState.waiting:
         return LoadingView();
       case ConnectionState.active:
-        return getPageOnSuccededConnectionState(context, snapshot);
+        return getPageOnSuccededConnectionState(context, snapshot, user);
         break;
       case ConnectionState.none:
         return ErrorView();
         break;
       case ConnectionState.done:
-        return getPageOnSuccededConnectionState(context, snapshot);
+        return getPageOnSuccededConnectionState(context, snapshot, user);
         break;
     }
   }
@@ -184,15 +192,6 @@ class DepartmentListView extends StatelessWidget {
 
   bool atLeastOneDamaged(List<Equipment> equipments) =>
       equipments.any((e) => e.status == PageUtils.STATUS_DAMAGED);
-
-  // void pushToDepartmentFormView(BuildContext context) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (_) => null,
-  //     ),
-  //   );
-  // }
 
   void pushToEquipmentCorrectiveMaintenancesView(
       BuildContext context, Equipment equipment, DepartmentDTO departmentDTO) {

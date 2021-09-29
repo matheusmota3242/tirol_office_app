@@ -64,13 +64,12 @@ class _ObservationListViewState extends State<ObservationListView> {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return LoadingView();
-
                   break;
                 case ConnectionState.none:
                   return ErrorView();
                   break;
                 case ConnectionState.active:
-                  return Container();
+                  return LoadingView();
                   break;
                 case ConnectionState.done:
                   var docs = snapshot.data.docs;
