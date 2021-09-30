@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
+import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/views/screens/processes/process_details_view.dart';
@@ -15,6 +16,12 @@ class ProcessCardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    hasDamagedEquipment() => this
+        .process
+        .department
+        .equipments
+        .any((equipment) => equipment.status == "Danificado");
 
     return InkWell(
       onTap: () {
@@ -39,7 +46,12 @@ class ProcessCardItem extends StatelessWidget {
               Positioned(
                   child: Text(
                     process.getDepartment.name,
-                    style: theme.textTheme.headline5,
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: hasDamagedEquipment()
+                            ? Colors.red[500]
+                            : Colors.black),
                   ),
                   top: 0,
                   left: 0),

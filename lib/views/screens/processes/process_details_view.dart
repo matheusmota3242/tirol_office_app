@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tirol_office_app/mobx/equipment/equipment_mobx.dart';
 import 'package:tirol_office_app/mobx/equipment_list.dart/equipment_list_mobx.dart';
 import 'package:tirol_office_app/models/department_model.dart';
+import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
@@ -33,6 +34,15 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
   }
 
   scanQRCode() async {
+    var updatedEquipments = <Equipment>[];
+    equipmentListMobx.getEquipmentList.forEach((EquipmentMobx equipmentMobx) {
+      Equipment equipment = Equipment();
+      equipment.description = equipmentMobx.getDescription;
+      equipment.status = equipmentMobx.status;
+      equipment.id = equipmentMobx.id;
+      updatedEquipments.add(equipment);
+    });
+    widget.process.department.equipments = updatedEquipments;
     await processService.finalQRCodeScan(context, widget.process);
   }
 
@@ -124,8 +134,8 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
               visible: getQRCodeVisibility(),
               child: IconButton(
                 icon: PageUtils.qrCodeIcon,
-                onPressed: () {
-                  scanQRCode();
+                onPressed: () async {
+                  await scanQRCode();
                 },
               ),
             )

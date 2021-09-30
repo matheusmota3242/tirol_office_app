@@ -60,63 +60,63 @@ class _ProcessListViewState extends State<ProcessListView> {
       if (pickedTimestamp != null) pickedDateMobx.setPicked(pickedTimestamp);
     }
 
-    return Builder(builder: (_) {
-      if (loadingUser == false) {
-        return Observer(
-          builder: (_) => FutureBuilder(
-              future: ProcessService().queryByDate(pickedDateMobx.getPicked),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return Text('Ocorreu um erro');
-                  case ConnectionState.waiting:
-                    return LoadingView(
-                      background: PageUtils.PRIMARY_COLOR,
-                    );
+    return Scaffold(
+      backgroundColor: Theme.of(context).buttonColor,
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Theme.of(context).buttonColor,
+        shadowColor: Colors.transparent,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.date_range),
+            onPressed: () => showFilterDialog(),
+          ),
+          IconButton(
+              icon: Icon(Icons.qr_code),
+              onPressed: () {
+                _processService.firstQRCodeScan(context, null);
+              }),
+        ],
+      ),
+      resizeToAvoidBottomInset: false,
+      drawer: MenuDrawer(
+        user: user,
+        currentPage: title,
+      ),
+      body: Builder(builder: (_) {
+        if (loadingUser == false) {
+          return Observer(
+            builder: (_) => FutureBuilder(
+                future: ProcessService().queryByDate(pickedDateMobx.getPicked),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return Text('Ocorreu um erro');
+                    case ConnectionState.waiting:
+                      return LoadingView(
+                        background: PageUtils.PRIMARY_COLOR,
+                      );
 
-                    break;
-                  default:
-                    if (snapshot.hasError) {
-                      return ErrorView();
-                    }
+                      break;
+                    default:
+                      if (snapshot.hasError) {
+                        return ErrorView();
+                      }
 
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        if (user.role ==
-                            Role()
-                                .getRoleByEnum(UserRole.WAITING_FOR_APPROVAL)) {
-                          return WaitingForApprovalView();
-                        } else if (user.role ==
-                                Role().getRoleByEnum(UserRole.ADMIN) ||
-                            user.role ==
-                                Role().getRoleByEnum(UserRole.DEFAULT)) {
-                          var _docs = snapshot.data.docs;
-                          return Scaffold(
-                            backgroundColor: Theme.of(context).buttonColor,
-                            appBar: AppBar(
-                              title: Text(title),
-                              backgroundColor: Theme.of(context).buttonColor,
-                              shadowColor: Colors.transparent,
-                              actions: [
-                                IconButton(
-                                  icon: Icon(Icons.date_range),
-                                  onPressed: () => showFilterDialog(),
-                                ),
-                                IconButton(
-                                    icon: Icon(Icons.qr_code),
-                                    onPressed: () {
-                                      _processService.firstQRCodeScan(
-                                          context, null);
-                                    }),
-                              ],
-                            ),
-                            resizeToAvoidBottomInset: false,
-                            drawer: MenuDrawer(
-                              user: user,
-                              currentPage: title,
-                            ),
-                            body: Padding(
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          if (user.role ==
+                              Role().getRoleByEnum(
+                                  UserRole.WAITING_FOR_APPROVAL)) {
+                            return WaitingForApprovalView();
+                          } else if (user.role ==
+                                  Role().getRoleByEnum(UserRole.ADMIN) ||
+                              user.role ==
+                                  Role().getRoleByEnum(UserRole.DEFAULT)) {
+                            var _docs = snapshot.data.docs;
+
+                            return Padding(
                               padding: PageUtils.BODY_PADDING,
                               child: _docs.isEmpty
                                   ? Stack(
@@ -182,22 +182,22 @@ class _ProcessListViewState extends State<ProcessListView> {
                                             ),
                                           )
                                         ]),
-                            ),
-                          );
+                            );
+                          } else {
+                            return ErrorView();
+                          }
                         } else {
-                          return ErrorView();
+                          return EmptyView();
                         }
-                      } else {
-                        return EmptyView();
                       }
-                    }
-                    return LoadingView(background: PageUtils.PRIMARY_COLOR);
-                }
-              }),
-        );
-      } else {
-        return LoadingView(background: PageUtils.PRIMARY_COLOR);
-      }
-    });
+                      return LoadingView(background: PageUtils.PRIMARY_COLOR);
+                  }
+                }),
+          );
+        } else {
+          return LoadingView(background: PageUtils.PRIMARY_COLOR);
+        }
+      }),
+    );
   }
 }

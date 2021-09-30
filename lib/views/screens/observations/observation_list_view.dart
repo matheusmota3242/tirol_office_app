@@ -63,13 +63,17 @@ class _ObservationListViewState extends State<ObservationListView> {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return LoadingView();
+                  return LoadingView(
+                    background: PageUtils.PRIMARY_COLOR,
+                  );
                   break;
                 case ConnectionState.none:
                   return ErrorView();
                   break;
                 case ConnectionState.active:
-                  return LoadingView();
+                  return LoadingView(
+                    background: PageUtils.PRIMARY_COLOR,
+                  );
                   break;
                 case ConnectionState.done:
                   var docs = snapshot.data.docs;
