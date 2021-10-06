@@ -63,19 +63,29 @@ class _ProcessListViewState extends State<ProcessListView> {
     return Scaffold(
       backgroundColor: Theme.of(context).buttonColor,
       appBar: AppBar(
-        title: Text(title),
+        title: user.role == 'Administrador'
+            ? Text(title)
+            : Text('Aguardando aprovação'),
         backgroundColor: Theme.of(context).buttonColor,
         shadowColor: Colors.transparent,
         actions: [
-          IconButton(
-            icon: Icon(Icons.date_range),
-            onPressed: () => showFilterDialog(),
+          Visibility(
+            visible: user.role !=
+                Role().getRoleByEnum(UserRole.WAITING_FOR_APPROVAL),
+            child: IconButton(
+              icon: Icon(Icons.date_range),
+              onPressed: () => showFilterDialog(),
+            ),
           ),
-          IconButton(
-              icon: Icon(Icons.qr_code),
-              onPressed: () {
-                _processService.firstQRCodeScan(context, null);
-              }),
+          Visibility(
+            visible: user.role !=
+                Role().getRoleByEnum(UserRole.WAITING_FOR_APPROVAL),
+            child: IconButton(
+                icon: Icon(Icons.qr_code),
+                onPressed: () {
+                  _processService.firstQRCodeScan(context, null);
+                }),
+          ),
         ],
       ),
       resizeToAvoidBottomInset: false,

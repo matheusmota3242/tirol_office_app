@@ -56,13 +56,7 @@ class DepartmentListView extends StatelessWidget {
       body: StreamBuilder(
         stream: FirestoreDB.departments.orderBy('name').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return LoadingView();
-              break;
-            default:
-              return setBody(context, snapshot, user);
-          }
+          return setBody(context, snapshot, user);
         },
       ),
     );
@@ -173,19 +167,22 @@ class DepartmentListView extends StatelessWidget {
 
   Widget setBody(
       BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot, User user) {
+    Widget page;
     switch (snapshot.connectionState) {
       case ConnectionState.waiting:
-        return LoadingView();
+        page = LoadingView();
+        break;
       case ConnectionState.active:
-        return getPageOnSuccededConnectionState(context, snapshot, user);
+        page = getPageOnSuccededConnectionState(context, snapshot, user);
         break;
       case ConnectionState.none:
-        return ErrorView();
+        page = ErrorView();
         break;
       case ConnectionState.done:
-        return getPageOnSuccededConnectionState(context, snapshot, user);
+        page = LoadingView();
         break;
     }
+    return page;
   }
 
   bool isDamaged(String status) => status == 'Funcionando';

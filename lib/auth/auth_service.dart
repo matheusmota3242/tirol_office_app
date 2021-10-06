@@ -70,6 +70,9 @@ class AuthService {
           'email': email
         });
       });
+    } on auth.FirebaseAuthException catch (fae) {
+      if (fae.code == 'email-already-in-use')
+        Toasts.showToast(content: 'E-mail já utilizado');
     } on Exception catch (e) {
       print(e);
     }

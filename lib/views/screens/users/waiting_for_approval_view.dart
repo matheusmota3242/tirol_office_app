@@ -4,9 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 class WaitingForApprovalView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
+    return Container(
+      color: Colors.white,
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(

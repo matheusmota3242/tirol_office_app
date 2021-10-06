@@ -238,9 +238,9 @@ class RegisterView extends StatelessWidget {
         width: width,
         child: RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState.validate()) {
-              signup(context, authService);
+              await signup(context, authService);
             }
           },
           child: Text(
