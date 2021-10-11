@@ -127,6 +127,32 @@ class MenuDrawer extends StatelessWidget {
               ? Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: TextButton(
+                    onPressed: () => currentPage != PageUtils.UNITS_TITLE
+                        ? pushToUnitsListView(context)
+                        : null,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.room_preferences,
+                          color: Colors.grey[700],
+                        ),
+                        SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          PageUtils.UNITS_TITLE,
+                          style: TextStyle(
+                              color: Colors.grey[700], fontSize: 16.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Container(),
+          user.role == 'Administrador'
+              ? Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: TextButton(
                     onPressed: () => currentPage != PageUtils.MAINTENANCES_TITLE
                         ? pushToMaintenancesView(context)
                         : null,
@@ -293,6 +319,11 @@ class MenuDrawer extends StatelessWidget {
   pushToPersonalInfoView(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         RouteUtils.personalInfo, (Route<dynamic> route) => false);
+  }
+
+  pushToUnitsListView(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+        context, RouteUtils.units, (route) => false);
   }
 
   /* Logout */

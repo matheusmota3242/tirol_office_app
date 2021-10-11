@@ -21,6 +21,7 @@ class PageUtils {
   static const USERS_TITLE = 'Usuários';
   static const PROCESS_DETIALS_TITLE = 'Detalhes do processo';
   static const SERVICE_PROVIDER_TITLE = 'Detalhes do serviço';
+  static const UNITS_TITLE = 'Unidades';
 
   static const STATUS_WORKING = 'Funcionando';
   static const STATUS_DAMAGED = 'Danificado';

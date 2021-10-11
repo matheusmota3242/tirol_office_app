@@ -5,6 +5,7 @@ import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintanance_form_view.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
+import 'package:tirol_office_app/views/screens/units/unit_form_view.dart';
 
 class RouteUtils {
   static const String processes = 'processes';
@@ -20,6 +21,7 @@ class RouteUtils {
   static const String serviceProvidersForm = 'serviceProvidersForm';
   static const String personalInfo = 'personalInfo';
   static const String personalInfoForm = 'personalInfoForm';
+  static const String units = 'units';
 
   /* Página de formulário de manutenção corretiva.
    * Recebe a descrição do equipmaneto e o nome do departamento
@@ -56,5 +58,9 @@ class RouteUtils {
         ),
       ),
     );
+  }
+
+  static void pushToUnitFormView(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => UnitFormView()));
   }
 }

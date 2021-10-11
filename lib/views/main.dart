@@ -22,6 +22,7 @@ import 'package:tirol_office_app/views/screens/users/user_list_view.dart';
 
 import 'screens/maintenances/maintenances_view.dart';
 import 'screens/personal_info/personal_info_form_view.dart';
+import 'screens/units/unit_list_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -127,7 +128,8 @@ class MyApp extends StatelessWidget {
           'serviceProviders': (_) => ServiceProviderListView(),
           'serviceProvidersForm': (_) => ServiceProviderFormView(),
           'personalInfo': (_) => PersonalInfoView(),
-          'personalInfoForm': (_) => PersonalInfoFormView()
+          'personalInfoForm': (_) => PersonalInfoFormView(),
+          'units': (_) => UnitListView(),
         },
         home: uid == null ? LoginView() : ProcessListView(),
       ),
