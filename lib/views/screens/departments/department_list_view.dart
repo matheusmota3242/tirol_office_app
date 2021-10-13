@@ -14,50 +14,58 @@ import 'package:tirol_office_app/views/screens/departments/department_form_view.
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
 import 'package:tirol_office_app/views/screens/error_view.dart';
 import 'package:tirol_office_app/views/screens/loading_view.dart';
+import 'package:tirol_office_app/views/screens/units/unit_list_view.dart';
 import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
-import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 class DepartmentListView extends StatelessWidget {
-  const DepartmentListView({Key key}) : super(key: key);
-
+  const DepartmentListView({Key key, @required this.unitName})
+      : super(key: key);
+  final String unitName;
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserService>(context).getUser;
     String title = PageUtils.DEPARTIMENTS_TITLE;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: [
-          Visibility(
-            visible: user.role == 'Administrador',
-            child: IconButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => DepartmentFormView(
-                    currentDepartment: new Department(),
-                    edit: false,
+    return WillPopScope(
+      onWillPop: () async => Navigator.push(
+          context, MaterialPageRoute(builder: (_) => UnitListView())),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('${this.unitName} -  $title'),
+          actions: [
+            Visibility(
+              visible: user.role == 'Administrador',
+              child: IconButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => DepartmentFormView(
+                      currentDepartment: new Department(),
+                      edit: false,
+                    ),
                   ),
                 ),
+                icon: Icon(
+                  Icons.add,
+                ),
               ),
-              icon: Icon(
-                Icons.add,
-              ),
-            ),
-          )
-        ],
-      ),
-      drawer: MenuDrawer(
-        user: Provider.of<UserService>(context).getUser,
-        currentPage: title,
-      ),
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: StreamBuilder(
-        stream: FirestoreDB.departments.orderBy('name').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return setBody(context, snapshot, user);
-        },
+            )
+          ],
+        ),
+        // drawer: MenuDrawer(
+        //   user: Provider.of<UserService>(context).getUser,
+        //   currentPage: title,
+        // ),
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: StreamBuilder(
+          stream: FirestoreDB.departments
+              .where('unitName', isEqualTo: this.unitName)
+              .orderBy('name')
+              .snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            return setBody(context, snapshot, user);
+          },
+        ),
       ),
     );
   }
@@ -139,8 +147,8 @@ class DepartmentListView extends StatelessWidget {
                                 ? pushToEquipmentCorrectiveMaintenancesView(
                                     context,
                                     e,
-                                    DepartmentDTO(
-                                        department.id, department.name),
+                                    DepartmentDTO(department.id,
+                                        department.name, this.unitName),
                                   )
                                 : null,
                             child: Row(
@@ -170,7 +178,9 @@ class DepartmentListView extends StatelessWidget {
     Widget page;
     switch (snapshot.connectionState) {
       case ConnectionState.waiting:
-        page = LoadingView();
+        page = LoadingView(
+          background: Colors.white,
+        );
         break;
       case ConnectionState.active:
         page = getPageOnSuccededConnectionState(context, snapshot, user);
@@ -179,7 +189,9 @@ class DepartmentListView extends StatelessWidget {
         page = ErrorView();
         break;
       case ConnectionState.done:
-        page = LoadingView();
+        page = LoadingView(
+          background: Colors.white,
+        );
         break;
     }
     return page;

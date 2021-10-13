@@ -9,6 +9,10 @@ class ValidationUtils {
 
   isEmptyMessage(String field) => 'Por favor, preencha o campo $field';
 
+  isEmpty(String value) {
+    if (value.isEmpty) return 'Campo obrigatório';
+  }
+
   bool checkEmail(String email) {
     bool isValid = EmailValidator.validate(email);
     return isValid;

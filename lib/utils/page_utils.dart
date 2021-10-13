@@ -176,4 +176,16 @@ class PageUtils {
       ),
     );
   }
+
+  static Widget getNoContent({bool blackFont}) {
+    return Center(
+      child: Text(
+        'Não há itens cadastrados.',
+        style: TextStyle(
+            color: blackFont ? Colors.black : Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w500),
+      ),
+    );
+  }
 }

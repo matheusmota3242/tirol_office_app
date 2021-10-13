@@ -100,9 +100,12 @@ class _EquipmentCorrectiveMaintenanceFormViewState
       if (_formKey.currentState.validate()) {
         ServiceProvider serviceProvider = serviceProviders.firstWhere(
             (element) => element.name == serviceProviderNameMobx.name);
+
         widget.maintenance.serviceProvider = serviceProvider;
         widget.maintenance.dateTime =
             DateTimeUtils.skipTime(pickedDateMobx.getPicked);
+        widget.maintenance.unitName = widget.departmentDTO.unitName;
+
         bool result;
         if (isEdition())
           result = await service.update(widget.maintenance);

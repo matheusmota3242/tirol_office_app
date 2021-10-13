@@ -136,7 +136,9 @@ class _MaintenancesViewState extends State<MaintenancesView> {
                             .pushToEquipmentCorrectiveMaintenancesFormView(
                                 context: context,
                                 departmentDTO: DepartmentDTO(
-                                    null, maintenance.departmentName),
+                                    null,
+                                    maintenance.departmentName,
+                                    maintenance.unitName),
                                 equipment: Equipment.withDescription(
                                     maintenance.departmentName),
                                 maintenance: maintenance,

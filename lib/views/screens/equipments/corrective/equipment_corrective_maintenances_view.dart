@@ -6,6 +6,7 @@ import 'package:tirol_office_app/service/maintenance_service.dart';
 import 'package:tirol_office_app/utils/datetime_utils.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
+import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
 import 'package:tirol_office_app/views/widgets/equipment_status_widget.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
@@ -135,7 +136,12 @@ class _EquipmentCorrectiveMaintenancesViewState
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushNamed(context, RouteUtils.DEPARTMENTS);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => DepartmentListView(
+                      unitName: widget.departmentDTO.unitName,
+                    )));
         return true;
       },
       child: Scaffold(

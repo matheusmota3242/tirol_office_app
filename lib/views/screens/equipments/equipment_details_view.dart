@@ -26,7 +26,10 @@ class EquipmentDetailsView extends StatelessWidget {
       onWillPop: () async {
         Navigator.pushAndRemoveUntil<void>(
             context,
-            MaterialPageRoute(builder: (_) => DepartmentListView()),
+            MaterialPageRoute(
+                builder: (_) => DepartmentListView(
+                      unitName: this.departmentDTO.unitName,
+                    )),
             ModalRoute.withName("/"));
         return true;
       },

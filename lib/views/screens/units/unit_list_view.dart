@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tirol_office_app/models/unit.dart';
 import 'package:tirol_office_app/service/unit_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
+import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
+import '../error_view.dart';
 import '../loading_view.dart';
 
 class UnitListView extends StatelessWidget {
@@ -25,25 +28,58 @@ class UnitListView extends StatelessWidget {
         currentPage: PageUtils.UNITS_TITLE,
         user: Provider.of<UserService>(context).getUser,
       ),
-      body: FutureBuilder(
-        future: UnitService.getUnits(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          Widget page;
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              page = LoadingView();
-              break;
-            case ConnectionState.active:
-              page = Container();
-              break;
-            case ConnectionState.done:
-              page = Container();
-              break;
-            default:
-          }
-          return page;
-        },
+      body: Container(
+        padding: PageUtils.BODY_PADDING,
+        child: FutureBuilder(
+          future: UnitService.getUnits(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            Widget page;
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                page = LoadingView();
+                break;
+              case ConnectionState.active:
+                page = Container();
+                break;
+              case ConnectionState.done:
+                page = getPageOnConnectionStateDone(snapshot);
+                break;
+              default:
+                page = ErrorView();
+            }
+            return page;
+          },
+        ),
       ),
     );
+  }
+
+  getPageOnConnectionStateDone(AsyncSnapshot<QuerySnapshot> snapshot) {
+    Widget page;
+    if (snapshot.data.docs.isEmpty) {
+      page = PageUtils.getNoContent(blackFont: true);
+    } else {
+      page = ListView.builder(
+          itemCount: snapshot.data.size,
+          itemBuilder: (context, index) {
+            Unit unit = Unit.fromJson(snapshot.data.docs[index].data());
+            return ListTile(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => DepartmentListView(unitName: unit.name))),
+              title: Text(unit.name),
+              subtitle: Text(
+                  '${unit.address}, ${unit.number.toString()}, ${unit.district}'),
+              contentPadding: EdgeInsets.all(0),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+              ),
+            );
+          });
+    }
+    return page;
   }
 }

@@ -45,9 +45,32 @@ class MenuDrawer extends StatelessWidget {
             width: double.infinity,
             height: userContainerHeight,
           ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0, top: 8.0),
+            child: TextButton(
+              onPressed: () => currentPage != PageUtils.UNITS_TITLE
+                  ? pushToUnitsListView(context)
+                  : null,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.room_preferences,
+                    color: Colors.grey[700],
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    PageUtils.UNITS_TITLE,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
+          ),
           user.role == 'Administrador'
               ? Padding(
-                  padding: EdgeInsets.only(left: 10.0, top: 8.0),
+                  padding: EdgeInsets.only(left: 10.0),
                   child: TextButton(
                     onPressed: () => currentPage != PageUtils.PROCESSES_TITLE
                         ? pushToProcessListView(context)
@@ -97,58 +120,33 @@ class MenuDrawer extends StatelessWidget {
                   ),
                 )
               : Container(),
-          user.role == 'Administrador'
-              ? Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: TextButton(
-                    onPressed: () => currentPage != PageUtils.DEPARTIMENTS_TITLE
-                        ? pushToDepartmentListView(context)
-                        : null,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.room_preferences,
-                          color: Colors.grey[700],
-                        ),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Text(
-                          PageUtils.DEPARTIMENTS_TITLE,
-                          style: TextStyle(
-                              color: Colors.grey[700], fontSize: 16.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              : Container(),
-          user.role == 'Administrador'
-              ? Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: TextButton(
-                    onPressed: () => currentPage != PageUtils.UNITS_TITLE
-                        ? pushToUnitsListView(context)
-                        : null,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.room_preferences,
-                          color: Colors.grey[700],
-                        ),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Text(
-                          PageUtils.UNITS_TITLE,
-                          style: TextStyle(
-                              color: Colors.grey[700], fontSize: 16.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              : Container(),
+          // user.role == 'Administrador'
+          //     ? Padding(
+          //         padding: EdgeInsets.only(left: 10.0),
+          //         child: TextButton(
+          //           onPressed: () => currentPage != PageUtils.DEPARTIMENTS_TITLE
+          //               ? pushToDepartmentListView(context)
+          //               : null,
+          //           child: Row(
+          //             children: [
+          //               Icon(
+          //                 Icons.room_preferences,
+          //                 color: Colors.grey[700],
+          //               ),
+          //               SizedBox(
+          //                 width: 5.0,
+          //               ),
+          //               Text(
+          //                 PageUtils.DEPARTIMENTS_TITLE,
+          //                 style: TextStyle(
+          //                     color: Colors.grey[700], fontSize: 16.0),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       )
+          //     : Container(),
+
           user.role == 'Administrador'
               ? Padding(
                   padding: EdgeInsets.only(left: 10.0),
