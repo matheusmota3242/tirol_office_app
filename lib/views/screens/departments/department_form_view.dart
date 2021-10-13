@@ -14,9 +14,13 @@ import 'package:tirol_office_app/views/widgets/department_form_equipment_item.da
 class DepartmentFormView extends StatefulWidget {
   final Department currentDepartment;
   final bool edit;
+  final String unitName;
 
   const DepartmentFormView(
-      {Key key, this.currentDepartment, @required this.edit})
+      {Key key,
+      this.currentDepartment,
+      @required this.edit,
+      @required this.unitName})
       : super(key: key);
   @override
   _DepartmentFormViewState createState() => _DepartmentFormViewState();
@@ -100,6 +104,8 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
           equipment.status = element.status;
           return equipment;
         }).toList();
+
+        widget.currentDepartment.unitName = widget.unitName;
         widget.currentDepartment.equipments = equipmentList;
 
         if (checkEdition()) {

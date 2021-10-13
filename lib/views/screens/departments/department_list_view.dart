@@ -117,7 +117,9 @@ class DepartmentListView extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (_) => DepartmentFormView(
-                                currentDepartment: department, edit: true)))
+                                currentDepartment: department,
+                                edit: true,
+                                unitName: this.unitName)))
                     : null,
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.all(0),
