@@ -3,13 +3,18 @@ import 'package:tirol_office_app/models/unit.dart';
 
 import 'package:tirol_office_app/service/unit_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/utils/validation_utils.dart';
 
 import 'unit_list_view.dart';
 
 class UnitFormView extends StatefulWidget {
-  const UnitFormView({Key key}) : super(key: key);
+  const UnitFormView({
+    Key key,
+    @required this.unit,
+    @required this.edit,
+  }) : super(key: key);
+  final Unit unit;
+  final bool edit;
   @override
   _UnitFormViewState createState() => _UnitFormViewState();
 }
@@ -17,10 +22,8 @@ class UnitFormView extends StatefulWidget {
 class _UnitFormViewState extends State<UnitFormView>
     with TickerProviderStateMixin {
   AnimationController _animationController;
-  Unit unit = Unit();
-
   final GlobalKey<FormState> _formKey = GlobalKey();
-
+  UnitService _service = UnitService();
   @override
   void initState() {
     _animationController = AnimationController(
@@ -33,6 +36,24 @@ class _UnitFormViewState extends State<UnitFormView>
 
   @override
   Widget build(BuildContext context) {
+    String oldUnitName;
+    if (widget.edit) {
+      oldUnitName = widget.unit.name;
+    }
+
+    persist() async {
+      if (_formKey.currentState.validate()) {
+        if (widget.edit) {
+          await _service.update(widget.unit, oldUnitName);
+        } else {
+          await _service.add(widget.unit);
+        }
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => UnitListView()),
+            (route) => false);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Nova unidade'),
@@ -45,7 +66,8 @@ class _UnitFormViewState extends State<UnitFormView>
             children: [
               TextFormField(
                 validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => unit.name = value,
+                onChanged: (value) => widget.unit.name = value,
+                initialValue: widget.unit.name,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
                   labelText: 'Nome',
@@ -69,7 +91,8 @@ class _UnitFormViewState extends State<UnitFormView>
               ),
               TextFormField(
                 validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => unit.address = value,
+                onChanged: (value) => widget.unit.address = value,
+                initialValue: widget.unit.address,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
                   labelText: 'Endereço',
@@ -93,7 +116,8 @@ class _UnitFormViewState extends State<UnitFormView>
               ),
               TextFormField(
                 validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => unit.number = int.parse(value),
+                onChanged: (value) => widget.unit.number = int.parse(value),
+                initialValue: widget.unit.number.toString(),
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
@@ -118,7 +142,8 @@ class _UnitFormViewState extends State<UnitFormView>
               ),
               TextFormField(
                 validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => unit.district = value,
+                onChanged: (value) => widget.unit.district = value,
+                initialValue: widget.unit.district,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
                   labelText: 'Bairro',
@@ -144,14 +169,6 @@ class _UnitFormViewState extends State<UnitFormView>
       floatingActionButton:
           PageUtils.getFloatActionButton(_animationController, persist, pop),
     );
-  }
-
-  persist() async {
-    if (_formKey.currentState.validate()) {
-      await UnitService().add(unit);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => UnitListView()), (route) => false);
-    }
   }
 
   pop() {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/maintenance_model.dart';
+import 'package:tirol_office_app/models/unit.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintanance_form_view.dart';
 import 'package:tirol_office_app/views/screens/equipments/corrective/equipment_corrective_maintenances_view.dart';
 import 'package:tirol_office_app/views/screens/units/unit_form_view.dart';
@@ -61,6 +62,14 @@ class RouteUtils {
   }
 
   static void pushToUnitFormView(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => UnitFormView()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => UnitFormView(
+          unit: Unit(),
+          edit: false,
+        ),
+      ),
+    );
   }
 }

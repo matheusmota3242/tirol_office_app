@@ -42,6 +42,7 @@ class DepartmentListView extends StatelessWidget {
                     builder: (_) => DepartmentFormView(
                       currentDepartment: new Department(),
                       edit: false,
+                      unitName: this.unitName,
                     ),
                   ),
                 ),

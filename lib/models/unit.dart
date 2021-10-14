@@ -1,8 +1,13 @@
 class Unit {
+  String _id;
+
   String _name;
   String _address;
   int _number;
   String _district;
+
+  String get id => this._id;
+  set id(String value) => this._id = value;
 
   get name => this._name;
   set name(String name) => this._name = name;

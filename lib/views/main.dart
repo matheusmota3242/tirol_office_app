@@ -121,7 +121,9 @@ class MyApp extends StatelessWidget {
           'processes': (_) => ProcessListView(),
           'processDetails': (_) => ProcessDetailsView(),
           'observations': (_) => ObservationListView(),
-          'departments': (_) => DepartmentListView(),
+          'departments': (_) => DepartmentListView(
+                unitName: '',
+              ),
           'equipments': (_) => EquipmentsView(),
           'maintenances': (_) => MaintenancesView(),
           'users': (_) => UserListView(),

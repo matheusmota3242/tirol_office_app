@@ -8,8 +8,9 @@ import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/department_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/widgets/department_form_equipment_item.dart';
+
+import 'department_list_view.dart';
 
 class DepartmentFormView extends StatefulWidget {
   final Department currentDepartment;
@@ -113,9 +114,14 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
         } else {
           result = await _service.save(widget.currentDepartment);
         }
-        if (result)
-          Navigator.pushNamedAndRemoveUntil(
-              context, RouteUtils.DEPARTMENTS, (route) => false);
+        if (result) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => DepartmentListView(
+                        unitName: widget.unitName,
+                      )));
+        }
       }
     }
 
