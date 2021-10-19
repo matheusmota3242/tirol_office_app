@@ -54,29 +54,37 @@ abstract class DepartmentServiceBase with Store {
   Future<bool> save(Department department) async {
     bool result = false;
     var snapshot = await FirestoreDB.departments.get();
-    if (!departmentAlreadyExists(snapshot, department.name)) {
+    if (departmentAlreadyExists(
+            snapshot, department.name, department.unitName) ==
+        false) {
       try {
         await FirestoreDB.departments.add(department.toJson());
         Toasts.showToast(content: 'Departamento criado com sucesso');
         result = true;
       } catch (e) {
-        Toasts.showToast(content: 'Ocorreu um erro');
+        Toasts.showWarningToast(content: 'Ocorreu um erro');
       }
+    } else {
+      Toasts.showToast(content: 'Departamento já existe');
     }
     return result;
   }
 
   Future<bool> update(Department department) async {
     bool result = false;
-
-    try {
-      await FirestoreDB.departments
-          .doc(department.id)
-          .update(department.toJson());
-      Toasts.showToast(content: 'Departamento editado com sucesso');
-      result = true;
-    } catch (e) {
-      Toasts.showToast(content: 'Erro ao editar departamento');
+    var snapshot = await FirestoreDB.departments.get();
+    if (departmentAlreadyExists(
+            snapshot, department.name, department.unitName) ==
+        false) {
+      try {
+        await FirestoreDB.departments
+            .doc(department.id)
+            .update(department.toJson());
+        Toasts.showToast(content: 'Departamento editado com sucesso');
+        result = true;
+      } catch (e) {
+        Toasts.showToast(content: 'Erro ao editar departamento');
+      }
     }
 
     return result;
@@ -108,7 +116,11 @@ abstract class DepartmentServiceBase with Store {
         .get();
   }
 
-  bool departmentAlreadyExists(QuerySnapshot snapshot, String name) =>
-      snapshot.docs
-          .any((element) => Department.fromJson(element.data()).name == name);
+  bool departmentAlreadyExists(
+          QuerySnapshot snapshot, String departmentName, String unitName) =>
+      snapshot.docs.any((element) {
+        Department department = Department.fromJson(element.data());
+        return department.name == departmentName &&
+            department.unitName == unitName;
+      });
 }

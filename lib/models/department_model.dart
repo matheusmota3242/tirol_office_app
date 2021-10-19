@@ -29,10 +29,12 @@ class Department {
         _equipments = List<Equipment>.from(data['equipments'].map((equipment) =>
             equipment['interval'] != null
                 ? SpecialEquipment.fromJson(equipment)
-                : Equipment.fromJson(equipment)));
+                : Equipment.fromJson(equipment))),
+        _unitName = data['unitName'];
 
   Map<String, dynamic> toJson() => {
         'name': _name,
         'equipments': _equipments.map((e) => e.toJson()).toList(),
+        'unitName': unitName,
       };
 }

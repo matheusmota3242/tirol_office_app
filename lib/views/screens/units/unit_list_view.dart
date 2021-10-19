@@ -7,15 +7,21 @@ import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/screens/departments/department_list_view.dart';
+import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
 
 import '../error_view.dart';
 import '../loading_view.dart';
 import 'unit_form_view.dart';
 
-class UnitListView extends StatelessWidget {
+class UnitListView extends StatefulWidget {
   const UnitListView({Key key}) : super(key: key);
+  @override
+  _UnitListViewState createState() => _UnitListViewState();
+}
 
+class _UnitListViewState extends State<UnitListView> {
+  UnitService _service = UnitService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +62,10 @@ class UnitListView extends StatelessWidget {
     );
   }
 
+  superSetState() {
+    setState(() {});
+  }
+
   getPageOnConnectionStateDone(AsyncSnapshot<QuerySnapshot> snapshot) {
     Widget page;
     if (snapshot.data.docs.isEmpty) {
@@ -74,6 +84,8 @@ class UnitListView extends StatelessWidget {
                   builder: (_) => UnitFormView(unit: unit, edit: true),
                 ),
               ),
+              onLongPress: () => Dialogs.showDeleteDialog(
+                  context, _service.remove, superSetState, unit.id),
               child: ListTile(
                 onTap: () => Navigator.push(
                     context,

@@ -46,4 +46,8 @@ class UnitService {
       Toasts.showWarningToast(content: 'Erro ao editar unidade');
     }
   }
+
+  remove(String id) async {
+    await FirestoreDB.dbUnits.doc(id).delete();
+  }
 }

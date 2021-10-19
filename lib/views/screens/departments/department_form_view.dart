@@ -36,6 +36,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
   AnimationController _animationController;
   DepartmentService _service = DepartmentService();
   EquipmentListMobx equipmentListMobx = EquipmentListMobx();
+  GlobalKey<FormState> _key = GlobalKey<FormState>();
   @override
   void initState() {
     _animationController = AnimationController(
@@ -60,7 +61,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
   @override
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
-    GlobalKey<FormState> _key = GlobalKey<FormState>();
+
     // Campo nome do deprtamento a ser adicionado
     Widget departmentNameField() {
       TextEditingController controller =

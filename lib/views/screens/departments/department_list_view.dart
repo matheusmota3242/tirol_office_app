@@ -40,7 +40,7 @@ class DepartmentListView extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => DepartmentFormView(
-                      currentDepartment: new Department(),
+                      currentDepartment: Department(),
                       edit: false,
                       unitName: this.unitName,
                     ),
