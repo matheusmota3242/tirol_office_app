@@ -4,6 +4,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
+import 'package:tirol_office_app/helpers/process_helper.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
@@ -67,8 +68,13 @@ class ProcessService {
     QuerySnapshot departmentSnapshot;
     var now = DateTime.now();
 
-    departmentSnapshot =
-        await FirestoreDB.departments.where('name', isEqualTo: response).get();
+    List<String> responseArray = ProcessHelper.extractResponse(response);
+    departmentSnapshot = await FirestoreDB.departments
+        .where('unitName', isEqualTo: responseArray[0])
+        .where('name', isEqualTo: responseArray[1])
+        .get();
+
+    //TODO testar o fluxo de processos novamente
 
     /* Caso o departamento não exista... */
     if (departmentSnapshot.docs.isEmpty) return null;
