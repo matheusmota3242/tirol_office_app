@@ -45,7 +45,7 @@ class ProcessCardItem extends StatelessWidget {
             children: [
               Positioned(
                   child: Text(
-                    process.getDepartment.name,
+                    '${process.getDepartment.unitName} - ${process.getDepartment.name}',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,

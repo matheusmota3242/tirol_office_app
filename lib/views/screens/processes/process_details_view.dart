@@ -3,12 +3,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/mobx/equipment/equipment_mobx.dart';
 import 'package:tirol_office_app/mobx/equipment_list.dart/equipment_list_mobx.dart';
+import 'package:tirol_office_app/mobx/loading/loading_mobx.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/process_service.dart';
 import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
+import 'package:tirol_office_app/views/screens/loading_view.dart';
 import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
 import 'package:tirol_office_app/views/widgets/process_card_item.dart';
 
@@ -25,6 +27,7 @@ class ProcessDetailsView extends StatefulWidget {
 class _ProcessDetailsViewState extends State<ProcessDetailsView> {
   ProcessService processService = ProcessService();
   EquipmentListMobx equipmentListMobx = EquipmentListMobx();
+  LoadingMobx loadingMobx = LoadingMobx();
   Department department = Department();
   bool isEquipmentOk(String status) => status == 'Funcionando';
   @override
@@ -43,7 +46,7 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
       updatedEquipments.add(equipment);
     });
     widget.process.department.equipments = updatedEquipments;
-    await processService.finalQRCodeScan(context, widget.process);
+    await processService.finalQRCodeScan(context, widget.process, loadingMobx);
   }
 
   /* Inicializando EquipmentListMobx */
@@ -141,112 +144,128 @@ class _ProcessDetailsViewState extends State<ProcessDetailsView> {
             )
           ],
         ),
-        body: Container(
-            padding: EdgeInsets.all(12.0),
-            color: PageUtils.PRIMARY_COLOR,
-            child: ListView(
-              children: [
-                ProcessCardItem(
-                  isProcessDetailsView: true,
-                  isLastItem: false,
-                  process: widget.process,
-                ),
-                Card(
-                  margin: EdgeInsets.all(0),
-                  shadowColor: Colors.transparent,
-                  child: Container(
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Equipamentos',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        SizedBox(
-                          height: 12.0,
-                        ),
-                        equipmentListMobx.equipmentList.isEmpty
-                            ? Text('Não há equipamentos cadastrados')
-                            : Observer(
-                                builder: (_) => Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: equipmentListMobx.equipmentList
-                                      .map(
-                                        (e) => processService.hasOwnership(
-                                                    widget.process.getUserId,
-                                                    _userService.getUser.id) &&
-                                                widget.process.end == null
-                                            ? Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    e.getDescription,
-                                                    style: TextStyle(
-                                                        color: e.getStatus ==
-                                                                'Danificado'
-                                                            ? Colors.red[400]
-                                                            : Colors.black),
-                                                  ),
-                                                  Switch(
-                                                      value: isEquipmentOk(
-                                                          e.getStatus),
-                                                      onChanged: (value) {
-                                                        e.changeStatus(
-                                                            e.getStatus);
-                                                      }),
-                                                ],
-                                              )
-                                            : Container(
-                                                padding:
-                                                    EdgeInsets.only(top: 8.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(e.description),
-                                                    Container(
-                                                      height: 24,
-                                                      width: 24,
-                                                      child: Icon(
-                                                        e
-                                                                    .getStatus ==
-                                                                'Danificado'
-                                                            ? Icons
-                                                                .warning_amber_rounded
-                                                            : Icons.done,
-                                                        color: Colors.white,
-                                                        size: 16,
+        body: Observer(
+          builder: (_) => loadingMobx.status == false
+              ? Container(
+                  padding: EdgeInsets.all(12.0),
+                  color: PageUtils.PRIMARY_COLOR,
+                  child: ListView(
+                    children: [
+                      ProcessCardItem(
+                        isProcessDetailsView: true,
+                        isLastItem: false,
+                        process: widget.process,
+                      ),
+                      Card(
+                        margin: EdgeInsets.all(0),
+                        shadowColor: Colors.transparent,
+                        child: Container(
+                          width: double.maxFinite,
+                          padding: EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Equipamentos',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              SizedBox(
+                                height: 12.0,
+                              ),
+                              equipmentListMobx.equipmentList.isEmpty
+                                  ? Text('Não há equipamentos cadastrados')
+                                  : Observer(
+                                      builder: (_) => Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: equipmentListMobx
+                                            .equipmentList
+                                            .map(
+                                              (e) => processService
+                                                          .hasOwnership(
+                                                              widget.process
+                                                                  .getUserId,
+                                                              _userService
+                                                                  .getUser
+                                                                  .id) &&
+                                                      widget.process.end == null
+                                                  ? Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          e.getDescription,
+                                                          style: TextStyle(
+                                                              color: e.getStatus ==
+                                                                      'Danificado'
+                                                                  ? Colors
+                                                                      .red[400]
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
+                                                        Switch(
+                                                            value:
+                                                                isEquipmentOk(e
+                                                                    .getStatus),
+                                                            onChanged: (value) {
+                                                              e.changeStatus(
+                                                                  e.getStatus);
+                                                            }),
+                                                      ],
+                                                    )
+                                                  : Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 8.0),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(e.description),
+                                                          Container(
+                                                            height: 24,
+                                                            width: 24,
+                                                            child: Icon(
+                                                              e.getStatus ==
+                                                                      'Danificado'
+                                                                  ? Icons
+                                                                      .warning_amber_rounded
+                                                                  : Icons.done,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 16,
+                                                            ),
+                                                            decoration: BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: e.getStatus ==
+                                                                        'Danificado'
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .green),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: e.getStatus ==
-                                                                  'Danificado'
-                                                              ? Colors.red
-                                                              : Colors.green),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                      )
-                                      .toList(),
-                                ),
-                              )
-                      ],
-                    ),
-                  ),
+                                            )
+                                            .toList(),
+                                      ),
+                                    )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      observationsField()
+                    ],
+                  ))
+              : LoadingView(
+                  background: PageUtils.PRIMARY_COLOR,
                 ),
-                SizedBox(
-                  height: 16.0,
-                ),
-                observationsField()
-              ],
-            )),
+        ),
       ),
     );
   }

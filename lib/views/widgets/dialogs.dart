@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
+import 'package:tirol_office_app/mobx/loading/loading_mobx.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
 import 'package:tirol_office_app/service/process_service.dart';
@@ -199,8 +200,8 @@ class Dialogs {
     return result;
   }
 
-  showFinalScanDialog(
-      BuildContext context, String response, Process process) async {
+  showFinalScanDialog(BuildContext context, String response, Process process,
+      LoadingMobx loading) async {
     showDialog(
       context: context,
       builder: (_) =>
@@ -222,6 +223,7 @@ class Dialogs {
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        loading.setStatus(true);
                         updateProcess(process, context);
                         Navigator.of(localContext).pop();
                       },

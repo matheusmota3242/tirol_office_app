@@ -5,6 +5,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tirol_office_app/db/firestore.dart';
 import 'package:tirol_office_app/helpers/datetime_helper.dart';
 import 'package:tirol_office_app/helpers/process_helper.dart';
+import 'package:tirol_office_app/mobx/loading/loading_mobx.dart';
 import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/models/process_model.dart';
@@ -36,12 +37,14 @@ class ProcessService {
     }
   }
 
-  Future<void> finalQRCodeScan(BuildContext context, Process process) async {
+  Future<void> finalQRCodeScan(
+      BuildContext context, Process process, LoadingMobx loading) async {
     String response = await FlutterBarcodeScanner.scanBarcode(
         '#FF0000', "Cancelar", true, ScanMode.QR);
-
-    if (response == process.getDepartment.name) {
-      await Dialogs().showFinalScanDialog(context, response, process);
+    List<String> responseArray = ProcessHelper.extractResponse(response);
+    if (responseArray[0] == process.getDepartment.unitName &&
+        responseArray[1] == process.getDepartment.name) {
+      await Dialogs().showFinalScanDialog(context, response, process, loading);
     } else {
       Toasts.showToast(content: 'Código diferente do esperado');
     }
@@ -77,7 +80,7 @@ class ProcessService {
     //TODO testar o fluxo de processos novamente
 
     /* Caso o departamento não exista... */
-    if (departmentSnapshot.docs.isEmpty) return null;
+    if (departmentSnapshot.docs.isEmpty) return;
 
     Department department =
         Department.fromJson(departmentSnapshot.docs.first.data());
