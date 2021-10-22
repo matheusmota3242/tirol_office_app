@@ -4,9 +4,12 @@ import 'dart:math' as math;
 
 import 'package:tirol_office_app/auth/auth_service.dart';
 import 'package:tirol_office_app/models/user_model.dart';
+import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
+
+import 'personal_info_view.dart';
 
 class PersonalInfoFormView extends StatefulWidget {
   final User user;
@@ -30,10 +33,12 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
     var auth = Provider.of<AuthService>(context, listen: false);
-    void update() {
-      auth.update(widget.user, context);
+    void update() async {
+      await auth.update(widget.user, context);
+      Provider.of<UserService>(context, listen: false).setUser(widget.user);
       Toasts.showToast(content: 'Informações atualizadas com sucesso');
-      Navigator.pushNamed(context, RouteUtils.personalInfo);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (_) => PersonalInfoView()));
     }
 
     void cancel() {
@@ -41,20 +46,15 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
     }
 
     Widget personalInfoNameField(String label, String value) {
-      TextEditingController controller = TextEditingController(text: value);
       return Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
+              initialValue: widget.user.name,
               onChanged: (newName) {
-                controller.text = newName;
-                controller.selection = TextSelection.fromPosition(
-                    TextPosition(offset: controller.text.length));
-
                 widget.user.name = newName;
               },
-              controller: controller,
               style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey[800],
@@ -83,7 +83,6 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
     }
 
     Widget personalInfoEmailField(String label, String value) {
-      TextEditingController controller = TextEditingController(text: value);
       return Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,11 +90,8 @@ class _PersonalInfoFormViewState extends State<PersonalInfoFormView>
             TextFormField(
               onChanged: (newEmail) {
                 widget.user.email = newEmail;
-                controller.text = newEmail;
-                controller.selection = TextSelection.fromPosition(
-                    TextPosition(offset: controller.text.length));
               },
-              controller: controller,
+              initialValue: widget.user.email,
               style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey[800],

@@ -104,7 +104,8 @@ class ProcessService {
               DateTimeHelper.convertToEndDate(now),
             ),
           )
-          .where('department.name', isEqualTo: response)
+          .where('department.unitName', isEqualTo: responseArray[0])
+          .where('department.name', isEqualTo: responseArray[1])
           .get();
     } catch (e) {
       Toasts.showWarningToast(content: 'Erro ao criar processo!');

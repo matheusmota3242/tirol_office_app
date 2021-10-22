@@ -1,7 +1,6 @@
 class Role {
   Map<UserRole, String> map = {
     UserRole.ADMIN: 'Administrador',
-    UserRole.DEFAULT: 'Comum',
     UserRole.WAITING_FOR_APPROVAL: 'Aguardando aprovação'
   };
 

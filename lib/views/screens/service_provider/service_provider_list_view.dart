@@ -23,6 +23,19 @@ class ServiceProviderListView extends StatefulWidget {
 class _ServiceProviderListViewState extends State<ServiceProviderListView> {
   ServiceProviderService _service = ServiceProviderService();
 
+  void pushToServiceProvidersFormView(
+      BuildContext context, ServiceProvider serviceProvider, bool edit) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ServiceProviderFormView(
+          serviceProvider: serviceProvider,
+          edit: edit,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserService>(context).getUser;
@@ -32,10 +45,11 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
         title: Text(PageUtils.SERVICES_TITLE),
         actions: [
           Visibility(
-            visible: user.role == 'Administrador' ? true : false,
+            visible: user.role == 'Administrador',
             child: IconButton(
               icon: Icon(Icons.add),
-              onPressed: () => pushToServiceProvidersFormView(context),
+              onPressed: () => pushToServiceProvidersFormView(
+                  context, ServiceProvider(), false),
             ),
           )
         ],
@@ -56,15 +70,17 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
               case ConnectionState.active:
                 if (!snapshot.hasData || snapshot.data.docs.length == 0)
                   return Container(
-                      color: Colors.white,
-                      child: Center(
-                          child: Text(
+                    color: Colors.white,
+                    child: Center(
+                      child: Text(
                         'Não há itens cadastrados.',
                         style: TextStyle(
                             color: Colors.grey[800],
                             fontSize: 20,
                             fontWeight: FontWeight.w500),
-                      )));
+                      ),
+                    ),
+                  );
 
                 if (snapshot.hasError) return ErrorView();
 
@@ -82,16 +98,15 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
                             _service.remove,
                             setState,
                             serviceProvider.id),
-                        onDoubleTap: () =>
-                            _service.edit(context, serviceProvider),
+                        onDoubleTap: () => pushToServiceProvidersFormView(
+                            context, serviceProvider, true),
                         onTap: () => _pushToServiceProviderView(
                             context, serviceProvider),
                         child: ListTile(
                           //isThreeLine: true,
                           leading: Icon(Icons.person),
-                          title: InkWell(
-                            child: Text(serviceProvider.name),
-                          ),
+                          title: Text(serviceProvider.name),
+
                           subtitle: Text(serviceProvider.category),
 
                           // trailing: Visibility(
@@ -153,15 +168,5 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
         break;
       default:
     }
-  }
-
-  void pushToServiceProvidersFormView(BuildContext context) {
-    ServiceProvider serviceProvider = ServiceProvider();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => ServiceProviderFormView(
-                  serviceProvider: serviceProvider,
-                )));
   }
 }

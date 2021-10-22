@@ -140,7 +140,7 @@ class _UserListViewState extends State<UserListView> {
             return AlertDialog(
                 //title: Text('Alterar papel do usuário'),
                 content: Container(
-              height: 310.0,
+              height: 250.0,
               child: Column(
                 children: <Widget>[
                   Text(
@@ -148,7 +148,7 @@ class _UserListViewState extends State<UserListView> {
                   SizedBox(height: 20.0),
                   Container(
                     width: double.maxFinite,
-                    height: 200,
+                    height: 140,
                     child: ListView.builder(
                       itemCount: Role().getRoles().length,
                       itemBuilder: (context, index) {

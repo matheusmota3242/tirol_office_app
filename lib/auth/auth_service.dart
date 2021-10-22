@@ -88,10 +88,12 @@ class AuthService {
         context, RouteUtils.login, (Route<dynamic> route) => false);
   }
 
-  void update(User user, BuildContext context) async {
-    bool result = updateEmail(user.email, context);
+  update(User user, BuildContext context) async {
+    bool result = await updateEmail(user.email, context);
     if (result)
-      await FirestoreDB.users.doc(user.id).update({'email': user.email});
+      await FirestoreDB.users
+          .doc(user.id)
+          .update({'email': user.email, 'name': user.name});
   }
 
   updateEmail(String newEmail, BuildContext context) async {
@@ -101,12 +103,12 @@ class AuthService {
       result = true;
     } catch (e) {
       Toasts.showToast(content: 'Ocorreu um erro');
+      print(e.toString());
       logout(context);
     }
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('username', newEmail);
-    Provider.of<UserService>(context, listen: false).getUser.email = newEmail;
     return result;
   }
 

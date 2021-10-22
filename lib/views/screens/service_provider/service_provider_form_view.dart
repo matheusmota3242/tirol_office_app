@@ -9,8 +9,10 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ServiceProviderFormView extends StatefulWidget {
   final ServiceProvider serviceProvider;
+  final bool edit;
 
-  const ServiceProviderFormView({Key key, this.serviceProvider})
+  const ServiceProviderFormView(
+      {Key key, this.serviceProvider, @required this.edit})
       : super(key: key);
   _ServiceProviderFormViewState createState() =>
       _ServiceProviderFormViewState();
@@ -19,6 +21,7 @@ class ServiceProviderFormView extends StatefulWidget {
 class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
     with TickerProviderStateMixin {
   AnimationController _animationController;
+  GlobalKey<FormState> _formKey = GlobalKey();
   @override
   void initState() {
     _animationController = AnimationController(
@@ -33,7 +36,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
     ServiceProviderService _service = ServiceProviderService();
     ValidationUtils _validationHelper = ValidationUtils();
     var themeData = Theme.of(context);
-    GlobalKey<FormState> _formKey = GlobalKey();
+
     void persist() {
       if (_formKey.currentState.validate()) {
         _service.persist(this.widget.serviceProvider);
@@ -165,7 +168,7 @@ class _ServiceProviderFormViewState extends State<ServiceProviderFormView>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(PageUtils.SERVICES_FORM_TITLE),
+        title: Text(widget.edit ? 'Editar serviço' : 'Novo serviço'),
       ),
       body: Container(
         padding: PageUtils.BODY_PADDING,

@@ -8,9 +8,15 @@ import 'package:tirol_office_app/views/screens/auth/forgot_password_view.dart';
 import 'package:tirol_office_app/views/screens/auth/register_view.dart';
 import 'package:tirol_office_app/views/widgets/toast.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
+  const LoginView({Key key}) : super(key: key);
+  _LoginViewState createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   static ValidationUtils _validationHelper = ValidationUtils();
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   static const double _horizontalPadding = 50.0;
   String _email, _password;
 
@@ -168,9 +174,7 @@ class LoginView extends StatelessWidget {
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         onPressed: () {
-          if (_formKey.currentState.validate()) {
-            login(context, authService);
-          }
+          login(context, authService);
         },
         child: Text(
           'Entrar',
@@ -228,12 +232,14 @@ class LoginView extends StatelessWidget {
         password, ValidationUtils.PASSWORD_FIELD);
   }
 
-  dynamic login(BuildContext context, AuthService authService) async {
-    var result = await authService.loginWithEmail(
-        email: _email, password: _password, context: context);
-    if (result) {
-      Navigator.pushNamed(context, RouteUtils.processes);
+  login(BuildContext context, AuthService authService) async {
+    if (_formKey.currentState.validate()) {
+      var result = await authService.loginWithEmail(
+          email: _email, password: _password, context: context);
+      if (result) {
+        Navigator.pushNamed(context, RouteUtils.processes);
+      }
+      return result;
     }
-    return result;
   }
 }
