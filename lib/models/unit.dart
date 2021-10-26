@@ -1,25 +1,24 @@
 class Unit {
   String _id;
-
   String _name;
   String _address;
-  int _number;
+  String _number;
   String _district;
 
   String get id => this._id;
   set id(String value) => this._id = value;
 
-  get name => this._name;
+  String get name => this._name;
   set name(String name) => this._name = name;
 
-  get address => this._address;
+  String get address => this._address;
   set address(String address) => this._address = address;
 
-  get number => this._number;
-  set number(number) => this._number = number;
+  String get number => this._number;
+  set number(String number) => this._number = number;
 
-  get district => this._district;
-  set district(district) => this._district = district;
+  String get district => this._district;
+  set district(String district) => this._district = district;
 
   Unit();
 

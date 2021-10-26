@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tirol_office_app/models/unit.dart';
 
 import 'package:tirol_office_app/service/unit_service.dart';
@@ -8,13 +9,14 @@ import 'package:tirol_office_app/utils/validation_utils.dart';
 import 'unit_list_view.dart';
 
 class UnitFormView extends StatefulWidget {
+  final Unit unit;
+  final bool edit;
   const UnitFormView({
     Key key,
     @required this.unit,
     @required this.edit,
   }) : super(key: key);
-  final Unit unit;
-  final bool edit;
+
   @override
   _UnitFormViewState createState() => _UnitFormViewState();
 }
@@ -22,7 +24,7 @@ class UnitFormView extends StatefulWidget {
 class _UnitFormViewState extends State<UnitFormView>
     with TickerProviderStateMixin {
   AnimationController _animationController;
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final _formKey = GlobalKey<FormState>();
   UnitService _service = UnitService();
   @override
   void initState() {
@@ -66,7 +68,9 @@ class _UnitFormViewState extends State<UnitFormView>
             children: [
               TextFormField(
                 validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => widget.unit.name = value,
+                onChanged: (value) {
+                  widget.unit.name = value;
+                },
                 initialValue: widget.unit.name,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
@@ -91,7 +95,9 @@ class _UnitFormViewState extends State<UnitFormView>
               ),
               TextFormField(
                 validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => widget.unit.address = value,
+                onChanged: (value) {
+                  widget.unit.address = value;
+                },
                 initialValue: widget.unit.address,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
@@ -115,10 +121,19 @@ class _UnitFormViewState extends State<UnitFormView>
                 height: PageUtils.BODY_PADDING_VALUE,
               ),
               TextFormField(
-                validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => widget.unit.number = int.parse(value),
-                initialValue: widget.unit.number.toString(),
-                keyboardType: TextInputType.number,
+                validator: (value) {
+                  var msg;
+                  if (value.isEmpty) {
+                    msg = 'Campo obrigatório';
+                  } else if (int.tryParse(value) == null) {
+                    msg = 'Apenas números inteiros';
+                  }
+                  return msg;
+                },
+                onChanged: (value) {
+                  widget.unit.number = value;
+                },
+                initialValue: widget.unit.number,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,
                   labelText: 'Número',
@@ -142,7 +157,9 @@ class _UnitFormViewState extends State<UnitFormView>
               ),
               TextFormField(
                 validator: (value) => ValidationUtils().isEmpty(value),
-                onChanged: (value) => widget.unit.district = value,
+                onChanged: (value) {
+                  widget.unit.district = value;
+                },
                 initialValue: widget.unit.district,
                 decoration: InputDecoration(
                   alignLabelWithHint: true,

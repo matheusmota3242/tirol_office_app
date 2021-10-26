@@ -92,9 +92,9 @@ class _UnitListViewState extends State<UnitListView> {
                     MaterialPageRoute(
                         builder: (_) =>
                             DepartmentListView(unitName: unit.name))),
-                title: Text(unit.name),
-                subtitle: Text(
-                    '${unit.address}, ${unit.number.toString()}, ${unit.district}'),
+                title: Text('${unit.name}'),
+                subtitle:
+                    Text('${unit.address}, ${unit.number}, ${unit.district}'),
                 contentPadding: EdgeInsets.all(0),
                 trailing: Icon(
                   Icons.arrow_forward_ios,
