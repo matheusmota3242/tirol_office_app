@@ -6,7 +6,6 @@ import 'package:tirol_office_app/utils/validation_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
 import 'package:tirol_office_app/views/screens/auth/forgot_password_view.dart';
 import 'package:tirol_office_app/views/screens/auth/register_view.dart';
-import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key key}) : super(key: key);
@@ -62,27 +61,8 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  // Título da página
-  Widget _titlePage(double screenHeight) {
-    var fontSize = 36.0;
-    var paddingBottom = (screenHeight / 40);
-    return Padding(
-      padding: EdgeInsets.only(bottom: paddingBottom),
-      child: Center(
-        child: Text(
-          'Login',
-          style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w700,
-              color: Colors.black54),
-        ),
-      ),
-    );
-  }
-
   // Campo do usuário
   Widget _emailField(double screenHeight) {
-    var borderWidth = 1.0;
     var verticalPadding = (screenHeight / 40);
     var fieldVerticalPadding = 8.0;
     var fieldLeftPadding = 8.0;
@@ -237,7 +217,7 @@ class _LoginViewState extends State<LoginView> {
       var result = await authService.loginWithEmail(
           email: _email, password: _password, context: context);
       if (result) {
-        Navigator.pushNamed(context, RouteUtils.processes);
+        Navigator.pushNamed(context, RouteUtils.units);
       }
       return result;
     }

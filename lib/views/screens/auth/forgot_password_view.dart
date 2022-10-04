@@ -5,13 +5,13 @@ import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/validation_utils.dart';
 
 class ForgotPasswordView extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
-  static const double _horizontalPadding = 50.0;
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     String _email;
-    var WIDGETS_WIDTH = MediaQuery.of(context).size.width * 0.75;
-    var SIZE_SCREEN = MediaQuery.of(context).size;
+    var widgetsWidth = MediaQuery.of(context).size.width * 0.75;
+    var sizeScreen = MediaQuery.of(context).size;
     const double HORIZONTAL_PADDING = 40;
     Widget sizedBox = SizedBox(
       height: 70,
@@ -25,7 +25,7 @@ class ForgotPasswordView extends StatelessWidget {
             key: _formKey,
             child: ListView(children: [
               SizedBox(
-                height: SIZE_SCREEN.height * 0.1,
+                height: sizeScreen.height * 0.1,
               ),
               _forgotPasswordImage(),
               SizedBox(
@@ -42,7 +42,7 @@ class ForgotPasswordView extends StatelessWidget {
               ),
               sizedBox,
               Container(
-                width: WIDGETS_WIDTH,
+                width: widgetsWidth,
                 child: TextFormField(
                   onChanged: (value) => _email = value,
                   validator: (value) => ValidationUtils().validateEmail(value),
@@ -73,11 +73,11 @@ class ForgotPasswordView extends StatelessWidget {
               sizedBox,
               SizedBox(
                 height: 44,
-                width: WIDGETS_WIDTH,
+                width: widgetsWidth,
                 child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState.validate())
-                        AuthService().sendPasswordResetEmail(_email);
+                        await AuthService().sendPasswordResetEmail(_email);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
@@ -88,7 +88,7 @@ class ForgotPasswordView extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              _popButton(context, WIDGETS_WIDTH)
+              _popButton(context, widgetsWidth)
             ])),
       ),
     );
@@ -99,28 +99,6 @@ class ForgotPasswordView extends StatelessWidget {
       child: SvgPicture.asset(
         'assets/images/forgot_password.svg',
         height: 150,
-      ),
-    );
-  }
-
-  Widget _submitButton(
-      String email, BuildContext context, double screenHeight) {
-    var buttonPadding = 16.0;
-    var verticalPadding = (screenHeight / 40);
-    return Padding(
-      padding: EdgeInsets.fromLTRB(_horizontalPadding, verticalPadding,
-          _horizontalPadding, verticalPadding),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        onPressed: () => AuthService().sendPasswordResetEmail(email),
-        child: Text(
-          'Salvar',
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        color: Theme.of(context).buttonColor,
-        padding: EdgeInsets.only(top: buttonPadding, bottom: buttonPadding),
       ),
     );
   }

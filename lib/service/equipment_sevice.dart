@@ -4,11 +4,6 @@ import 'package:tirol_office_app/models/department_model.dart';
 import 'package:tirol_office_app/models/equipment_model.dart';
 
 class EquipmentService {
-  Equipment _currentEquipment;
-
-  get currentEquipment => _currentEquipment;
-  set currentEquipment(Equipment equipment) => _currentEquipment = equipment;
-
   @observable
   String currentEquipmentStatus;
 

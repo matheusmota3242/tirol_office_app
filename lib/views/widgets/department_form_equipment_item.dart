@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import 'package:tirol_office_app/helpers/equipment_helper.dart';
 import 'package:tirol_office_app/mobx/equipment/equipment_mobx.dart';
-import 'package:tirol_office_app/models/enums/equipment_status_enum.dart';
-import 'package:tirol_office_app/models/equipment_model.dart';
 import 'package:tirol_office_app/service/equipment_sevice.dart';
+
+import 'equipment_status_widget.dart';
 
 class DepartmentFormEquipmentItem extends StatefulWidget {
   final EquipmentMobx mobx;
@@ -24,11 +23,6 @@ class DepartmentFormEquipmentItem extends StatefulWidget {
 class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
   @override
   Widget build(BuildContext context) {
-    final EquipmentService _service = EquipmentService();
-
-    // // Service recebe equipamento do componente
-    // _service.currentEquipment = widget.equipment;
-
     // // Lista com opções do menu
     var equipmentStatusOptions = <String>['Funcionando', 'Danificado'];
 
@@ -81,14 +75,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
         ),
       );
     }
-
-    // Atualiza equipamento após confirmação do modal
-    // void updateEquipment() {
-    //   setState(() {
-    //     setEquipmentDescription(descriptionTemp);
-    //     setEquipmentStatus(statusTemp);
-    //   });
-    // }
 
     showDeleteDialog() {
       showDialog(
@@ -238,7 +224,6 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
     //   if (value == 'Editar') edit(widget.equipment);
     // }
 
-    var themeData = Theme.of(context);
     return InkWell(
       onLongPress: () => showDeleteDialog(),
       onDoubleTap: () => edit(),
@@ -258,41 +243,34 @@ class _DepartmentFormEquipmentItem extends State<DepartmentFormEquipmentItem> {
                   bottom: 0.0,
                   child: Row(
                     children: [
-                      Text(
-                        'Status:',
-                        style: themeData.textTheme.subtitle1,
-                      ),
-                      SizedBox(
-                        width: 6.0,
-                      ),
-                      Text(
-                        widget.mobx.getStatus ==
-                                EquipmentHelper()
-                                    .getRoleByEnum(EquipmentStatus.ABLE)
-                            ? 'Funcionando'
-                            : 'Danificado',
-                        style:
-                            TextStyle(fontSize: 15.0, color: Colors.grey[700]),
+                      EquipmentStatusWidget(
+                        status: widget.mobx.getStatus,
                       ),
                     ],
                   ),
                 ),
-                // Positioned(
-                //   right: 0,
-                //   top: 9.0,
-                //   child: PopupMenuButton(
-                //     onSelected: (value) => null,
-                //     padding: EdgeInsets.all(0),
-                //     itemBuilder: (_) => ['Editar', 'Remover']
-                //         .map(
-                //           (choice) => PopupMenuItem<String>(
-                //             child: Text(choice),
-                //             value: choice,
-                //           ),
-                //         )
-                //         .toList(),
-                //   ),
-                // ),
+                Positioned(
+                  right: 0,
+                  top: 9.0,
+                  child: PopupMenuButton(
+                    onSelected: (value) {
+                      if (value == 'Editar') {
+                        edit();
+                      } else if (value == 'Remover') {
+                        showDeleteDialog();
+                      }
+                    },
+                    padding: EdgeInsets.all(0),
+                    itemBuilder: (_) => ['Editar', 'Remover']
+                        .map(
+                          (choice) => PopupMenuItem<String>(
+                            child: Text(choice),
+                            value: choice,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
               ],
             ),
           ),

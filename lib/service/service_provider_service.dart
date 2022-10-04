@@ -25,8 +25,10 @@ class ServiceProviderService {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) =>
-                ServiceProviderFormView(serviceProvider: serviceProvider)));
+            builder: (_) => ServiceProviderFormView(
+                  serviceProvider: serviceProvider,
+                  edit: true,
+                )));
   }
 
   Future<void> remove(String id) async {

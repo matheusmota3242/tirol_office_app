@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/validation_utils.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
@@ -35,7 +34,6 @@ class _PersonalInfoPasswordFormViewState
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
     var _auth = Provider.of<AuthService>(context);
-    var _user = Provider.of<UserService>(context, listen: false).getUser;
 
     void onChangedHandler(String field, String value) {
       switch (field) {

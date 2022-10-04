@@ -30,8 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.0
   flutter_svg:
   flutter_barcode_scanner:
-  firebase_core: ^1.0.4
-  firebase_auth: ^1.1.1
+  firebase_core: 
+  firebase_auth: 
   cloud_firestore: 
   mobx: ^1.2.1+4
   flutter_mobx: ^1.1.0+2 

@@ -128,6 +128,7 @@ class _UserListViewState extends State<UserListView> {
         return Colors.red[500];
         break;
       default:
+        return Colors.red[500];
     }
   }
 

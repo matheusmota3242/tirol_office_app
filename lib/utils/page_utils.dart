@@ -62,7 +62,7 @@ class PageUtils {
     ],
   );
 
-  static Widget HORIZONTAL_SEPARATOR_WHITE = Column(
+  static Widget horizontalSeparatorWhite = Column(
     children: [
       SizedBox(
         height: 16.0,

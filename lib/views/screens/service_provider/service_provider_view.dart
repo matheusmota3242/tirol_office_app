@@ -7,7 +7,7 @@ class ServiceProviderView extends StatelessWidget {
   final ServiceProvider serviceProvider;
 
   ServiceProviderView({Key key, this.serviceProvider}) : super(key: key);
-
+  var sizedBoxHeight = 24.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,11 +20,11 @@ class ServiceProviderView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             serviceProviderAttribute('Nome', this.serviceProvider.name),
-            PageUtils.horizonalSeparatorGrey,
+            SizedBox(height: sizedBoxHeight),
             serviceProviderAttribute('Categoria', serviceProvider.category),
-            PageUtils.horizonalSeparatorGrey,
+            SizedBox(height: sizedBoxHeight),
             serviceProviderAttribute('Email', serviceProvider.email),
-            PageUtils.horizonalSeparatorGrey,
+            SizedBox(height: sizedBoxHeight),
             serviceProviderAttribute('Telefone', serviceProvider.phone),
           ],
         ),

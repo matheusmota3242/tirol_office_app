@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tirol_office_app/auth/auth_service.dart';
@@ -12,54 +11,54 @@ import 'package:tirol_office_app/views/widgets/toast.dart';
 class RegisterView extends StatelessWidget {
   ValidationUtils _validationHelper = ValidationUtils();
   final _formKey = GlobalKey<FormState>();
-  static const double _horizontalPadding = 50.0;
   String _email, _password, _passwordConfirm, _name;
+
   @override
   Widget build(BuildContext context) {
     AuthService _authService = Provider.of<AuthService>(context);
-    var SCREEN_SIZE = MediaQuery.of(context).size;
-    var SCREEN_HEIGHT = SCREEN_SIZE.height;
-    var WIDGETS_WIDTH = SCREEN_SIZE.width * 0.75;
+    var screenSize = MediaQuery.of(context).size;
+    var screenHeight = screenSize.height;
+    var widgetsWidth = screenSize.width * 0.75;
     return Scaffold(
       body: Container(
         child: Form(
           child: ListView(
             children: [
               SizedBox(
-                height: SCREEN_HEIGHT * 0.08,
+                height: screenHeight * 0.08,
               ),
-              _registerImage(SCREEN_HEIGHT),
+              _registerImage(screenHeight),
               SizedBox(
                 height: 20,
               ),
-              _titlePage(SCREEN_HEIGHT),
+              _titlePage(screenHeight),
               SizedBox(
                 height: 20,
               ),
-              _nameField(SCREEN_HEIGHT, WIDGETS_WIDTH),
+              _nameField(screenHeight, widgetsWidth),
               SizedBox(
                 height: 20,
               ),
-              _emailField(SCREEN_SIZE, WIDGETS_WIDTH),
+              _emailField(screenSize, widgetsWidth),
               SizedBox(
                 height: 20,
               ),
-              _passwordField(SCREEN_HEIGHT, WIDGETS_WIDTH),
+              _passwordField(screenHeight, widgetsWidth),
               SizedBox(
                 height: 20,
               ),
-              _confirmPasswordField(SCREEN_HEIGHT, WIDGETS_WIDTH),
+              _confirmPasswordField(screenHeight, widgetsWidth),
               SizedBox(
                 height: 20,
               ),
               _registerButton(
-                  context, SCREEN_HEIGHT, WIDGETS_WIDTH, _authService),
+                  context, screenHeight, widgetsWidth, _authService),
               SizedBox(
                 height: 20,
               ),
               Center(
                 child: SizedBox(
-                  width: WIDGETS_WIDTH,
+                  width: widgetsWidth,
                   height: 44,
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
@@ -84,12 +83,12 @@ class RegisterView extends StatelessWidget {
   }
 
   Widget _registerImage(double screenHeight) {
-    var IMAGE_HEIGHT = 150.0;
+    var imageHeight = 150.0;
 
     return SizedBox(
       child: SvgPicture.asset(
         'assets/images/register.svg',
-        height: IMAGE_HEIGHT,
+        height: imageHeight,
       ),
     );
   }
@@ -135,8 +134,6 @@ class RegisterView extends StatelessWidget {
   }
 
   Widget _nameField(double screenHeight, double width) {
-    var borderWidth = 1.0;
-    var verticalPadding = (screenHeight / 40);
     var fieldVerticalPadding = 8.0;
     var fieldLeftPadding = 8.0;
     var fieldRightPadding = 0.0;
@@ -165,7 +162,6 @@ class RegisterView extends StatelessWidget {
   }
 
   Widget _passwordField(double screenHeight, double width) {
-    var verticalPadding = (screenHeight / 40);
     var fieldVerticalPadding = 8.0;
     var fieldLeftPadding = 8.0;
     var fieldRightPadding = 0.0;
@@ -193,7 +189,6 @@ class RegisterView extends StatelessWidget {
   }
 
   Widget _confirmPasswordField(double screenHeight, double width) {
-    var verticalPadding = (screenHeight / 40);
     var fieldVerticalPadding = 8.0;
     var fieldLeftPadding = 8.0;
     var fieldRightPadding = 0.0;
@@ -232,7 +227,6 @@ class RegisterView extends StatelessWidget {
   Widget _registerButton(BuildContext context, double screenHeight,
       double width, AuthService authService) {
     var buttonPadding = 16.0;
-    var verticalPadding = (screenHeight / 40);
     return Center(
       child: SizedBox(
         width: width,

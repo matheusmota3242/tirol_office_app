@@ -13,7 +13,6 @@ import 'package:tirol_office_app/views/screens/service_provider/service_provider
 import 'package:tirol_office_app/views/screens/service_provider/service_provider_view.dart';
 import 'package:tirol_office_app/views/widgets/dialogs.dart';
 import 'package:tirol_office_app/views/widgets/menu_drawer.dart';
-import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class ServiceProviderListView extends StatefulWidget {
   _ServiceProviderListViewState createState() =>
@@ -154,19 +153,5 @@ class _ServiceProviderListViewState extends State<ServiceProviderListView> {
             builder: (_) => ServiceProviderView(
                   serviceProvider: serviceProvider,
                 )));
-  }
-
-  _handleChoice(
-      BuildContext context, String choice, ServiceProvider serviceProvider) {
-    switch (choice) {
-      case 'Editar':
-        _service.edit(context, serviceProvider);
-        break;
-      case 'Remover':
-        _service.remove(serviceProvider.id);
-        Toasts.showToast(content: 'Serviço removido com sucesso');
-        break;
-      default:
-    }
   }
 }

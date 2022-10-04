@@ -20,8 +20,6 @@ class MaintenancesView extends StatefulWidget {
 class _MaintenancesViewState extends State<MaintenancesView> {
   MaintenanceService _service = MaintenanceService();
   String dropdownValue = 'Remover';
-  static const double SIZEDBOX_HEIGHT = 18;
-  static const double SECOND_ROW_TOP_PADDING = 30;
 
   @override
   Widget build(BuildContext context) {
@@ -29,65 +27,9 @@ class _MaintenancesViewState extends State<MaintenancesView> {
       await _service.delete(maintenanceId);
     }
 
-    showDeleteDialog(Maintenance maintenance) {
-      showDialog(
-        context: context,
-        builder: (_) => StatefulBuilder(
-            builder: (BuildContext localContext, innerSetState) {
-          return AlertDialog(
-            title: Text(
-              'Remover',
-              style: TextStyle(color: Colors.red[500]),
-            ),
-            content: Text('Você realmente deseja remover esse item?'),
-            actions: [
-              Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(localContext);
-                      },
-                      child: Text('Cancelar'),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        delete(maintenance.id);
-                        Navigator.pop(localContext);
-                        setState(() {});
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).buttonColor),
-                      ),
-                      child: Text('Sim'),
-                    )
-                  ],
-                ),
-              )
-            ],
-          );
-        }),
-      );
-    }
-
     superSetState() {
       setState(() {});
     }
-
-    // handlingOptionSelected(String value, Maintenance maintenance) async {
-    //   if (value == 'Remover') {
-    //     showDeleteDialog(maintenance);
-    //   } else {
-    //     await _service.updateHasOccured(maintenance);
-    //     setState(() {});
-    //   }
-    // }
 
     updateHasOccured(Maintenance maintenance, bool value) async {
       await _service.updateHasOccured(maintenance, value);

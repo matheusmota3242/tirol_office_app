@@ -37,13 +37,14 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
   DepartmentService _service = DepartmentService();
   EquipmentListMobx equipmentListMobx = EquipmentListMobx();
   GlobalKey<FormState> _key = GlobalKey<FormState>();
+
   @override
   void initState() {
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-
+    print('ofdskokfd');
     if (widget.edit) {
       widget.currentDepartment.equipments.forEach((element) {
         EquipmentMobx mobx = EquipmentMobx();
@@ -61,40 +62,42 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
   @override
   Widget build(BuildContext context) {
     var themeData = Theme.of(context);
+    TextEditingController nameController =
+        TextEditingController(text: widget.currentDepartment?.name);
 
     // Campo nome do deprtamento a ser adicionado
-    Widget departmentNameField() {
-      TextEditingController controller =
-          TextEditingController(text: widget.currentDepartment?.name);
+    // Widget departmentNameField() {
+    //   TextEditingController controller =
+    //       TextEditingController(text: widget.currentDepartment?.name);
 
-      return Container(
-        child: Form(
-          key: _key,
-          child: TextFormField(
-            onChanged: (value) => widget.currentDepartment.name = value,
-            validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
-            controller: controller,
-            decoration: InputDecoration(
-              alignLabelWithHint: true,
-              labelText: 'Nome',
-              labelStyle: TextStyle(
-                  color: Colors.grey[700],
-                  height: 0.9,
-                  fontWeight: FontWeight.w600),
-              filled: true,
-              counterStyle: TextStyle(color: Colors.red),
-              hintText: 'Nome',
-              contentPadding: EdgeInsets.only(
-                left: 10.0,
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+    //   return Container(
+    //     child: Form(
+    //       key: _key,
+    //       child: TextFormField(
+    //         onChanged: (value) => widget.currentDepartment.name = value,
+    //         validator: (value) => value.isEmpty ? 'Campo obrigatório' : null,
+    //         controller: controller,
+    //         decoration: InputDecoration(
+    //           alignLabelWithHint: true,
+    //           labelText: 'Nome',
+    //           labelStyle: TextStyle(
+    //               color: Colors.grey[700],
+    //               height: 0.9,
+    //               fontWeight: FontWeight.w600),
+    //           filled: true,
+    //           counterStyle: TextStyle(color: Colors.red),
+    //           hintText: 'Nome',
+    //           contentPadding: EdgeInsets.only(
+    //             left: 10.0,
+    //           ),
+    //           border: OutlineInputBorder(
+    //             borderSide: BorderSide.none,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     void submit() async {
       bool result = false;
@@ -186,7 +189,32 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
         child: ListView(
           shrinkWrap: true,
           children: [
-            departmentNameField(),
+            Form(
+              key: _key,
+              child: TextFormField(
+                onChanged: (value) => widget.currentDepartment.name = value,
+                validator: (value) =>
+                    value.isEmpty ? 'Campo obrigatório' : null,
+                controller: nameController,
+                decoration: InputDecoration(
+                  alignLabelWithHint: true,
+                  labelText: 'Nome',
+                  labelStyle: TextStyle(
+                      color: Colors.grey[700],
+                      height: 0.9,
+                      fontWeight: FontWeight.w600),
+                  filled: true,
+                  counterStyle: TextStyle(color: Colors.red),
+                  hintText: 'Nome',
+                  contentPadding: EdgeInsets.only(
+                    left: 10.0,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
             SizedBox(
               height: 10.0,
             ),

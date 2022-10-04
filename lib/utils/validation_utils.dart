@@ -19,7 +19,6 @@ class ValidationUtils {
   }
 
   validateName(String name) {
-    String msg;
     if (name.isEmpty) {
       return isEmptyMessage('nome');
     }

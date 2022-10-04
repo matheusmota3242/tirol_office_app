@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:tirol_office_app/auth/auth_service.dart';
-import 'package:tirol_office_app/mobx/loading/loading_mobx.dart';
-import 'package:tirol_office_app/models/department_model.dart';
-import 'package:tirol_office_app/models/process_model.dart';
-import 'package:tirol_office_app/service/process_service.dart';
-import 'package:tirol_office_app/service/user_service.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
-import 'package:tirol_office_app/views/screens/processes/process_details_view.dart';
-import 'package:tirol_office_app/views/screens/processes/process_list_view.dart';
-import 'package:tirol_office_app/views/widgets/toast.dart';
 
 class Dialogs {
   static showDeleteDialog(
@@ -115,129 +108,6 @@ class Dialogs {
           )
         ],
       ),
-    );
-  }
-
-  Future persistProcess(ProcessService processService, String response,
-      Department department, String observations, BuildContext context) async {
-    return await processService.persist(response, department,
-        Provider.of<UserService>(context, listen: false).getUser, observations);
-  }
-
-  addProcess(BuildContext context, BuildContext dialogContext,
-      ProcessService processService, String response, observations) async {
-    return await processService.add(response, observations,
-        Provider.of<UserService>(context, listen: false).getUser);
-  }
-
-  showFirstScanDialog(BuildContext context, String response,
-      Department department, observations) async {
-    ProcessService processService =
-        Provider.of<ProcessService>(context, listen: false);
-
-    await showDialog(
-        context: context,
-        builder: (_) =>
-            StatefulBuilder(builder: (BuildContext dialogContext, setState) {
-              return AlertDialog(
-                title: const Text('Checkin'),
-                content: Text(
-                    'Deseja dar continuidade ao processo em ' + response + '?'),
-                actions: [
-                  Container(
-                    padding: EdgeInsets.only(right: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(dialogContext, false);
-                          },
-                          child: Text('Cancelar'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            Process process;
-                            process = await addProcess(context, dialogContext,
-                                processService, response, observations);
-                            Navigator.of(dialogContext).pop(true);
-                            if (null != process) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => ProcessDetailsView(
-                                        edit: true, process: process),
-                                  ));
-                            } else {
-                              Toasts.showWarningToast(
-                                  content: "Departamento não cadastrado");
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).buttonColor),
-                          ),
-                          child: Text('Sim'),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              );
-            }));
-  }
-
-  updateProcess(Process process, BuildContext context) async {
-    ProcessService processService = ProcessService();
-    bool result = await processService.update(process);
-    if (result) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => ProcessListView()),
-          (route) => false);
-    }
-
-    return result;
-  }
-
-  showFinalScanDialog(BuildContext context, String response, Process process,
-      LoadingMobx loading) async {
-    showDialog(
-      context: context,
-      builder: (_) =>
-          StatefulBuilder(builder: (BuildContext localContext, setState) {
-        return AlertDialog(
-            title: Text('Checkout'),
-            content: Text('Deseja finalizar o processo ' + response + '?'),
-            actions: [
-              Container(
-                padding: EdgeInsets.only(right: 5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(localContext);
-                      },
-                      child: Text('Cancelar'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        loading.setStatus(true);
-                        updateProcess(process, context);
-                        Navigator.of(localContext).pop();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).buttonColor),
-                      ),
-                      child: Text('Sim'),
-                    )
-                  ],
-                ),
-              )
-            ]);
-      }),
     );
   }
 

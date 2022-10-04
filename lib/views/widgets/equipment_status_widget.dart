@@ -12,9 +12,7 @@ class EquipmentStatusWidget extends StatelessWidget {
       height: 24,
       width: 24,
       child: Icon(
-        EquipmentHelper.isDamaged(status)
-            ? Icons.done
-            : Icons.warning_amber_rounded,
+        EquipmentHelper.isDamaged(status) ? Icons.done : Icons.error_outline,
         color: Colors.white,
         size: 16,
       ),

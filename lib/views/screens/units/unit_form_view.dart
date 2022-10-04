@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tirol_office_app/models/unit.dart';
 
 import 'package:tirol_office_app/service/unit_service.dart';
@@ -58,7 +57,7 @@ class _UnitFormViewState extends State<UnitFormView>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nova unidade'),
+        title: Text(widget.edit ? 'Editar unidade' : 'Nova unidade'),
       ),
       body: Container(
         padding: PageUtils.BODY_PADDING,

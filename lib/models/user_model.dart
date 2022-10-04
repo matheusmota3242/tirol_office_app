@@ -2,7 +2,6 @@ class User {
   String _id;
   String _name;
   String _role;
-  bool _status;
   String _email;
   String _password;
 

@@ -39,6 +39,7 @@ class AuthService {
     } catch (e) {
       result = false;
       Toasts.showToast(content: 'Credenciais inválidas');
+      throw e;
     }
 
     return result;
