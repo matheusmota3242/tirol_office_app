@@ -44,7 +44,6 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    print('ofdskokfd');
     if (widget.edit) {
       widget.currentDepartment.equipments.forEach((element) {
         EquipmentMobx mobx = EquipmentMobx();
@@ -227,7 +226,7 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                 IconButton(
                   onPressed: () {
                     final _formKey = GlobalKey<FormState>();
-                    showAddEquipmentDialog(_formKey, false);
+                    showAddEquipmentDialog(_formKey);
                   },
                   color: Theme.of(context).buttonColor,
                   icon: Icon(Icons.add_circle),
@@ -283,17 +282,12 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
       return 'Equipmaneto já existe';
   }
 
-  // void updateEquipmentFromMobx(EquipmentMobx mobx) {
-  //   equipmentListMobx.equipmentList[index].setDescription(mob);
-  //   equipmentListMobx.equipmentList[index].setStatus(status);
-  // }
-
   bool departmentEquipmentsIsEmpty(Department department) =>
       department.equipments.isEmpty ? true : false;
 
-  showAddEquipmentDialog(GlobalKey<FormState> formKey, bool isSpecial) {
+  showAddEquipmentDialog(GlobalKey<FormState> formKey) {
     GlobalKey<FormState> _formKey = GlobalKey();
-    Equipment equipment = Equipment();
+    EquipmentMobx equipment = EquipmentMobx();
     showDialog(
         context: context,
         builder: (_) =>
@@ -338,11 +332,9 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
                           child: DropdownButton<String>(
                             underline: SizedBox(),
                             isExpanded: true,
-                            value: equipment.status,
+                            value: equipment.getStatus,
                             onChanged: (value) {
-                              setState(() {
-                                equipment.status = value;
-                              });
+                              equipment.setStatus(value);
                             },
                             items: equipmentStatusOptions.map((value) {
                               return DropdownMenuItem<String>(
@@ -408,15 +400,15 @@ class _DepartmentFormViewState extends State<DepartmentFormView>
 
   // Campo nome do equipamento a ser adicionado ao deprtamento
   Widget equipmentNameField(
-      Equipment equipment, GlobalKey<FormState> equipmentFormKey) {
+      EquipmentMobx equipment, GlobalKey<FormState> equipmentFormKey) {
     TextEditingController controller =
-        TextEditingController(text: equipment.description);
+        TextEditingController(text: equipment.getDescription);
     return Form(
       key: equipmentFormKey,
       child: Container(
         child: TextFormField(
           validator: (value) => checkIfAlreadyExists(value),
-          onChanged: (value) => equipment.description = value,
+          onChanged: (value) => equipment.setDescription(value),
           keyboardType: TextInputType.name,
           controller: controller,
           decoration: InputDecoration(

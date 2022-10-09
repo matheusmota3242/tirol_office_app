@@ -5,6 +5,8 @@ class Maintenance {
   String _unitName;
   String _departmentName;
   String _equipmentDescription;
+  String _description;
+
   DateTime _dateTime;
   bool _hasOccurred;
   ServiceProvider _serviceProvider;
@@ -15,16 +17,19 @@ class Maintenance {
   String get departmentName => this._departmentName;
   set departmentName(String value) => this._departmentName = value;
 
-  get equipmentDescription => this._equipmentDescription;
+  String get equipmentDescription => this._equipmentDescription;
   set equipmentDescription(value) => this._equipmentDescription = value;
 
-  get dateTime => this._dateTime;
+  String get description => this._description;
+  set description(String value) => this._description = value;
+
+  DateTime get dateTime => this._dateTime;
   set dateTime(value) => this._dateTime = value;
 
   get hasOccurred => this._hasOccurred;
   set hasOccurred(value) => this._hasOccurred = value;
 
-  get serviceProvider => this._serviceProvider;
+  ServiceProvider get serviceProvider => this._serviceProvider;
   set serviceProvider(value) => this._serviceProvider = value;
 
   String get unitName => this._unitName;
@@ -36,6 +41,7 @@ class Maintenance {
 
   Maintenance.fromJson(Map<String, dynamic> json)
       : _dateTime = DateTime.parse(json['dateTime'].toDate().toString()),
+        _description = json['description'],
         _unitName = json['unitName'],
         _departmentName = json['departmentName'],
         _equipmentDescription = json['equipmentDescription'],
@@ -44,6 +50,7 @@ class Maintenance {
 
   Map<String, dynamic> toJson() => {
         'dateTime': _dateTime,
+        'description': _description,
         'departmentName': _departmentName,
         'equipmentDescription': _equipmentDescription,
         'hasOccurred': _hasOccurred,

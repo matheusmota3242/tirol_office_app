@@ -71,19 +71,14 @@ abstract class DepartmentServiceBase with Store {
 
   Future<bool> update(Department department) async {
     bool result = false;
-    var snapshot = await FirestoreDB.departments.get();
-    if (departmentAlreadyExists(
-            snapshot, department.name, department.unitName) ==
-        false) {
-      try {
-        await FirestoreDB.departments
-            .doc(department.id)
-            .update(department.toJson());
-        Toasts.showToast(content: 'Departamento editado com sucesso');
-        result = true;
-      } catch (e) {
-        Toasts.showToast(content: 'Erro ao editar departamento');
-      }
+    try {
+      await FirestoreDB.departments
+          .doc(department.id)
+          .update(department.toJson());
+      Toasts.showToast(content: 'Departamento editado com sucesso');
+      result = true;
+    } catch (e) {
+      Toasts.showToast(content: 'Erro ao editar departamento');
     }
 
     return result;

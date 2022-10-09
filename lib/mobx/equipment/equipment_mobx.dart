@@ -8,7 +8,7 @@ abstract class EquipmentMobxBase with Store {
   int id;
 
   @observable
-  String description;
+  String description = "Funcionando";
 
   @observable
   String status;

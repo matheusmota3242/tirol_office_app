@@ -1,11 +1,9 @@
 import 'equipment_model.dart';
-import 'special_equipment_model.dart';
 
 class Department {
   String _id;
   String _name;
   String _unitName;
-
   List<Equipment> _equipments;
 
   Department() {
@@ -26,10 +24,8 @@ class Department {
 
   Department.fromJson(Map<String, dynamic> data)
       : _name = data['name'],
-        _equipments = List<Equipment>.from(data['equipments'].map((equipment) =>
-            equipment['interval'] != null
-                ? SpecialEquipment.fromJson(equipment)
-                : Equipment.fromJson(equipment))),
+        _equipments = List<Equipment>.from(data['equipments']
+            .map((equipment) => Equipment.fromJson(equipment))),
         _unitName = data['unitName'];
 
   Map<String, dynamic> toJson() => {

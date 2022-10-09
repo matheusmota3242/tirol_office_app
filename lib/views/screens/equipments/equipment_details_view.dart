@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tirol_office_app/models/dto/department_dto_model.dart';
 
 import 'package:tirol_office_app/models/equipment_model.dart';
-import 'package:tirol_office_app/models/special_equipment_model.dart';
 import 'package:tirol_office_app/service/equipment_sevice.dart';
 import 'package:tirol_office_app/utils/page_utils.dart';
 import 'package:tirol_office_app/utils/route_utils.dart';
@@ -75,24 +74,6 @@ class EquipmentDetailsView extends StatelessWidget {
                             ),
                           )),
                       PageUtils.horizonalSeparatorGrey,
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Visibility(
-                          visible: equipment is SpecialEquipment,
-                          child: Column(
-                            children: [
-                              InkWell(
-                                onTap: () => null,
-                                child: Text(
-                                  'Manutenções preventivas',
-                                  style: PageUtils.textButtonStyle,
-                                ),
-                              ),
-                              SizedBox(height: PageUtils.BODY_PADDING_VALUE),
-                            ],
-                          ),
-                        ),
-                      ),
                       InkWell(
                         onTap: () => RouteUtils
                             .pushToEquipmentCorrectiveMaintenancesView(
